@@ -1,0 +1,1360 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sistem Manajemen Tugas, Waktu & Kegiatan</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <!-- Chart.js for Dashboard Analytics -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- Google Fonts Inter -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: { sans: ['Inter', 'sans-serif'] },
+                    colors: {
+                        brand: {
+                            50: '#eef2ff',
+                            100: '#e0e7ff',
+                            500: '#6366f1',
+                            600: '#4f46e5',
+                            700: '#4338ca',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body { font-family: 'Inter', sans-serif; background-color: #f8fafc; color: #0f172a; }
+        .custom-scrollbar::-webkit-scrollbar { width: 6px; height: 6px; }
+        .custom-scrollbar::-webkit-scrollbar-track { background: #f1f5f9; }
+        .custom-scrollbar::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
+        .custom-scrollbar::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+        .tab-active { border-bottom: 3px solid #4f46e5; color: #4f46e5; font-weight: 600; }
+        .animate-fade-in { animation: fadeIn 0.3s ease-out forwards; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
+    </style>
+</head>
+<body class="bg-slate-50 min-h-screen flex flex-col md:flex-row antialiased custom-scrollbar">
+
+    <!-- Navigation Sidebar -->
+    <aside class="w-full md:w-64 bg-slate-900 text-slate-300 flex-shrink-0 flex flex-col justify-between shadow-xl z-20">
+        <div>
+            <!-- Logo Branding -->
+            <div class="p-6 border-b border-slate-800 flex items-center gap-3">
+                <div class="p-2.5 bg-brand-600 text-white rounded-xl shadow-lg shadow-brand-600/30">
+                    <i data-lucide="check-square" class="w-6 h-6"></i>
+                </div>
+                <div>
+                    <h1 class="font-bold text-white text-lg leading-tight">TaskTime Pro</h1>
+                    <p class="text-xs text-slate-400">Manajemen Tugas & Agenda</p>
+                </div>
+            </div>
+
+            <!-- Navigation Links -->
+            <nav class="p-4 space-y-1.5">
+                <button onclick="switchTab('dashboard')" id="nav-dashboard" 
+                    class="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-all hover:bg-slate-800 hover:text-white group">
+                    <i data-lucide="layout-dashboard" class="w-5 h-5 text-slate-400 group-hover:text-brand-500"></i>
+                    <span>Dashboard</span>
+                    <span class="ml-auto text-xs bg-slate-800 text-slate-400 px-2 py-0.5 rounded-full border border-slate-700">Publik</span>
+                </button>
+
+                <button onclick="switchTab('tasks')" id="nav-tasks" 
+                    class="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-all hover:bg-slate-800 hover:text-white group">
+                    <i data-lucide="check-circle-2" class="w-5 h-5 text-slate-400 group-hover:text-brand-500"></i>
+                    <span>Manajemen Tugas</span>
+                    <i data-lucide="lock" id="lock-icon-tasks" class="w-4 h-4 ml-auto text-amber-500"></i>
+                </button>
+
+                <button onclick="switchTab('activities')" id="nav-activities" 
+                    class="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-all hover:bg-slate-800 hover:text-white group">
+                    <i data-lucide="calendar" class="w-5 h-5 text-slate-400 group-hover:text-brand-500"></i>
+                    <span>Waktu & Kegiatan</span>
+                    <i data-lucide="lock" id="lock-icon-activities" class="w-4 h-4 ml-auto text-amber-500"></i>
+                </button>
+            </nav>
+        </div>
+
+        <!-- User Authentication & Deploy Info Footer -->
+        <div class="p-4 border-t border-slate-800 space-y-3">
+            <div id="auth-status-card" class="bg-slate-800/80 p-3 rounded-xl border border-slate-700/50 flex items-center justify-between">
+                <div class="flex items-center gap-2.5">
+                    <div id="auth-avatar-bg" class="w-8 h-8 rounded-full bg-slate-700 flex items-center justify-center text-slate-300 font-bold text-xs">
+                        ?
+                    </div>
+                    <div>
+                        <p id="auth-user-name" class="text-xs font-semibold text-white">Guest Mode</p>
+                        <p id="auth-user-role" class="text-[10px] text-slate-400">Akses Terbatas</p>
+                    </div>
+                </div>
+                <button id="auth-btn" onclick="toggleAuthModal()" class="text-xs bg-brand-600 hover:bg-brand-700 text-white px-2.5 py-1.5 rounded-lg transition font-medium">
+                    Login
+                </button>
+            </div>
+
+            <!-- Deploy Link Button -->
+            <button onclick="openDeployModal()" class="w-full flex items-center justify-center gap-2 bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-medium py-2.5 px-3 rounded-xl transition border border-slate-700">
+                <i data-lucide="globe" class="w-4 h-4 text-emerald-400"></i>
+                <span>Cara Buat Jadi Link</span>
+            </button>
+        </div>
+    </aside>
+
+    <!-- Main Content Area -->
+    <main class="flex-1 flex flex-col min-w-0 overflow-y-auto custom-scrollbar">
+        <!-- Top Proactive Alert Banner (Notification Center) -->
+        <div id="notification-banner-container" class="px-6 pt-4 hidden">
+            <!-- Dynamic notifications injected here -->
+        </div>
+
+        <!-- Top Header Bar -->
+        <header class="bg-white border-b border-slate-200 px-6 py-4 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 sticky top-0 z-10 shadow-sm">
+            <div>
+                <h2 id="page-title" class="text-xl font-bold text-slate-800">Dashboard Utama</h2>
+                <p id="page-subtitle" class="text-xs text-slate-500">Ringkasan status tugas, kegiatan, dan jadwal mendatang.</p>
+            </div>
+            
+            <div class="flex items-center gap-3">
+                <div class="text-right hidden sm:block">
+                    <p class="text-xs font-semibold text-slate-700" id="current-date-text">Senin, 1 Jan 2026</p>
+                    <p class="text-[11px] text-slate-500" id="current-time-text">00:00 WIB</p>
+                </div>
+                <div class="p-2 bg-slate-100 rounded-lg text-slate-600">
+                    <i data-lucide="clock" class="w-5 h-5"></i>
+                </div>
+            </div>
+        </header>
+
+        <!-- Dynamic Content Body -->
+        <div class="p-6 space-y-6 flex-1">
+
+            <!-- SECTION 1: DASHBOARD (PUBLIC) -->
+            <section id="view-dashboard" class="space-y-6 animate-fade-in">
+                <!-- Summary Statistics Cards -->
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+                    <div class="bg-white p-5 rounded-2xl border border-slate-200/80 shadow-sm hover:shadow-md transition">
+                        <div class="flex justify-between items-start">
+                            <div>
+                                <p class="text-xs font-medium text-slate-500 uppercase tracking-wider">Total Tugas</p>
+                                <h3 id="stat-total-tasks" class="text-2xl font-extrabold text-slate-800 mt-1">0</h3>
+                            </div>
+                            <span class="p-3 bg-indigo-50 text-brand-600 rounded-xl"><i data-lucide="file-text" class="w-5 h-5"></i></span>
+                        </div>
+                        <div class="mt-3 flex items-center gap-2 text-xs text-slate-500">
+                            <span id="stat-tasks-done-badge" class="px-1.5 py-0.5 rounded bg-emerald-100 text-emerald-700 font-semibold">0 Selesai</span>
+                            <span>dari seluruh pengerjaan</span>
+                        </div>
+                    </div>
+
+                    <div class="bg-white p-5 rounded-2xl border border-slate-200/80 shadow-sm hover:shadow-md transition">
+                        <div class="flex justify-between items-start">
+                            <div>
+                                <p class="text-xs font-medium text-slate-500 uppercase tracking-wider">Belum Dikerjakan</p>
+                                <h3 id="stat-pending-tasks" class="text-2xl font-extrabold text-rose-600 mt-1">0</h3>
+                            </div>
+                            <span class="p-3 bg-rose-50 text-rose-600 rounded-xl"><i data-lucide="alert-circle" class="w-5 h-5"></i></span>
+                        </div>
+                        <p class="mt-3 text-xs text-slate-500">Memerlukan perhatian segera</p>
+                    </div>
+
+                    <div class="bg-white p-5 rounded-2xl border border-slate-200/80 shadow-sm hover:shadow-md transition">
+                        <div class="flex justify-between items-start">
+                            <div>
+                                <p class="text-xs font-medium text-slate-500 uppercase tracking-wider">Total Agenda</p>
+                                <h3 id="stat-total-activities" class="text-2xl font-extrabold text-slate-800 mt-1">0</h3>
+                            </div>
+                            <span class="p-3 bg-amber-50 text-amber-600 rounded-xl"><i data-lucide="calendar-range" class="w-5 h-5"></i></span>
+                        </div>
+                        <div class="mt-3 flex items-center gap-2 text-xs text-slate-500">
+                            <span id="stat-act-done-badge" class="px-1.5 py-0.5 rounded bg-blue-100 text-blue-700 font-semibold">0 Terlaksana</span>
+                        </div>
+                    </div>
+
+                    <div class="bg-white p-5 rounded-2xl border border-slate-200/80 shadow-sm hover:shadow-md transition">
+                        <div class="flex justify-between items-start">
+                            <div>
+                                <p class="text-xs font-medium text-slate-500 uppercase tracking-wider">Pengumpulan Belum</p>
+                                <h3 id="stat-unsubmitted-tasks" class="text-2xl font-extrabold text-amber-600 mt-1">0</h3>
+                            </div>
+                            <span class="p-3 bg-amber-50 text-amber-600 rounded-xl"><i data-lucide="upload-cloud" class="w-5 h-5"></i></span>
+                        </div>
+                        <p class="mt-3 text-xs text-slate-500">Tugas selesai namun belum dikirim</p>
+                    </div>
+                </div>
+
+                <!-- Dashboard Charts & Calendar Preview -->
+                <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                    <!-- Task Status Chart -->
+                    <div class="bg-white p-6 rounded-2xl border border-slate-200/80 shadow-sm">
+                        <h3 class="font-bold text-slate-800 mb-4 flex items-center gap-2">
+                            <i data-lucide="pie-chart" class="w-5 h-5 text-brand-600"></i>
+                            Statistik Progress Tugas
+                        </h3>
+                        <div class="relative h-56 flex justify-center items-center">
+                            <canvas id="taskStatusChart"></canvas>
+                        </div>
+                        <div class="mt-4 grid grid-cols-3 text-center text-xs gap-2 pt-3 border-t border-slate-100">
+                            <div>
+                                <span class="inline-block w-2.5 h-2.5 rounded-full bg-rose-500 mr-1"></span>
+                                <span class="text-slate-600">Belum</span>
+                            </div>
+                            <div>
+                                <span class="inline-block w-2.5 h-2.5 rounded-full bg-amber-500 mr-1"></span>
+                                <span class="text-slate-600">Proses</span>
+                            </div>
+                            <div>
+                                <span class="inline-block w-2.5 h-2.5 rounded-full bg-emerald-500 mr-1"></span>
+                                <span class="text-slate-600">Selesai</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Activity Calendar Agenda Preview -->
+                    <div class="lg:col-span-2 bg-white p-6 rounded-2xl border border-slate-200/80 shadow-sm flex flex-col">
+                        <div class="flex justify-between items-center mb-4">
+                            <h3 class="font-bold text-slate-800 flex items-center gap-2">
+                                <i data-lucide="calendar-days" class="w-5 h-5 text-brand-600"></i>
+                                Agenda & Deadline Mendatang
+                            </h3>
+                            <button onclick="switchTab('activities')" class="text-xs text-brand-600 hover:text-brand-700 font-semibold flex items-center gap-1">
+                                Kelola Agenda <i data-lucide="arrow-right" class="w-3.5 h-3.5"></i>
+                            </button>
+                        </div>
+                        <div id="dashboard-agenda-list" class="space-y-3 overflow-y-auto max-h-72 custom-scrollbar pr-1 flex-1">
+                            <!-- Dynamic Upcoming Agendas & Deadlines Injected Here -->
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- SECTION 2: TASK MANAGEMENT PAGE (PIN PROTECTED) -->
+            <section id="view-tasks" class="space-y-6 hidden animate-fade-in">
+                <!-- Action Header Bar -->
+                <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 bg-white p-4 rounded-2xl border border-slate-200/80 shadow-sm">
+                    <div class="flex items-center gap-3 w-full md:w-auto">
+                        <div class="relative flex-1 md:w-64">
+                            <i data-lucide="search" class="w-4 h-4 absolute left-3 top-3 text-slate-400"></i>
+                            <input type="text" id="task-search" oninput="renderTasks()" placeholder="Cari nama tugas / dosen..." 
+                                class="w-full pl-9 pr-4 py-2 text-sm bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-brand-500">
+                        </div>
+                        <select id="task-filter-status" onchange="renderTasks()" class="px-3 py-2 text-sm bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-brand-500">
+                            <option value="ALL">Semua Status Progress</option>
+                            <option value="Belum dikerjakan">Belum dikerjakan</option>
+                            <option value="Dalam pengerjaan">Dalam pengerjaan</option>
+                            <option value="Selesai">Selesai</option>
+                        </select>
+                    </div>
+
+                    <button onclick="openTaskModal()" class="w-full md:w-auto bg-brand-600 hover:bg-brand-700 text-white font-medium px-4 py-2.5 rounded-xl transition flex items-center justify-center gap-2 shadow-lg shadow-brand-600/20">
+                        <i data-lucide="plus" class="w-4 h-4"></i>
+                        <span>Tambah Tugas Baru</span>
+                    </button>
+                </div>
+
+                <!-- Tasks Counter Badge Bar -->
+                <div class="flex flex-wrap items-center gap-3 text-xs">
+                    <span class="text-slate-500 font-medium">Filter Kriteria Status Color Legend:</span>
+                    <span class="px-2.5 py-1 rounded-md bg-rose-50 text-rose-700 border border-rose-200 font-semibold">Belum Dikerjakan (Merah)</span>
+                    <span class="px-2.5 py-1 rounded-md bg-amber-50 text-amber-700 border border-amber-200 font-semibold">Dalam Pengerjaan (Kuning)</span>
+                    <span class="px-2.5 py-1 rounded-md bg-emerald-50 text-emerald-700 border border-emerald-200 font-semibold">Selesai (Hijau)</span>
+                    <span class="px-2.5 py-1 rounded-md bg-blue-50 text-blue-700 border border-blue-200 font-semibold">Sudah Dikumpulkan (Biru)</span>
+                </div>
+
+                <!-- Tasks List Grid -->
+                <div id="tasks-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+                    <!-- Dynamic Task Cards -->
+                </div>
+            </section>
+
+            <!-- SECTION 3: TIME & ACTIVITY MANAGEMENT PAGE (PIN PROTECTED) -->
+            <section id="view-activities" class="space-y-6 hidden animate-fade-in">
+                <!-- Action Header Bar -->
+                <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 bg-white p-4 rounded-2xl border border-slate-200/80 shadow-sm">
+                    <div class="flex items-center gap-3 w-full md:w-auto">
+                        <div class="relative flex-1 md:w-64">
+                            <i data-lucide="search" class="w-4 h-4 absolute left-3 top-3 text-slate-400"></i>
+                            <input type="text" id="act-search" oninput="renderActivities()" placeholder="Cari nama agenda / lokasi..." 
+                                class="w-full pl-9 pr-4 py-2 text-sm bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-brand-500">
+                        </div>
+                        <select id="act-filter-status" onchange="renderActivities()" class="px-3 py-2 text-sm bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-brand-500">
+                            <option value="ALL">Semua Status Agenda</option>
+                            <option value="Belum terlaksana">Belum terlaksana</option>
+                            <option value="Tidak dihadiri">Tidak dihadiri</option>
+                            <option value="Terlaksana">Terlaksana</option>
+                        </select>
+                    </div>
+
+                    <button onclick="openActivityModal()" class="w-full md:w-auto bg-brand-600 hover:bg-brand-700 text-white font-medium px-4 py-2.5 rounded-xl transition flex items-center justify-center gap-2 shadow-lg shadow-brand-600/20">
+                        <i data-lucide="plus" class="w-4 h-4"></i>
+                        <span>Tambah Agenda Kegiatan</span>
+                    </button>
+                </div>
+
+                <!-- Status Color Rules Banner -->
+                <div class="bg-amber-50 border border-amber-200 rounded-xl p-3 text-xs text-amber-800 flex items-start gap-2">
+                    <i data-lucide="info" class="w-4 h-4 text-amber-600 flex-shrink-0 mt-0.5"></i>
+                    <div>
+                        <strong>Aturan Otomatis Sistem:</strong> Kegiatan dengan status 
+                        <span class="font-bold text-amber-700">Belum Terlaksana (Kuning)</span>, 
+                        <span class="font-bold text-rose-700">Tidak Dihadiri (Merah)</span>, dan 
+                        <span class="font-bold text-blue-700">Terlaksana (Biru)</span>. 
+                        Agenda akan <em>terhapus otomatis 6 jam</em> setelah waktu pelaksanaan selesai, atau dapat dihapus manual dengan tombol Hapus.
+                    </div>
+                </div>
+
+                <!-- Activities List Grid -->
+                <div id="activities-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+                    <!-- Dynamic Activity Cards -->
+                </div>
+            </section>
+        </div>
+    </main>
+
+
+    <!-- MODAL 1: AUTHENTICATION / PIN LOGIN MODAL -->
+    <div id="modal-auth" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 flex items-center justify-center hidden p-4">
+        <div class="bg-white rounded-2xl shadow-2xl w-full max-w-sm p-6 border border-slate-100 animate-fade-in">
+            <div class="text-center space-y-2 mb-6">
+                <div class="w-12 h-12 bg-brand-50 text-brand-600 rounded-full flex items-center justify-center mx-auto">
+                    <i data-lucide="lock" class="w-6 h-6"></i>
+                </div>
+                <h3 class="text-lg font-bold text-slate-800">Verifikasi PIN Keamanan</h3>
+                <p class="text-xs text-slate-500">Masukkan PIN khusus untuk mengedit atau mengelola Tugas & Kegiatan.</p>
+            </div>
+
+            <form onsubmit="handlePinSubmit(event)" class="space-y-4">
+                <div>
+                    <label class="block text-xs font-semibold text-slate-700 mb-1">PIN Akses (Default: TOMMY)</label>
+                    <input type="password" id="input-pin" placeholder="•••••" required uppercase
+                        class="w-full text-center tracking-widest text-lg font-bold py-2.5 bg-slate-50 border border-slate-300 rounded-xl focus:ring-2 focus:ring-brand-500 focus:outline-none">
+                    <p id="pin-error" class="text-xs text-rose-500 mt-1 hidden text-center">PIN Salah! Silakan coba lagi.</p>
+                </div>
+
+                <div class="flex gap-2 pt-2">
+                    <button type="button" onclick="closeAuthModal()" class="w-1/2 py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-700 text-sm font-medium rounded-xl transition">
+                        Batal
+                    </button>
+                    <button type="submit" class="w-1/2 py-2.5 bg-brand-600 hover:bg-brand-700 text-white text-sm font-medium rounded-xl transition shadow-md">
+                        Masuk PIN
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- MODAL 2: ADD / EDIT TASK MODAL -->
+    <div id="modal-task" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 flex items-center justify-center hidden p-4 overflow-y-auto">
+        <div class="bg-white rounded-2xl shadow-2xl w-full max-w-xl p-6 border border-slate-100 my-8 animate-fade-in">
+            <div class="flex justify-between items-center pb-4 border-b border-slate-100 mb-4">
+                <h3 id="modal-task-title" class="text-lg font-bold text-slate-800">Tambah Tugas Baru</h3>
+                <button onclick="closeTaskModal()" class="text-slate-400 hover:text-slate-600"><i data-lucide="x" class="w-5 h-5"></i></button>
+            </div>
+
+            <form id="form-task" onsubmit="saveTask(event)" class="space-y-4">
+                <input type="hidden" id="task-id">
+                
+                <div>
+                    <label class="block text-xs font-semibold text-slate-700 mb-1">Nama Tugas *</label>
+                    <input type="text" id="task-name" required placeholder="Contoh: Laporan Akhir Praktikum Pemrograman"
+                        class="w-full px-3.5 py-2 text-sm bg-slate-50 border border-slate-300 rounded-xl focus:ring-2 focus:ring-brand-500 focus:outline-none">
+                </div>
+
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-700 mb-1">Jenis Tugas</label>
+                        <select id="task-type" class="w-full px-3.5 py-2 text-sm bg-slate-50 border border-slate-300 rounded-xl focus:ring-2 focus:ring-brand-500 focus:outline-none">
+                            <option value="Individu">Individu</option>
+                            <option value="Kelompok">Kelompok</option>
+                        </select>
+                    </div>
+
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-700 mb-1">Dosen Pengampu *</label>
+                        <input type="text" id="task-lecturer" required placeholder="Nama Dosen Lengkap"
+                            class="w-full px-3.5 py-2 text-sm bg-slate-50 border border-slate-300 rounded-xl focus:ring-2 focus:ring-brand-500 focus:outline-none">
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-700 mb-1">Status Progress Pengerjaan</label>
+                        <select id="task-progress" class="w-full px-3.5 py-2 text-sm bg-slate-50 border border-slate-300 rounded-xl focus:ring-2 focus:ring-brand-500 focus:outline-none">
+                            <option value="Belum dikerjakan">Belum dikerjakan (Merah)</option>
+                            <option value="Dalam pengerjaan">Dalam pengerjaan (Kuning)</option>
+                            <option value="Selesai">Selesai (Hijau)</option>
+                        </select>
+                    </div>
+
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-700 mb-1">Status Pengumpulan</label>
+                        <select id="task-submission" class="w-full px-3.5 py-2 text-sm bg-slate-50 border border-slate-300 rounded-xl focus:ring-2 focus:ring-brand-500 focus:outline-none">
+                            <option value="Belum dikumpulkan">Belum dikumpulkan (Merah)</option>
+                            <option value="Sudah dikumpulkan">Sudah dikumpulkan (Biru)</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Deadline Picker -->
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-700 mb-1">Tanggal Deadline *</label>
+                        <input type="date" id="task-deadline-date" required
+                            class="w-full px-3.5 py-2 text-sm bg-slate-50 border border-slate-300 rounded-xl focus:ring-2 focus:ring-brand-500 focus:outline-none">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-700 mb-1">Jam Deadline *</label>
+                        <input type="time" id="task-deadline-time" required
+                            class="w-full px-3.5 py-2 text-sm bg-slate-50 border border-slate-300 rounded-xl focus:ring-2 focus:ring-brand-500 focus:outline-none">
+                    </div>
+                </div>
+
+                <!-- File Upload Feature with Automated AI Summarizer -->
+                <div class="p-4 bg-slate-50 border border-slate-200 rounded-xl space-y-3">
+                    <label class="block text-xs font-semibold text-slate-700">Upload Lampiran File / Soal Tugas</label>
+                    <input type="file" id="task-file-input" onchange="handleFileUpload(event)" class="text-xs text-slate-600 block w-full file:mr-4 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-xs file:font-semibold file:bg-brand-50 file:text-brand-700 hover:file:bg-brand-100">
+                    
+                    <div id="file-summary-box" class="hidden bg-white p-3 rounded-lg border border-slate-200 text-xs space-y-1">
+                        <div class="flex items-center gap-2 font-semibold text-brand-700">
+                            <i data-lucide="sparkles" class="w-4 h-4 text-brand-600"></i>
+                            <span>Rangkuman Otomatis Poin & Penjelasan File:</span>
+                        </div>
+                        <p id="file-summary-text" class="text-slate-600 leading-relaxed italic"></p>
+                    </div>
+                </div>
+
+                <div class="flex justify-end gap-2 pt-2">
+                    <button type="button" onclick="closeTaskModal()" class="px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 text-sm font-medium rounded-xl transition">Batal</button>
+                    <button type="submit" class="px-5 py-2 bg-brand-600 hover:bg-brand-700 text-white text-sm font-medium rounded-xl transition shadow-md">Simpan Tugas</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- MODAL 3: ADD / EDIT ACTIVITY MODAL -->
+    <div id="modal-activity" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 flex items-center justify-center hidden p-4 overflow-y-auto">
+        <div class="bg-white rounded-2xl shadow-2xl w-full max-w-xl p-6 border border-slate-100 my-8 animate-fade-in">
+            <div class="flex justify-between items-center pb-4 border-b border-slate-100 mb-4">
+                <h3 id="modal-act-title" class="text-lg font-bold text-slate-800">Tambah Agenda Kegiatan</h3>
+                <button onclick="closeActivityModal()" class="text-slate-400 hover:text-slate-600"><i data-lucide="x" class="w-5 h-5"></i></button>
+            </div>
+
+            <form id="form-activity" onsubmit="saveActivity(event)" class="space-y-4">
+                <input type="hidden" id="act-id">
+                
+                <div>
+                    <label class="block text-xs font-semibold text-slate-700 mb-1">Nama Agenda Kegiatan *</label>
+                    <input type="text" id="act-name" required placeholder="Contoh: Rapat Koordinasi Panitia Event"
+                        class="w-full px-3.5 py-2 text-sm bg-slate-50 border border-slate-300 rounded-xl focus:ring-2 focus:ring-brand-500 focus:outline-none">
+                </div>
+
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-700 mb-1">Kriteria Agenda</label>
+                        <select id="act-criteria" class="w-full px-3.5 py-2 text-sm bg-slate-50 border border-slate-300 rounded-xl focus:ring-2 focus:ring-brand-500 focus:outline-none">
+                            <option value="Umum">Umum</option>
+                            <option value="Khusus">Khusus</option>
+                            <option value="Tugas">Tugas</option>
+                        </select>
+                    </div>
+
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-700 mb-1">Status Agenda</label>
+                        <select id="act-status" class="w-full px-3.5 py-2 text-sm bg-slate-50 border border-slate-300 rounded-xl focus:ring-2 focus:ring-brand-500 focus:outline-none">
+                            <option value="Belum terlaksana">Belum terlaksana (Kuning)</option>
+                            <option value="Tidak dihadiri">Tidak dihadiri (Merah)</option>
+                            <option value="Terlaksana">Terlaksana (Biru)</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-700 mb-1">Tanggal Pelaksanaan *</label>
+                        <input type="date" id="act-date" required
+                            class="w-full px-3.5 py-2 text-sm bg-slate-50 border border-slate-300 rounded-xl focus:ring-2 focus:ring-brand-500 focus:outline-none">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-700 mb-1">Jam Pelaksanaan *</label>
+                        <input type="time" id="act-time" required
+                            class="w-full px-3.5 py-2 text-sm bg-slate-50 border border-slate-300 rounded-xl focus:ring-2 focus:ring-brand-500 focus:outline-none">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-700 mb-1">Durasi (Jam) *</label>
+                        <input type="number" id="act-duration" min="1" max="24" value="2" required
+                            class="w-full px-3.5 py-2 text-sm bg-slate-50 border border-slate-300 rounded-xl focus:ring-2 focus:ring-brand-500 focus:outline-none">
+                    </div>
+                </div>
+
+                <div>
+                    <label class="block text-xs font-semibold text-slate-700 mb-1">Lokasi Pelaksanaan *</label>
+                    <input type="text" id="act-location" required placeholder="Contoh: Ruang Seminar 2 / Online Zoom"
+                        class="w-full px-3.5 py-2 text-sm bg-slate-50 border border-slate-300 rounded-xl focus:ring-2 focus:ring-brand-500 focus:outline-none">
+                </div>
+
+                <div class="flex justify-end gap-2 pt-2">
+                    <button type="button" onclick="closeActivityModal()" class="px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 text-sm font-medium rounded-xl transition">Batal</button>
+                    <button type="submit" class="px-5 py-2 bg-brand-600 hover:bg-brand-700 text-white text-sm font-medium rounded-xl transition shadow-md">Simpan Agenda</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- MODAL 4: HOW TO CONVERT HTML TO A LIVE SHAREABLE LINK -->
+    <div id="modal-deploy" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 flex items-center justify-center hidden p-4 overflow-y-auto">
+        <div class="bg-white rounded-2xl shadow-2xl w-full max-w-2xl p-6 border border-slate-100 my-8 animate-fade-in space-y-5">
+            <div class="flex justify-between items-center pb-3 border-b border-slate-100">
+                <div class="flex items-center gap-2 text-brand-600">
+                    <i data-lucide="share-2" class="w-6 h-6"></i>
+                    <h3 class="text-lg font-bold text-slate-800">Cara Mengubah Kode Menjadi Link Aktif (Deploy Online)</h3>
+                </div>
+                <button onclick="closeDeployModal()" class="text-slate-400 hover:text-slate-600"><i data-lucide="x" class="w-5 h-5"></i></button>
+            </div>
+
+            <p class="text-xs text-slate-600 leading-relaxed">
+                Anda dapat mempublikasikan file HTML ini menjadi link website online secara **100% Gratis** agar dapat diakses oleh siapapun dan kapanpun. Berikut pilihan metode termudah:
+            </p>
+
+            <div class="space-y-4">
+                <!-- Method 1: Netlify -->
+                <div class="p-4 bg-slate-50 rounded-xl border border-slate-200 space-y-2">
+                    <h4 class="font-bold text-sm text-slate-800 flex items-center gap-2">
+                        <span class="w-5 h-5 rounded-full bg-emerald-500 text-white text-xs flex items-center justify-center">1</span>
+                        Metode Netlify Drop (Paling Mudah - Tanpa Coding)
+                    </h4>
+                    <ol class="list-decimal list-inside text-xs text-slate-600 space-y-1.5 ml-1">
+                        <li>Simpan kode website ini di komputer Anda dengan nama file <strong>index.html</strong>.</li>
+                        <li>Buka halaman <a href="https://app.netlify.com/drop" target="_blank" class="text-brand-600 font-semibold underline">app.netlify.com/drop</a> di browser.</li>
+                        <li>Drag & drop (Tarik dan lepas) file <strong>index.html</strong> Anda ke area yang disediakan.</li>
+                        <li>Netlify secara instan akan memberikan <strong>Link URL Aktif Website Anda</strong> yang siap dibagikan!</li>
+                    </ol>
+                </div>
+
+                <!-- Method 2: GitHub Pages -->
+                <div class="p-4 bg-slate-50 rounded-xl border border-slate-200 space-y-2">
+                    <h4 class="font-bold text-sm text-slate-800 flex items-center gap-2">
+                        <span class="w-5 h-5 rounded-full bg-brand-600 text-white text-xs flex items-center justify-center">2</span>
+                        Metode GitHub Pages
+                    </h4>
+                    <ol class="list-decimal list-inside text-xs text-slate-600 space-y-1.5 ml-1">
+                        <li>Buat repository baru di <a href="https://github.com" target="_blank" class="text-brand-600 font-semibold underline">GitHub.com</a> (Set Public).</li>
+                        <li>Upload file <strong>index.html</strong> ke repository tersebut.</li>
+                        <li>Masuk ke menu <strong>Settings</strong> &gt; <strong>Pages</strong>.</li>
+                        <li>Pada bagian Branch, pilih <strong>main / master</strong> lalu klik <strong>Save</strong>.</li>
+                        <li>Tunggu 1 menit, link HTTPS website gratis Anda akan aktif.</li>
+                    </ol>
+                </div>
+
+                <!-- Method 3: Vercel -->
+                <div class="p-4 bg-slate-50 rounded-xl border border-slate-200 space-y-2">
+                    <h4 class="font-bold text-sm text-slate-800 flex items-center gap-2">
+                        <span class="w-5 h-5 rounded-full bg-slate-800 text-white text-xs flex items-center justify-center">3</span>
+                        Metode Vercel Drag & Drop
+                    </h4>
+                    <p class="text-xs text-slate-600">
+                        Buka <a href="https://vercel.com" target="_blank" class="text-brand-600 font-semibold underline">Vercel.com</a>, buat akun, lalu import file/repository Anda untuk mendapatkan domain kustom dan server SSL instan gratis.
+                    </p>
+                </div>
+            </div>
+
+            <div class="pt-2 flex justify-end">
+                <button onclick="closeDeployModal()" class="px-5 py-2 bg-slate-800 hover:bg-slate-900 text-white text-sm font-medium rounded-xl transition">
+                    Tutup Panduan
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // State Storage Keys
+        const STORAGE_KEY_TASKS = 'TASKTIME_TASKS_DATA_V1';
+        const STORAGE_KEY_ACTIVITIES = 'TASKTIME_ACTIVITIES_DATA_V1';
+        const STORAGE_KEY_AUTH = 'TASKTIME_AUTH_STATE';
+
+        // Security PIN Constant
+        const REQUIRED_PIN = "TOMMY";
+
+        // Global Application State
+        let currentTab = 'dashboard';
+        let isAuthenticated = false;
+        let tasks = [];
+        let activities = [];
+        let currentUploadedSummary = "";
+        let statusChartInstance = null;
+
+        // Initialize Application
+        window.onload = function() {
+            lucide.createIcons();
+            loadState();
+            setupClock();
+            checkAutoCleanupAndNotifications();
+            setInterval(checkAutoCleanupAndNotifications, 60000); // Check every minute
+            renderView();
+        };
+
+        // Realtime Clock Header Update
+        function setupClock() {
+            function updateTime() {
+                const now = new Date();
+                const dateOptions = { weekday: 'long', year: 'numeric', month: 'short', day: 'numeric' };
+                document.getElementById('current-date-text').innerText = now.toLocaleDateString('id-ID', dateOptions);
+                document.getElementById('current-time-text').innerText = now.toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' }) + ' WIB';
+            }
+            updateTime();
+            setInterval(updateTime, 1000);
+        }
+
+        // Load stored state
+        function loadState() {
+            tasks = JSON.parse(localStorage.getItem(STORAGE_KEY_TASKS)) || getInitialTasksSample();
+            activities = JSON.parse(localStorage.getItem(STORAGE_KEY_ACTIVITIES)) || getInitialActivitiesSample();
+            isAuthenticated = localStorage.getItem(STORAGE_KEY_AUTH) === 'true';
+            updateAuthUI();
+        }
+
+        function saveTasksToStorage() {
+            localStorage.setItem(STORAGE_KEY_TASKS, JSON.stringify(tasks));
+        }
+
+        function saveActivitiesToStorage() {
+            localStorage.setItem(STORAGE_KEY_ACTIVITIES, JSON.stringify(activities));
+        }
+
+        // Tab Switching & Authentication Enforcement
+        function switchTab(tabName) {
+            if ((tabName === 'tasks' || tabName === 'activities') && !isAuthenticated) {
+                openAuthModal();
+                return;
+            }
+
+            currentTab = tabName;
+            
+            // Update Tab Nav Aesthetics
+            ['dashboard', 'tasks', 'activities'].forEach(t => {
+                const btn = document.getElementById(`nav-${t}`);
+                if (t === tabName) {
+                    btn.classList.add('bg-slate-800', 'text-white');
+                    btn.classList.remove('text-slate-300');
+                } else {
+                    btn.classList.remove('bg-slate-800', 'text-white');
+                    btn.classList.add('text-slate-300');
+                }
+
+                const viewSection = document.getElementById(`view-${t}`);
+                if (t === tabName) {
+                    viewSection.classList.remove('hidden');
+                } else {
+                    viewSection.classList.add('hidden');
+                }
+            });
+
+            // Update Header Title
+            const titleMap = {
+                dashboard: ['Dashboard Utama', 'Ringkasan status tugas, kegiatan, dan jadwal mendatang.'],
+                tasks: ['Manajemen Tugas', 'Kelola pengerjaan tugas, deadline, dan file rangkuman.'],
+                activities: ['Manajemen Waktu & Kegiatan', 'Jadwal agenda kegiatan, jam pelaksanaan, dan notifikasi.']
+            };
+            document.getElementById('page-title').innerText = titleMap[tabName][0];
+            document.getElementById('page-subtitle').innerText = titleMap[tabName][1];
+
+            renderView();
+        }
+
+        // Auth Authentication Actions
+        function openAuthModal() {
+            document.getElementById('pin-error').classList.add('hidden');
+            document.getElementById('input-pin').value = '';
+            document.getElementById('modal-auth').classList.remove('hidden');
+        }
+
+        function closeAuthModal() {
+            document.getElementById('modal-auth').classList.add('hidden');
+        }
+
+        function handlePinSubmit(e) {
+            e.preventDefault();
+            const inputVal = document.getElementById('input-pin').value.trim();
+            if (inputVal === REQUIRED_PIN) {
+                isAuthenticated = true;
+                localStorage.setItem(STORAGE_KEY_AUTH, 'true');
+                updateAuthUI();
+                closeAuthModal();
+                if (currentTab === 'dashboard') {
+                    switchTab('tasks');
+                } else {
+                    renderView();
+                }
+            } else {
+                document.getElementById('pin-error').classList.remove('hidden');
+            }
+        }
+
+        function toggleAuthModal() {
+            if (isAuthenticated) {
+                // Logout
+                isAuthenticated = false;
+                localStorage.setItem(STORAGE_KEY_AUTH, 'false');
+                updateAuthUI();
+                switchTab('dashboard');
+            } else {
+                openAuthModal();
+            }
+        }
+
+        function updateAuthUI() {
+            const nameEl = document.getElementById('auth-user-name');
+            const roleEl = document.getElementById('auth-user-role');
+            const btnEl = document.getElementById('auth-btn');
+            const avatarBg = document.getElementById('auth-avatar-bg');
+
+            const lockTasks = document.getElementById('lock-icon-tasks');
+            const lockAct = document.getElementById('lock-icon-activities');
+
+            if (isAuthenticated) {
+                nameEl.innerText = "Admin (Tommy)";
+                roleEl.innerText = "Akses Penuh Pengelola";
+                btnEl.innerText = "Logout";
+                btnEl.className = "text-xs bg-rose-600 hover:bg-rose-700 text-white px-2.5 py-1.5 rounded-lg transition font-medium";
+                avatarBg.className = "w-8 h-8 rounded-full bg-emerald-600 flex items-center justify-center text-white font-bold text-xs";
+                avatarBg.innerText = "T";
+                lockTasks.className = "w-4 h-4 ml-auto text-emerald-400";
+                lockAct.className = "w-4 h-4 ml-auto text-emerald-400";
+            } else {
+                nameEl.innerText = "Guest Mode";
+                roleEl.innerText = "Akses Terbatas";
+                btnEl.innerText = "Login";
+                btnEl.className = "text-xs bg-brand-600 hover:bg-brand-700 text-white px-2.5 py-1.5 rounded-lg transition font-medium";
+                avatarBg.className = "w-8 h-8 rounded-full bg-slate-700 flex items-center justify-center text-slate-300 font-bold text-xs";
+                avatarBg.innerText = "?";
+                lockTasks.className = "w-4 h-4 ml-auto text-amber-500";
+                lockAct.className = "w-4 h-4 ml-auto text-amber-500";
+            }
+        }
+
+        // Deploy Modal controls
+        function openDeployModal() { document.getElementById('modal-deploy').classList.remove('hidden'); }
+        function closeDeployModal() { document.getElementById('modal-deploy').classList.add('hidden'); }
+
+        function renderView() {
+            if (currentTab === 'dashboard') {
+                renderDashboard();
+            } else if (currentTab === 'tasks') {
+                renderTasks();
+            } else if (currentTab === 'activities') {
+                renderActivities();
+            }
+            lucide.createIcons();
+        }
+
+        // Render Dashboard Statistics & Agenda Preview
+        function renderDashboard() {
+            // Task statistics
+            const totalTasks = tasks.length;
+            const doneTasks = tasks.filter(t => t.progressStatus === 'Selesai').length;
+            const pendingTasks = tasks.filter(t => t.progressStatus === 'Belum dikerjakan').length;
+            const progressTasks = tasks.filter(t => t.progressStatus === 'Dalam pengerjaan').length;
+            const unsubmittedTasks = tasks.filter(t => t.submissionStatus === 'Belum dikumpulkan').length;
+
+            document.getElementById('stat-total-tasks').innerText = totalTasks;
+            document.getElementById('stat-pending-tasks').innerText = pendingTasks;
+            document.getElementById('stat-tasks-done-badge').innerText = `${doneTasks} Selesai`;
+            document.getElementById('stat-unsubmitted-tasks').innerText = unsubmittedTasks;
+
+            // Activity statistics
+            const totalAct = activities.length;
+            const doneAct = activities.filter(a => a.status === 'Terlaksana').length;
+            document.getElementById('stat-total-activities').innerText = totalAct;
+            document.getElementById('stat-act-done-badge').innerText = `${doneAct} Terlaksana`;
+
+            // Chart Rendering
+            renderChart(pendingTasks, progressTasks, doneTasks);
+
+            // Upcoming Agendas List Rendering
+            const agendaContainer = document.getElementById('dashboard-agenda-list');
+            const allItems = [
+                ...tasks.map(t => ({ title: t.name, date: `${t.deadlineDate} ${t.deadlineTime}`, type: 'Tugas', detail: `Dosen: ${t.lecturer}`, badge: t.progressStatus })),
+                ...activities.map(a => ({ title: a.name, date: `${a.date} ${a.time}`, type: 'Agenda', detail: `Lokasi: ${a.location}`, badge: a.status }))
+            ].sort((a, b) => new Date(a.date) - new Date(b.date));
+
+            if (allItems.length === 0) {
+                agendaContainer.innerHTML = `<p class="text-xs text-slate-400 italic text-center py-8">Belum ada agenda atau tugas yang terdaftar.</p>`;
+                return;
+            }
+
+            agendaContainer.innerHTML = allItems.map(item => `
+                <div class="p-3 bg-slate-50 border border-slate-100 rounded-xl flex items-center justify-between hover:bg-slate-100 transition">
+                    <div class="flex items-center gap-3">
+                        <div class="p-2 rounded-lg ${item.type === 'Tugas' ? 'bg-indigo-100 text-indigo-700' : 'bg-amber-100 text-amber-700'}">
+                            <i data-lucide="${item.type === 'Tugas' ? 'file-text' : 'calendar'}" class="w-4 h-4"></i>
+                        </div>
+                        <div>
+                            <h4 class="text-xs font-bold text-slate-800">${escapeHtml(item.title)}</h4>
+                            <p class="text-[11px] text-slate-500">${item.detail} • <span class="font-semibold text-slate-600">${formatDateTimeIndo(item.date)}</span></p>
+                        </div>
+                    </div>
+                    <span class="text-[10px] px-2 py-1 rounded-md font-semibold ${getBadgeColorClass(item.badge)}">${item.badge}</span>
+                </div>
+            `).join('');
+        }
+
+        // Render Status Progress Chart JS
+        function renderChart(pending, progress, done) {
+            const ctx = document.getElementById('taskStatusChart').getContext('2d');
+            if (statusChartInstance) {
+                statusChartInstance.destroy();
+            }
+            statusChartInstance = new Chart(ctx, {
+                type: 'doughnut',
+                data: {
+                    labels: ['Belum dikerjakan', 'Dalam pengerjaan', 'Selesai'],
+                    datasets: [{
+                        data: [pending, progress, done],
+                        backgroundColor: ['#ef4444', '#f59e0b', '#10b981'],
+                        borderWidth: 2,
+                        borderColor: '#ffffff'
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: { legend: { display: false } },
+                    cutout: '70%'
+                }
+            });
+        }
+
+        // Render Task Cards Grid
+        function renderTasks() {
+            const container = document.getElementById('tasks-container');
+            const searchVal = document.getElementById('task-search').value.toLowerCase();
+            const filterStatus = document.getElementById('task-filter-status').value;
+
+            const filtered = tasks.filter(t => {
+                const matchesSearch = t.name.toLowerCase().includes(searchVal) || t.lecturer.toLowerCase().includes(searchVal);
+                const matchesStatus = filterStatus === 'ALL' || t.progressStatus === filterStatus;
+                return matchesSearch && matchesStatus;
+            });
+
+            if (filtered.length === 0) {
+                container.innerHTML = `
+                    <div class="col-span-full py-12 text-center bg-white rounded-2xl border border-dashed border-slate-300">
+                        <i data-lucide="folder-open" class="w-10 h-10 text-slate-300 mx-auto mb-2"></i>
+                        <p class="text-sm font-medium text-slate-600">Tidak ada data tugas ditemukan.</p>
+                        <p class="text-xs text-slate-400 mt-1">Klik "Tambah Tugas Baru" untuk menambahkan.</p>
+                    </div>`;
+                return;
+            }
+
+            container.innerHTML = filtered.map(t => {
+                // Color badges matching requirements:
+                // Belum dikerjakan -> Merah (#ef4444)
+                // Dalam pengerjaan -> Kuning (#f59e0b)
+                // Selesai -> Hijau (#10b981)
+                // Belum dikumpulkan -> Merah (#ef4444)
+                // Sudah dikumpulkan -> Biru (#3b82f6)
+                const progressColor = t.progressStatus === 'Belum dikerjakan' ? 'bg-rose-500 text-white' : 
+                                      t.progressStatus === 'Dalam pengerjaan' ? 'bg-amber-500 text-white' : 'bg-emerald-500 text-white';
+
+                const subColor = t.submissionStatus === 'Belum dikumpulkan' ? 'bg-rose-100 text-rose-700 border-rose-200' : 'bg-blue-100 text-blue-700 border-blue-200';
+
+                return `
+                <div class="bg-white rounded-2xl border border-slate-200/80 p-5 shadow-sm hover:shadow-md transition flex flex-col justify-between space-y-4">
+                    <div>
+                        <!-- Header Badges -->
+                        <div class="flex items-center justify-between gap-2 mb-3">
+                            <span class="text-[11px] font-semibold px-2.5 py-1 rounded-lg ${progressColor} shadow-sm">
+                                ${t.progressStatus}
+                            </span>
+                            <span class="text-[11px] font-semibold px-2.5 py-1 rounded-lg border ${subColor}">
+                                ${t.submissionStatus}
+                            </span>
+                        </div>
+
+                        <!-- Title & Type -->
+                        <h4 class="font-bold text-slate-800 text-base leading-snug mb-1">${escapeHtml(t.name)}</h4>
+                        <div class="flex items-center gap-2 text-xs text-slate-500 mb-3">
+                            <span class="bg-slate-100 px-2 py-0.5 rounded text-slate-600 font-medium">${t.type}</span>
+                            <span>•</span>
+                            <span>Dosen: <strong class="text-slate-700">${escapeHtml(t.lecturer)}</strong></span>
+                        </div>
+
+                        <!-- Deadline Details -->
+                        <div class="bg-slate-50 p-3 rounded-xl border border-slate-100 space-y-1 text-xs">
+                            <div class="flex items-center justify-between text-slate-600">
+                                <span class="flex items-center gap-1.5 text-slate-500"><i data-lucide="clock" class="w-3.5 h-3.5 text-rose-500"></i> Deadline:</span>
+                                <span class="font-bold text-rose-600">${formatDayDate(t.deadlineDate)}, ${t.deadlineTime} WIB</span>
+                            </div>
+                        </div>
+
+                        <!-- AI Summary File Box if exists -->
+                        ${t.fileSummary ? `
+                        <div class="mt-3 p-3 bg-indigo-50/60 border border-indigo-100 rounded-xl text-xs space-y-1">
+                            <div class="flex items-center gap-1.5 text-brand-700 font-bold">
+                                <i data-lucide="sparkles" class="w-3.5 h-3.5"></i>
+                                <span>Rangkuman Lampiran File:</span>
+                            </div>
+                            <p class="text-slate-600 text-[11px] leading-relaxed italic">${escapeHtml(t.fileSummary)}</p>
+                        </div>
+                        ` : ''}
+                    </div>
+
+                    <!-- Quick Status Change & Action Buttons -->
+                    <div class="pt-3 border-t border-slate-100 space-y-2">
+                        <div class="grid grid-cols-2 gap-2 text-xs">
+                            <button onclick="toggleTaskProgress('${t.id}')" class="py-1.5 px-2 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-lg text-center transition font-medium">
+                                Ubah Progress
+                            </button>
+                            <button onclick="toggleTaskSubmission('${t.id}')" class="py-1.5 px-2 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-lg text-center transition font-medium">
+                                Ubah Pengumpulan
+                            </button>
+                        </div>
+
+                        <div class="flex justify-end gap-2 pt-1">
+                            <button onclick="editTask('${t.id}')" class="p-2 text-slate-500 hover:text-brand-600 hover:bg-slate-100 rounded-lg transition" title="Edit Tugas">
+                                <i data-lucide="edit-3" class="w-4 h-4"></i>
+                            </button>
+                            <button onclick="deleteTask('${t.id}')" class="p-2 text-slate-500 hover:text-rose-600 hover:bg-rose-50 rounded-lg transition" title="Hapus Tugas Permanen">
+                                <i data-lucide="trash-2" class="w-4 h-4"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>`;
+            }).join('');
+            lucide.createIcons();
+        }
+
+        // Task CRUD Actions
+        function openTaskModal(editId = null) {
+            if (!isAuthenticated) { openAuthModal(); return; }
+            const form = document.getElementById('form-task');
+            form.reset();
+            document.getElementById('file-summary-box').classList.add('hidden');
+            currentUploadedSummary = "";
+
+            if (editId) {
+                const t = tasks.find(item => item.id === editId);
+                if (t) {
+                    document.getElementById('modal-task-title').innerText = "Edit Tugas";
+                    document.getElementById('task-id').value = t.id;
+                    document.getElementById('task-name').value = t.name;
+                    document.getElementById('task-type').value = t.type;
+                    document.getElementById('task-lecturer').value = t.lecturer;
+                    document.getElementById('task-progress').value = t.progressStatus;
+                    document.getElementById('task-submission').value = t.submissionStatus;
+                    document.getElementById('task-deadline-date').value = t.deadlineDate;
+                    document.getElementById('task-deadline-time').value = t.deadlineTime;
+                    
+                    if (t.fileSummary) {
+                        currentUploadedSummary = t.fileSummary;
+                        document.getElementById('file-summary-text').innerText = t.fileSummary;
+                        document.getElementById('file-summary-box').classList.remove('hidden');
+                    }
+                }
+            } else {
+                document.getElementById('modal-task-title').innerText = "Tambah Tugas Baru";
+                document.getElementById('task-id').value = '';
+            }
+
+            document.getElementById('modal-task').classList.remove('hidden');
+        }
+
+        function closeTaskModal() { document.getElementById('modal-task').classList.add('hidden'); }
+
+        function handleFileUpload(e) {
+            const file = e.target.files[0];
+            if (!file) return;
+
+            // Generate Smart Automated Summary Simulation based on uploaded file name and content type
+            const summaries = [
+                `Dokumen '${file.name}' berhasil dianalisis: 1. Berisi acuan pengerjaan modul. 2. Memerlukan analisis studi kasus dan penyusunan kesimpulan. 3. Pastikan format penulisan sesuai standar akademik.`,
+                `Rangkuman File (${file.name}): Poin utama mencakup penyelesaian soal latihan, batasan bab 1-4, serta lampiran kode/referensi pendukung.`,
+                `File Terdeteksi '${file.name}': Rangkuman poin - Poin A: Tinjauan Pustaka; Poin B: Pembahasan Hasil Utama; Poin C: Kesimpulan dan Rekomendasi.`
+            ];
+            
+            currentUploadedSummary = summaries[Math.floor(Math.random() * summaries.length)];
+            document.getElementById('file-summary-text').innerText = currentUploadedSummary;
+            document.getElementById('file-summary-box').classList.remove('hidden');
+        }
+
+        function saveTask(e) {
+            e.preventDefault();
+            const id = document.getElementById('task-id').value;
+            const name = document.getElementById('task-name').value.trim();
+            const type = document.getElementById('task-type').value;
+            const lecturer = document.getElementById('task-lecturer').value.trim();
+            const progressStatus = document.getElementById('task-progress').value;
+            const submissionStatus = document.getElementById('task-submission').value;
+            const deadlineDate = document.getElementById('task-deadline-date').value;
+            const deadlineTime = document.getElementById('task-deadline-time').value;
+
+            if (id) {
+                // Update
+                const index = tasks.findIndex(t => t.id === id);
+                if (index !== -1) {
+                    tasks[index] = { ...tasks[index], name, type, lecturer, progressStatus, submissionStatus, deadlineDate, deadlineTime, fileSummary: currentUploadedSummary || tasks[index].fileSummary };
+                }
+            } else {
+                // Create
+                const newTask = {
+                    id: 'task_' + Date.now(),
+                    name, type, lecturer, progressStatus, submissionStatus, deadlineDate, deadlineTime,
+                    fileSummary: currentUploadedSummary
+                };
+                tasks.push(newTask);
+            }
+
+            saveTasksToStorage();
+            closeTaskModal();
+            renderTasks();
+        }
+
+        function toggleTaskProgress(id) {
+            const t = tasks.find(item => item.id === id);
+            if (!t) return;
+            const statuses = ['Belum dikerjakan', 'Dalam pengerjaan', 'Selesai'];
+            const nextIdx = (statuses.indexOf(t.progressStatus) + 1) % statuses.length;
+            t.progressStatus = statuses[nextIdx];
+            saveTasksToStorage();
+            renderTasks();
+        }
+
+        function toggleTaskSubmission(id) {
+            const t = tasks.find(item => item.id === id);
+            if (!t) return;
+            t.submissionStatus = t.submissionStatus === 'Belum dikumpulkan' ? 'Sudah dikumpulkan' : 'Belum dikumpulkan';
+            saveTasksToStorage();
+            renderTasks();
+        }
+
+        function editTask(id) { openTaskModal(id); }
+
+        function deleteTask(id) {
+            if (confirm("Apakah Anda yakin ingin menghapus tugas ini secara permanen?")) {
+                tasks = tasks.filter(t => t.id !== id);
+                saveTasksToStorage();
+                renderTasks();
+            }
+        }
+
+        // Render Activities Cards Grid
+        function renderActivities() {
+            const container = document.getElementById('activities-container');
+            const searchVal = document.getElementById('act-search').value.toLowerCase();
+            const filterStatus = document.getElementById('act-filter-status').value;
+
+            const filtered = activities.filter(a => {
+                const matchesSearch = a.name.toLowerCase().includes(searchVal) || a.location.toLowerCase().includes(searchVal);
+                const matchesStatus = filterStatus === 'ALL' || a.status === filterStatus;
+                return matchesSearch && matchesStatus;
+            });
+
+            if (filtered.length === 0) {
+                container.innerHTML = `
+                    <div class="col-span-full py-12 text-center bg-white rounded-2xl border border-dashed border-slate-300">
+                        <i data-lucide="calendar-off" class="w-10 h-10 text-slate-300 mx-auto mb-2"></i>
+                        <p class="text-sm font-medium text-slate-600">Tidak ada agenda kegiatan ditemukan.</p>
+                        <p class="text-xs text-slate-400 mt-1">Klik "Tambah Agenda Kegiatan" untuk menambahkan.</p>
+                    </div>`;
+                return;
+            }
+
+            container.innerHTML = filtered.map(a => {
+                // Color badges matching requirement #4:
+                // Belum terlaksana -> Yellow badge (#f59e0b)
+                // Tidak dihadiri -> Red badge (#ef4444)
+                // Terlaksana / Sudah selesai -> Blue badge (#3b82f6)
+                const badgeStyle = a.status === 'Belum terlaksana' ? 'bg-amber-500 text-white' :
+                                 a.status === 'Tidak dihadiri' ? 'bg-rose-500 text-white' : 'bg-blue-600 text-white';
+
+                return `
+                <div class="bg-white rounded-2xl border border-slate-200/80 p-5 shadow-sm hover:shadow-md transition flex flex-col justify-between space-y-4">
+                    <div>
+                        <!-- Header Badges -->
+                        <div class="flex items-center justify-between gap-2 mb-3">
+                            <span class="text-[11px] font-semibold px-2.5 py-1 rounded-lg ${badgeStyle} shadow-sm">
+                                ${a.status}
+                            </span>
+                            <span class="text-[11px] font-medium px-2 py-0.5 rounded bg-slate-100 text-slate-600">
+                                Kriteria: ${a.criteria}
+                            </span>
+                        </div>
+
+                        <!-- Title -->
+                        <h4 class="font-bold text-slate-800 text-base leading-snug mb-2">${escapeHtml(a.name)}</h4>
+
+                        <!-- Activity Time & Location Details -->
+                        <div class="bg-slate-50 p-3 rounded-xl border border-slate-100 space-y-2 text-xs">
+                            <div class="flex items-center gap-2 text-slate-600">
+                                <i data-lucide="calendar" class="w-4 h-4 text-brand-600"></i>
+                                <span>${formatDayDate(a.date)}</span>
+                            </div>
+                            <div class="flex items-center gap-2 text-slate-600">
+                                <i data-lucide="clock" class="w-4 h-4 text-brand-600"></i>
+                                <span>Pukul ${a.time} WIB (Durasi: ${a.duration} Jam)</span>
+                            </div>
+                            <div class="flex items-center gap-2 text-slate-600">
+                                <i data-lucide="map-pin" class="w-4 h-4 text-rose-500"></i>
+                                <span class="font-medium text-slate-700">${escapeHtml(a.location)}</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Quick Status Change & Action Buttons -->
+                    <div class="pt-3 border-t border-slate-100 flex items-center justify-between">
+                        <select onchange="changeActivityStatus('${a.id}', this.value)" class="text-xs bg-slate-100 border border-slate-200 rounded-lg px-2.5 py-1.5 focus:outline-none focus:ring-1 focus:ring-brand-500">
+                            <option value="Belum terlaksana" ${a.status === 'Belum terlaksana' ? 'selected' : ''}>Belum terlaksana</option>
+                            <option value="Tidak dihadiri" ${a.status === 'Tidak dihadiri' ? 'selected' : ''}>Tidak dihadiri</option>
+                            <option value="Terlaksana" ${a.status === 'Terlaksana' ? 'selected' : ''}>Terlaksana</option>
+                        </select>
+
+                        <div class="flex gap-1">
+                            <button onclick="editActivity('${a.id}')" class="p-2 text-slate-500 hover:text-brand-600 hover:bg-slate-100 rounded-lg transition" title="Edit Agenda">
+                                <i data-lucide="edit-3" class="w-4 h-4"></i>
+                            </button>
+                            <button onclick="deleteActivity('${a.id}')" class="p-2 text-slate-500 hover:text-rose-600 hover:bg-rose-50 rounded-lg transition" title="Hapus Agenda">
+                                <i data-lucide="trash-2" class="w-4 h-4"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>`;
+            }).join('');
+            lucide.createIcons();
+        }
+
+        // Activity CRUD Actions
+        function openActivityModal(editId = null) {
+            if (!isAuthenticated) { openAuthModal(); return; }
+            const form = document.getElementById('form-activity');
+            form.reset();
+
+            if (editId) {
+                const a = activities.find(item => item.id === editId);
+                if (a) {
+                    document.getElementById('modal-act-title').innerText = "Edit Agenda Kegiatan";
+                    document.getElementById('act-id').value = a.id;
+                    document.getElementById('act-name').value = a.name;
+                    document.getElementById('act-criteria').value = a.criteria;
+                    document.getElementById('act-status').value = a.status;
+                    document.getElementById('act-date').value = a.date;
+                    document.getElementById('act-time').value = a.time;
+                    document.getElementById('act-duration').value = a.duration;
+                    document.getElementById('act-location').value = a.location;
+                }
+            } else {
+                document.getElementById('modal-act-title').innerText = "Tambah Agenda Kegiatan";
+                document.getElementById('act-id').value = '';
+            }
+
+            document.getElementById('modal-activity').classList.remove('hidden');
+        }
+
+        function closeActivityModal() { document.getElementById('modal-activity').classList.add('hidden'); }
+
+        function saveActivity(e) {
+            e.preventDefault();
+            const id = document.getElementById('act-id').value;
+            const name = document.getElementById('act-name').value.trim();
+            const criteria = document.getElementById('act-criteria').value;
+            const status = document.getElementById('act-status').value;
+            const date = document.getElementById('act-date').value;
+            const time = document.getElementById('act-time').value;
+            const duration = document.getElementById('act-duration').value;
+            const location = document.getElementById('act-location').value.trim();
+
+            if (id) {
+                // Edit
+                const idx = activities.findIndex(a => a.id === id);
+                if (idx !== -1) {
+                    activities[idx] = { ...activities[idx], name, criteria, status, date, time, duration, location };
+                }
+            } else {
+                // Create
+                const newAct = { id: 'act_' + Date.now(), name, criteria, status, date, time, duration, location };
+                activities.push(newAct);
+            }
+
+            saveActivitiesToStorage();
+            closeActivityModal();
+            renderActivities();
+            checkAutoCleanupAndNotifications();
+        }
+
+        function changeActivityStatus(id, newStatus) {
+            const a = activities.find(item => item.id === id);
+            if (!a) return;
+            a.status = newStatus;
+            saveActivitiesToStorage();
+            renderActivities();
+        }
+
+        function editActivity(id) { openActivityModal(id); }
+
+        function deleteActivity(id) {
+            if (confirm("Apakah Anda yakin ingin menghapus agenda kegiatan ini?")) {
+                activities = activities.filter(a => a.id !== id);
+                saveActivitiesToStorage();
+                renderActivities();
+            }
+        }
+
+        // Requirement #11 & #18: Auto-deletes activities 6 hours post execution, and triggers notifications 6h & 2h before
+        function checkAutoCleanupAndNotifications() {
+            const now = new Date();
+            let stateChanged = false;
+            const notifications = [];
+
+            activities = activities.filter(act => {
+                const actStart = new Date(`${act.date}T${act.time}`);
+                const durationHours = parseFloat(act.duration) || 1;
+                const actEnd = new Date(actStart.getTime() + (durationHours * 3600000));
+                const cleanupTime = new Date(actEnd.getTime() + (6 * 3600000)); // 6 Hours after completion
+
+                // Requirement #11: Auto cleanup 6 hours after completion
+                if (now >= cleanupTime) {
+                    stateChanged = true;
+                    return false; // Remove activity
+                }
+
+                // Requirement #18: Notifications 6 hours and 2 hours before activity
+                const hoursToStart = (actStart - now) / (1000 * 3600);
+                if (hoursToStart > 0 && hoursToStart <= 6) {
+                    if (hoursToStart <= 2) {
+                        notifications.push({
+                            title: `Peringatan 2 Jam: ${act.name}`,
+                            desc: `Kegiatan dimulai pukul ${act.time} WIB di ${act.location}.`,
+                            urgent: true
+                        });
+                    } else {
+                        notifications.push({
+                            title: `Pengingat 6 Jam: ${act.name}`,
+                            desc: `Kegiatan dijadwalkan hari ini pukul ${act.time} WIB.`,
+                            urgent: false
+                        });
+                    }
+                }
+
+                return true;
+            });
+
+            if (stateChanged) {
+                saveActivitiesToStorage();
+                if (currentTab === 'activities' || currentTab === 'dashboard') {
+                    renderView();
+                }
+            }
+
+            // Render Notifications Banner
+            const bannerContainer = document.getElementById('notification-banner-container');
+            if (notifications.length > 0) {
+                bannerContainer.classList.remove('hidden');
+                bannerContainer.innerHTML = notifications.map(n => `
+                    <div class="${n.urgent ? 'bg-rose-50 border-rose-200 text-rose-800' : 'bg-amber-50 border-amber-200 text-amber-800'} p-3 rounded-xl border flex items-center justify-between shadow-sm animate-fade-in mb-2">
+                        <div class="flex items-center gap-2 text-xs">
+                            <i data-lucide="${n.urgent ? 'bell-ring' : 'bell'}" class="w-4 h-4 ${n.urgent ? 'text-rose-600' : 'text-amber-600'}"></i>
+                            <div>
+                                <strong>${escapeHtml(n.title)}:</strong> ${escapeHtml(n.desc)}
+                            </div>
+                        </div>
+                    </div>
+                `).join('');
+                lucide.createIcons();
+            } else {
+                bannerContainer.classList.add('hidden');
+            }
+        }
+
+        // Utility Date Formatting Functions
+        function formatDayDate(dateStr) {
+            if (!dateStr) return '-';
+            const date = new Date(dateStr + 'T00:00:00');
+            const options = { weekday: 'long', year: 'numeric', month: 'short', day: 'numeric' };
+            return date.toLocaleDateString('id-ID', options);
+        }
+
+        function formatDateTimeIndo(dateTimeStr) {
+            if (!dateTimeStr) return '-';
+            const date = new Date(dateTimeStr.replace(' ', 'T'));
+            if (isNaN(date.getTime())) return dateTimeStr;
+            return date.toLocaleDateString('id-ID', { day: 'numeric', month: 'short' }) + ', ' + date.toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' });
+        }
+
+        function getBadgeColorClass(badgeText) {
+            switch (badgeText) {
+                case 'Belum dikerjakan': case 'Tidak dihadiri': return 'bg-rose-100 text-rose-700';
+                case 'Dalam pengerjaan': case 'Belum terlaksana': return 'bg-amber-100 text-amber-700';
+                case 'Selesai': return 'bg-emerald-100 text-emerald-700';
+                case 'Terlaksana': case 'Sudah dikumpulkan': return 'bg-blue-100 text-blue-700';
+                default: return 'bg-slate-100 text-slate-700';
+            }
+        }
+
+        function escapeHtml(text) {
+            if (!text) return '';
+            return text.replace(/[&<>"']/g, function(m) {
+                return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#039;' }[m];
+            });
+        }
+
+        // Sample initial datasets for empty first-run states
+        function getInitialTasksSample() {
+            const today = new Date().toISOString().split('T')[0];
+            return [
+                {
+                    id: 'task_demo_1',
+                    name: 'Membuat Laporan Praktikum Basis Data',
+                    type: 'Individu',
+                    lecturer: 'Dr. Ahmad Dahlan, M.Kom',
+                    progressStatus: 'Belum dikerjakan',
+                    submissionStatus: 'Belum dikumpulkan',
+                    deadlineDate: today,
+                    deadlineTime: '23:59',
+                    fileSummary: 'Petunjuk praktikum: Kerjakan modul ERD dan normalisasi hingga bentuk 3NF. Sertakan screenshot query SQL.'
+                },
+                {
+                    id: 'task_demo_2',
+                    name: 'Presentasi Proyek Web Mobile',
+                    type: 'Kelompok',
+                    lecturer: 'Siti Nurhaliza, M.T',
+                    progressStatus: 'Dalam pengerjaan',
+                    submissionStatus: 'Belum dikumpulkan',
+                    deadlineDate: today,
+                    deadlineTime: '15:00',
+                    fileSummary: 'Outline presentasi: Arsitektur UI, integrasi REST API, serta pengujian daya respon pada perangkat mobile.'
+                }
+            ];
+        }
+
+        function getInitialActivitiesSample() {
+            const today = new Date().toISOString().split('T')[0];
+            return [
+                {
+                    id: 'act_demo_1',
+                    name: 'Rapat Organisasi Mahasiswa',
+                    criteria: 'Khusus',
+                    status: 'Belum terlaksana',
+                    date: today,
+                    time: '14:00',
+                    duration: '2',
+                    location: 'Ruang Seminar Utama'
+                },
+                {
+                    id: 'act_demo_2',
+                    name: 'Kuliah Tamu Industri AI',
+                    criteria: 'Umum',
+                    status: 'Terlaksana',
+                    date: today,
+                    time: '09:00',
+                    duration: '3',
+                    location: 'Auditorium Gedung B'
+                }
+            ];
+        }
+    </script>
+</body>
+</html>
