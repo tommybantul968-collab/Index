@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Workspace Hub - Tugas, Kegiatan & Rekap Anggaran</title>
+  <title>Tommy Time Pro - Tugas, Kegiatan & Rekap Anggaran</title>
   
   <!-- Tailwind CSS CDN -->
   <script src="https://cdn.tailwindcss.com"></script>
@@ -59,8 +59,8 @@
       <nav class="hidden md:flex items-center space-x-1 bg-slate-100 p-1 rounded-xl border border-slate-200/80">
         <button onclick="switchPage('dashboard')" id="nav-dashboard" class="px-3.5 py-1.5 text-xs font-semibold rounded-lg transition-all">Dashboard</button>
         <button onclick="switchPage('tasks')" id="nav-tasks" class="px-3.5 py-1.5 text-xs font-semibold rounded-lg transition-all">Manajemen Tugas</button>
-        <button onclick="switchPage('agenda')" id="nav-agenda" class="px-3.5 py-1.5 text-xs font-semibold rounded-lg transition-all">Waktu & Kegiatan</button>
-        <button onclick="switchPage('finance')" id="nav-finance" class="px-3.5 py-1.5 text-xs font-semibold rounded-lg transition-all">Rekap Anggaran</button>
+        <button onclick="switchPage('agenda')" id="nav-agenda" class="px-3.5 py-1.5 text-xs font-semibold rounded-lg transition-all">Manajemen Waktu</button>
+        <button onclick="switchPage('finance')" id="nav-finance" class="px-3.5 py-1.5 text-xs font-semibold rounded-lg transition-all">Manajemen Keuangan</button>
       </nav>
 
       <div id="auth-container" class="flex items-center gap-2"></div>
@@ -102,10 +102,10 @@
       <div class="relative overflow-hidden rounded-3xl bg-gradient-to-r from-indigo-600 via-indigo-700 to-purple-700 p-6 sm:p-8 text-white shadow-xl flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
         <div class="relative z-10 max-w-2xl">
           <h2 class="text-2xl sm:text-3xl font-extrabold tracking-tight">Selamat Datang di Tommy Time Pro</h2>
-          <p class="mt-2 text-indigo-100 text-xs sm:text-sm">Sistem terpadu Pengelolaan Tugas Akademik, Manajemen Waktu & Kegiatan, serta Rekapitulasi Anggaran Otomatis.</p>
+          <p class="mt-2 text-indigo-100 text-xs sm:text-sm">Sistem terpadu Pengelolaan Tugas Akademik, Manajemen Waktu & Kegiatan, serta Manajemen Keuangan Otomatis.</p>
         </div>
         <button onclick="openPrintModal()" class="px-4 py-2.5 bg-white text-indigo-700 hover:bg-indigo-50 font-bold text-xs rounded-xl shadow-lg flex items-center gap-2 transition-all shrink-0">
-          <i data-lucide="printer" class="w-4 h-4"></i> Cetak Rekap Anggaran PDF
+          <i data-lucide="printer" class="w-4 h-4"></i> Cetak Keuangan PDF
         </button>
       </div>
 
@@ -514,7 +514,7 @@
           </div>
           <div>
             <label class="block text-[11px] font-bold text-slate-700 mb-1">Durasi (Jam)</label>
-            <input type="number" id="agenda-duration" value="60" min="15" step="15" class="w-full px-3 py-2 border rounded-xl text-xs" required>
+            <input type="number" id="agenda-duration" value="6" min="1" step="1" class="w-full px-3 py-2 border rounded-xl text-xs" required>
           </div>
         </div>
         <div>
