@@ -51,7 +51,7 @@
              class="w-9 h-9 object-contain rounded-lg border border-slate-100 shadow-sm"
              onerror="this.onerror=null; this.src='https://cdn-icons-png.flaticon.com/512/5968/5968523.png'">
         <div>
-          <h1 class="text-base font-bold text-slate-900 leading-tight">Tommy Time</h1>
+          <h1 class="text-base font-bold text-slate-900 leading-tight">Tommy Time Pro</h1>
           <p class="text-[11px] text-slate-500">Tugas, Agenda & Rekap Anggaran</p>
         </div>
       </div>
@@ -71,13 +71,13 @@
         <i data-lucide="home" class="w-4 h-4 mb-0.5"></i> Dashboard
       </button>
       <button onclick="switchPage('tasks')" class="flex flex-col items-center py-0.5">
-        <i data-lucide="check-square" class="w-4 h-4 mb-0.5"></i> Tugas
+        <i data-lucide="check-square" class="w-4 h-4 mb-0.5"></i> Manajemen Tugas
       </button>
       <button onclick="switchPage('agenda')" class="flex flex-col items-center py-0.5">
-        <i data-lucide="calendar" class="w-4 h-4 mb-0.5"></i> Kegiatan
+        <i data-lucide="calendar" class="w-4 h-4 mb-0.5"></i> Manajemen Kegiatan
       </button>
       <button onclick="switchPage('finance')" class="flex flex-col items-center py-0.5">
-        <i data-lucide="wallet" class="w-4 h-4 mb-0.5"></i> Anggaran
+        <i data-lucide="wallet" class="w-4 h-4 mb-0.5"></i> Manajemen Keuangan
       </button>
     </div>
   </header>
@@ -85,12 +85,15 @@
   <!-- MAIN CONTENT CONTAINER -->
   <main class="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6 no-print">
 
+    <!-- BANNER KETERANGAN AKSES KHUSUS -->
     <div id="auth-lock-banner" class="hidden mb-6 p-4 bg-amber-50 border border-amber-200 rounded-2xl flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 text-amber-800">
       <div class="flex items-center gap-3">
-        <i data-lucide="lock" class="w-5 h-5 text-amber-600 shrink-0"></i>
-        <p class="text-xs sm:text-sm font-medium">Anda di halaman Guest (Lihat-saja). Untuk menambah/mengedit/menghapus data, silakan login PIN.</p>
+        <i data-lucide="eye-off" class="w-5 h-5 text-amber-600 shrink-0"></i>
+        <p class="text-xs sm:text-sm font-medium">Mode Publik (Lihat-saja). Untuk membuka <strong>memasukkan data & mengedit, masukkan PIN
       </div>
-      <button onclick="openLoginModal()" class="px-3.5 py-1.5 bg-amber-600 text-white text-xs font-bold rounded-xl shadow-sm hover:bg-amber-700 whitespace-nowrap">Login PIN</button>
+      <button onclick="openLoginModal()" class="px-3.5 py-1.5 bg-amber-600 text-white text-xs font-bold rounded-xl shadow-sm hover:bg-amber-700 whitespace-nowrap flex items-center gap-1.5">
+        <i data-lucide="key-round" class="w-3.5 h-3.5"></i> LOGIN PIN
+      </button>
     </div>
 
     <!-- 1. HALAMAN DASHBOARD -->
@@ -98,7 +101,7 @@
       
       <div class="relative overflow-hidden rounded-3xl bg-gradient-to-r from-indigo-600 via-indigo-700 to-purple-700 p-6 sm:p-8 text-white shadow-xl flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
         <div class="relative z-10 max-w-2xl">
-          <h2 class="text-2xl sm:text-3xl font-extrabold tracking-tight">Selamat Datang di Tommy Time</h2>
+          <h2 class="text-2xl sm:text-3xl font-extrabold tracking-tight">Selamat Datang di Tommy Time Pro</h2>
           <p class="mt-2 text-indigo-100 text-xs sm:text-sm">Sistem terpadu Pengelolaan Tugas Akademik, Manajemen Waktu & Kegiatan, serta Rekapitulasi Anggaran Otomatis.</p>
         </div>
         <button onclick="openPrintModal()" class="px-4 py-2.5 bg-white text-indigo-700 hover:bg-indigo-50 font-bold text-xs rounded-xl shadow-lg flex items-center gap-2 transition-all shrink-0">
@@ -409,14 +412,14 @@
     <div class="bg-white rounded-2xl max-w-sm w-full p-6 shadow-2xl space-y-4">
       <div class="text-center">
         <h3 class="text-base font-bold text-slate-900">Autentikasi Hak Akses Edit</h3>
-        <p class="text-xs text-slate-500 mt-1">Masukkan PIN untuk mengelola tugas, waktu & anggaran.</p>
+        <p class="text-xs text-slate-500 mt-1">Masukkan PIN terotorisasi untuk melihat data lengkap & mengedit.</p>
       </div>
       <form onsubmit="handleLogin(event)" class="space-y-3">
         <input type="password" id="login-pin" placeholder="Masukkan PIN..." class="w-full text-center tracking-widest text-lg font-bold px-4 py-2 border rounded-xl focus:ring-2 focus:ring-indigo-500 focus:outline-none" required>
-        <div id="login-error" class="hidden text-xs text-red-500 text-center font-semibold">PIN Salah!</div>
+        <div id="login-error" class="hidden text-xs text-red-500 text-center font-semibold">PIN Salah! SIlakan coba lagi!</div>
         <div class="flex gap-2">
           <button type="button" onclick="closeLoginModal()" class="w-1/2 py-2 border rounded-xl font-semibold text-xs text-slate-600">Batal</button>
-          <button type="submit" class="w-1/2 py-2 bg-indigo-600 text-white rounded-xl font-semibold text-xs shadow-md">Masuk</button>
+          <button type="submit" class="w-1/2 py-2 bg-indigo-600 text-white rounded-xl font-semibold text-xs shadow-md">Buka Akses</button>
         </div>
       </form>
     </div>
@@ -510,7 +513,7 @@
             <input type="datetime-local" id="agenda-datetime" class="w-full px-3 py-2 border rounded-xl text-xs" required>
           </div>
           <div>
-            <label class="block text-[11px] font-bold text-slate-700 mb-1">Durasi (Menit)</label>
+            <label class="block text-[11px] font-bold text-slate-700 mb-1">Durasi (Jam)</label>
             <input type="number" id="agenda-duration" value="60" min="15" step="15" class="w-full px-3 py-2 border rounded-xl text-xs" required>
           </div>
         </div>
@@ -574,6 +577,14 @@
     const PIN_SECRET = "TOMMY";
     let isAuthenticated = false;
 
+    // Master Key terisolasi agar data aman & tidak terhapus saat update kode
+    const KEYS = {
+      TASKS: 'workspace_tasks_master_data',
+      AGENDAS: 'workspace_agendas_master_data',
+      FINANCES: 'workspace_finances_master_data',
+      AUTH: 'workspace_auth_session_state'
+    };
+
     let tasks = [];
     let agendas = [];
     let finances = [];
@@ -582,6 +593,7 @@
     let flowchartInstance = null;
 
     window.addEventListener('DOMContentLoaded', () => {
+      migrateOldStorageData(); // Migrasi otomatis data lama agar tidak terhapus
       loadStorageData();
       checkAuthSession();
       renderAuthBar();
@@ -598,21 +610,49 @@
       if (typeof lucide !== 'undefined') lucide.createIcons();
     }
 
+    // FUNGSI MIGRASI DATA PENYAMBUNG: Mencegah data terhapus saat pembaruan kode
+    function migrateOldStorageData() {
+      const oldTaskKeys = ['app_tasks_v2', 'app_tasks'];
+      const oldAgendaKeys = ['app_agendas_v2', 'app_agendas'];
+      const oldFinanceKeys = ['app_finances_v2', 'app_finances'];
+
+      oldTaskKeys.forEach(key => {
+        const data = localStorage.getItem(key);
+        if (data && !localStorage.getItem(KEYS.TASKS)) {
+          localStorage.setItem(KEYS.TASKS, data);
+        }
+      });
+
+      oldAgendaKeys.forEach(key => {
+        const data = localStorage.getItem(key);
+        if (data && !localStorage.getItem(KEYS.AGENDAS)) {
+          localStorage.setItem(KEYS.AGENDAS, data);
+        }
+      });
+
+      oldFinanceKeys.forEach(key => {
+        const data = localStorage.getItem(key);
+        if (data && !localStorage.getItem(KEYS.FINANCES)) {
+          localStorage.setItem(KEYS.FINANCES, data);
+        }
+      });
+    }
+
     function loadStorageData() {
-      tasks = JSON.parse(localStorage.getItem('app_tasks_v2') || '[]');
-      agendas = JSON.parse(localStorage.getItem('app_agendas_v2') || '[]');
-      finances = JSON.parse(localStorage.getItem('app_finances_v2') || '[]');
+      tasks = JSON.parse(localStorage.getItem(KEYS.TASKS) || '[]');
+      agendas = JSON.parse(localStorage.getItem(KEYS.AGENDAS) || '[]');
+      finances = JSON.parse(localStorage.getItem(KEYS.FINANCES) || '[]');
     }
 
     function saveStorageData() {
-      localStorage.setItem('app_tasks_v2', JSON.stringify(tasks));
-      localStorage.setItem('app_agendas_v2', JSON.stringify(agendas));
-      localStorage.setItem('app_finances_v2', JSON.stringify(finances));
+      localStorage.setItem(KEYS.TASKS, JSON.stringify(tasks));
+      localStorage.setItem(KEYS.AGENDAS, JSON.stringify(agendas));
+      localStorage.setItem(KEYS.FINANCES, JSON.stringify(finances));
       refreshAllViews();
     }
 
     function checkAuthSession() {
-      isAuthenticated = localStorage.getItem('app_auth_v2') === 'true';
+      isAuthenticated = localStorage.getItem(KEYS.AUTH) === 'true';
     }
 
     function renderAuthBar() {
@@ -620,7 +660,7 @@
       if (isAuthenticated) {
         container.innerHTML = `
           <span class="inline-flex items-center gap-1.5 px-3 py-1 bg-emerald-50 text-emerald-700 text-xs font-bold rounded-lg border border-emerald-200">
-            <span class="w-2 h-2 rounded-full bg-emerald-500"></span> Anda telah berada di Halaman Dashboard
+            <span class="w-2 h-2 rounded-full bg-emerald-500"></span> Akses PIN Terverifikasi (TOMMY)
           </span>
           <button onclick="handleLogout()" class="p-1.5 text-slate-400 hover:text-red-600 rounded-lg">
             <i data-lucide="log-out" class="w-4 h-4"></i>
@@ -630,7 +670,7 @@
       } else {
         container.innerHTML = `
           <button onclick="openLoginModal()" class="px-3.5 py-1.5 bg-indigo-600 text-white text-xs font-bold rounded-xl shadow-md flex items-center gap-1.5">
-            <i data-lucide="lock" class="w-3.5 h-3.5"></i> Login PIN
+            <i data-lucide="lock" class="w-3.5 h-3.5"></i> LOGIN PIN
           </button>
         `;
         document.getElementById('auth-lock-banner').classList.remove('hidden');
@@ -645,7 +685,7 @@
       e.preventDefault();
       if (document.getElementById('login-pin').value === PIN_SECRET) {
         isAuthenticated = true;
-        localStorage.setItem('app_auth_v2', 'true');
+        localStorage.setItem(KEYS.AUTH, 'true');
         closeLoginModal();
         renderAuthBar();
         refreshAllViews();
@@ -657,7 +697,7 @@
 
     function handleLogout() {
       isAuthenticated = false;
-      localStorage.setItem('app_auth_v2', 'false');
+      localStorage.setItem(KEYS.AUTH, 'false');
       renderAuthBar();
       refreshAllViews();
       showToast('Berhasil logout', 'info');
@@ -706,9 +746,9 @@
       let totalInc = finances.filter(f => f.type === 'pemasukan').reduce((acc, f) => acc + Number(f.amount), 0);
       let totalExp = finances.filter(f => f.type === 'pengeluaran').reduce((acc, f) => acc + Number(f.amount), 0);
 
-      document.getElementById('dash-total-income').innerText = formatIDR(totalInc);
-      document.getElementById('dash-total-expense').innerText = formatIDR(totalExp);
-      document.getElementById('dash-net-balance').innerText = `Saldo: ${formatIDR(totalInc - totalExp)}`;
+      document.getElementById('dash-total-income').innerText = isAuthenticated ? formatIDR(totalInc) : 'Rp *** (Terkunci)';
+      document.getElementById('dash-total-expense').innerText = isAuthenticated ? formatIDR(totalExp) : 'Rp *** (Terkunci)';
+      document.getElementById('dash-net-balance').innerText = `Saldo: ${isAuthenticated ? formatIDR(totalInc - totalExp) : 'Rp ***'}`;
 
       // Update Tampilan Persentase Tugas di Dashboard
       document.getElementById('dash-task-total-badge').innerText = `Total: ${totalTasks} Tugas`;
@@ -1013,9 +1053,9 @@
       let totalExp = finances.filter(f => f.type === 'pengeluaran').reduce((acc, f) => acc + Number(f.amount), 0);
       let totalFlow = totalInc + totalExp;
 
-      document.getElementById('fin-income-total').innerText = formatIDR(totalInc);
-      document.getElementById('fin-expense-total').innerText = formatIDR(totalExp);
-      document.getElementById('fin-net-total').innerText = formatIDR(totalInc - totalExp);
+      document.getElementById('fin-income-total').innerText = isAuthenticated ? formatIDR(totalInc) : 'Rp *** (Terkunci)';
+      document.getElementById('fin-expense-total').innerText = isAuthenticated ? formatIDR(totalExp) : 'Rp *** (Terkunci)';
+      document.getElementById('fin-net-total').innerText = isAuthenticated ? formatIDR(totalInc - totalExp) : 'Rp *** (Terkunci)';
 
       let incPct = totalFlow > 0 ? Math.round((totalInc / totalFlow) * 100) : 0;
       let expPct = totalFlow > 0 ? Math.round((totalExp / totalFlow) * 100) : 0;
@@ -1039,7 +1079,7 @@
               : `<span class="bg-red-100 text-red-700 font-bold px-2 py-0.5 rounded-full text-[10px]">Pengeluaran (Uang Keluar)</span>`}
           </td>
           <td class="p-4 text-right font-black ${f.type === 'pemasukan' ? 'text-emerald-600' : 'text-red-600'}">
-            ${f.type === 'pemasukan' ? '+' : '-'} ${formatIDR(f.amount)}
+            ${f.type === 'pemasukan' ? '+' : '-'} ${isAuthenticated ? formatIDR(f.amount) : 'Rp ***'}
           </td>
           <td class="p-4 text-center">
             ${isAuthenticated ? `
