@@ -56,6 +56,12 @@
         </div>
       </div>
 
+      <!-- FITUR REAL TIME CLOCK -->
+      <div class="hidden lg:flex items-center gap-2 bg-slate-50 px-3 py-1.5 rounded-xl border border-slate-200 text-xs font-semibold text-slate-700">
+        <i data-lucide="clock" class="w-4 h-4 text-indigo-600 animate-pulse"></i>
+        <span id="realtime-clock">--:--:-- WIB</span>
+      </div>
+
       <nav class="hidden md:flex items-center space-x-1 bg-slate-100 p-1 rounded-xl border border-slate-200/80">
         <button onclick="switchPage('dashboard')" id="nav-dashboard" class="px-3.5 py-1.5 text-xs font-semibold rounded-lg transition-all">Dashboard</button>
         <button onclick="switchPage('tasks')" id="nav-tasks" class="px-3.5 py-1.5 text-xs font-semibold rounded-lg transition-all">Manajemen Tugas</button>
@@ -71,13 +77,13 @@
         <i data-lucide="home" class="w-4 h-4 mb-0.5"></i> Dashboard
       </button>
       <button onclick="switchPage('tasks')" class="flex flex-col items-center py-0.5">
-        <i data-lucide="check-square" class="w-4 h-4 mb-0.5"></i> Manajemen Tugas
+        <i data-lucide="check-square" class="w-4 h-4 mb-0.5"></i> Tugas
       </button>
       <button onclick="switchPage('agenda')" class="flex flex-col items-center py-0.5">
-        <i data-lucide="calendar" class="w-4 h-4 mb-0.5"></i> Manajemen Kegiatan
+        <i data-lucide="calendar" class="w-4 h-4 mb-0.5"></i> Kegiatan
       </button>
       <button onclick="switchPage('finance')" class="flex flex-col items-center py-0.5">
-        <i data-lucide="wallet" class="w-4 h-4 mb-0.5"></i> Manajemen Keuangan
+        <i data-lucide="wallet" class="w-4 h-4 mb-0.5"></i> Keuangan
       </button>
     </div>
   </header>
@@ -89,7 +95,7 @@
     <div id="auth-lock-banner" class="hidden mb-6 p-4 bg-amber-50 border border-amber-200 rounded-2xl flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 text-amber-800">
       <div class="flex items-center gap-3">
         <i data-lucide="eye-off" class="w-5 h-5 text-amber-600 shrink-0"></i>
-        <p class="text-xs sm:text-sm font-medium">Mode Publik (Lihat-saja). Untuk membuka <strong>memasukkan data & mengedit, masukkan PIN
+        <p class="text-xs sm:text-sm font-medium">Mode Publik (Lihat-saja). Untuk memasukkan data & mengedit status, silakan gunakan <strong>Akses PIN TOMMY</strong>.</p>
       </div>
       <button onclick="openLoginModal()" class="px-3.5 py-1.5 bg-amber-600 text-white text-xs font-bold rounded-xl shadow-sm hover:bg-amber-700 whitespace-nowrap flex items-center gap-1.5">
         <i data-lucide="key-round" class="w-3.5 h-3.5"></i> LOGIN PIN
@@ -274,9 +280,9 @@
               <tr class="bg-slate-50 border-b border-slate-200 text-[11px] font-bold uppercase text-slate-500">
                 <th class="p-4">Nama Tugas & Dosen</th>
                 <th class="p-4">Jenis</th>
-                <th class="p-4">Deadline (Hari, Tgl, Jam)</th>
-                <th class="p-4">Status Pengerjaan</th>
-                <th class="p-4">Status Pengumpulkan</th>
+                <th class="p-4">Deadline</th>
+                <th class="p-4">Status Pengerjaan (Edit)</th>
+                <th class="p-4">Status Pengumpulan (Edit)</th>
                 <th class="p-4">File & Rangkuman</th>
                 <th class="p-4 text-center">Aksi</th>
               </tr>
@@ -398,7 +404,7 @@
       <h3 class="font-bold text-xs uppercase mb-2 border-b pb-1">2. Laporan Rekapitulasi Tugas</h3>
       <table class="w-full text-left text-xs border border-collapse">
         <thead>
-          <tr class="bg-slate-100 border-b"><th class="p-2 border">Nama Tugas</th><th class="p-2 border">Dosen</th><th class="p-2 border">Deadline</th><th class="p-2 border">Status Pengerjaan / Pengumpulkan</th></tr>
+          <tr class="bg-slate-100 border-b"><th class="p-2 border">Nama Tugas</th><th class="p-2 border">Dosen</th><th class="p-2 border">Deadline</th><th class="p-2 border">Status Pengerjaan / Pengumpulan</th></tr>
         </thead>
         <tbody id="print-task-body"></tbody>
       </table>
@@ -416,7 +422,7 @@
       </div>
       <form onsubmit="handleLogin(event)" class="space-y-3">
         <input type="password" id="login-pin" placeholder="Masukkan PIN..." class="w-full text-center tracking-widest text-lg font-bold px-4 py-2 border rounded-xl focus:ring-2 focus:ring-indigo-500 focus:outline-none" required>
-        <div id="login-error" class="hidden text-xs text-red-500 text-center font-semibold">PIN Salah! SIlakan coba lagi!</div>
+        <div id="login-error" class="hidden text-xs text-red-500 text-center font-semibold">PIN Salah! Silakan coba lagi!</div>
         <div class="flex gap-2">
           <button type="button" onclick="closeLoginModal()" class="w-1/2 py-2 border rounded-xl font-semibold text-xs text-slate-600">Batal</button>
           <button type="submit" class="w-1/2 py-2 bg-indigo-600 text-white rounded-xl font-semibold text-xs shadow-md">Buka Akses</button>
@@ -461,7 +467,7 @@
             </select>
           </div>
           <div>
-            <label class="block text-[11px] font-bold text-slate-700 mb-1">Status Pengumpulkan</label>
+            <label class="block text-[11px] font-bold text-slate-700 mb-1">Status Pengumpulan</label>
             <select id="task-submission" class="w-full px-3 py-2 border rounded-xl text-xs">
               <option value="Belum dikumpulkan">Belum dikumpulkan</option>
               <option value="Sudah dikumpulkan">Sudah dikumpulkan</option>
@@ -514,7 +520,7 @@
           </div>
           <div>
             <label class="block text-[11px] font-bold text-slate-700 mb-1">Durasi (Jam)</label>
-            <input type="number" id="agenda-duration" value="6" min="1" step="1" class="w-full px-3 py-2 border rounded-xl text-xs" required>
+            <input type="number" id="agenda-duration" value="1" min="1" step="1" class="w-full px-3 py-2 border rounded-xl text-xs" required>
           </div>
         </div>
         <div>
@@ -593,12 +599,13 @@
     let flowchartInstance = null;
 
     window.addEventListener('DOMContentLoaded', () => {
-      migrateOldStorageData(); // Migrasi otomatis data lama agar tidak terhapus
+      migrateOldStorageData(); // Migrasi otomatis data lama
       loadStorageData();
       checkAuthSession();
       renderAuthBar();
       switchPage('dashboard');
       initLucide();
+      startRealtimeClock(); // Jalankan Jam Real Time
 
       setInterval(() => {
         autoCleanupAgendas();
@@ -608,6 +615,22 @@
 
     function initLucide() {
       if (typeof lucide !== 'undefined') lucide.createIcons();
+    }
+
+    // FUNGSI HITUNG JAM REAL-TIME
+    function startRealtimeClock() {
+      const clockEl = document.getElementById('realtime-clock');
+      function updateClock() {
+        const now = new Date();
+        const options = { weekday: 'short', day: 'numeric', month: 'short', year: 'numeric' };
+        const dateStr = now.toLocaleDateString('id-ID', options);
+        const timeStr = now.toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+        if (clockEl) {
+          clockEl.innerText = `${dateStr} - ${timeStr} WIB`;
+        }
+      }
+      updateClock();
+      setInterval(updateClock, 1000);
     }
 
     // FUNGSI MIGRASI DATA PENYAMBUNG: Mencegah data terhapus saat pembaruan kode
@@ -662,7 +685,7 @@
           <span class="inline-flex items-center gap-1.5 px-3 py-1 bg-emerald-50 text-emerald-700 text-xs font-bold rounded-lg border border-emerald-200">
             <span class="w-2 h-2 rounded-full bg-emerald-500"></span> Akses PIN Terverifikasi (TOMMY)
           </span>
-          <button onclick="handleLogout()" class="p-1.5 text-slate-400 hover:text-red-600 rounded-lg">
+          <button onclick="handleLogout()" class="p-1.5 text-slate-400 hover:text-red-600 rounded-lg" title="Logout">
             <i data-lucide="log-out" class="w-4 h-4"></i>
           </button>
         `;
@@ -727,7 +750,7 @@
       initLucide();
     }
 
-    // --- DASHBOARD RENDER & HITUNG PERSENTASE TUGAS ---
+    // --- DASHBOARD RENDER ---
     function renderDashboard() {
       const totalTasks = tasks.length;
       const doneTasks = tasks.filter(t => t.status === 'Selesai').length;
@@ -750,7 +773,7 @@
       document.getElementById('dash-total-expense').innerText = isAuthenticated ? formatIDR(totalExp) : 'Rp *** (Terkunci)';
       document.getElementById('dash-net-balance').innerText = `Saldo: ${isAuthenticated ? formatIDR(totalInc - totalExp) : 'Rp ***'}`;
 
-      // Update Tampilan Persentase Tugas di Dashboard
+      // Progress Bar Dashboard
       document.getElementById('dash-task-total-badge').innerText = `Total: ${totalTasks} Tugas`;
       document.getElementById('bar-task-done').style.width = `${donePct}%`;
       document.getElementById('bar-task-progress').style.width = `${progPct}%`;
@@ -764,7 +787,7 @@
       document.getElementById('cnt-task-progress').innerText = `${progTasks} dari ${totalTasks} tugas`;
       document.getElementById('cnt-task-todo').innerText = `${todoTasks} dari ${totalTasks} tugas`;
 
-      // Update Tampilan Persentase Tugas di Halaman Task
+      // Halaman Tugas
       document.getElementById('task-pct-done').innerText = `${donePct}%`;
       document.getElementById('task-count-done').innerText = `${doneTasks} Tugas`;
       document.getElementById('task-pct-prog').innerText = `${progPct}%`;
@@ -790,7 +813,7 @@
 
       for (let d = 1; d <= daysInMonth; d++) {
         const currentDateStr = `${now.getFullYear()}-${String(now.getMonth()+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
-        const hasAgenda = agendas.some(a => a.datetime.startsWith(currentDateStr));
+        const hasAgenda = agendas.some(a => a.datetime && a.datetime.startsWith(currentDateStr));
         const isToday = d === now.getDate();
 
         grid.innerHTML += `
@@ -828,6 +851,7 @@
       });
     }
 
+    // --- TABEL MANAJEMEN TUGAS DENGAN DROPDOWN EDIT STATUS ---
     function renderTasks() {
       document.getElementById('task-counter').innerText = `Jumlah Seluruh Tugas: ${tasks.length}`;
       const tbody = document.getElementById('task-table-body');
@@ -845,16 +869,26 @@
           </td>
           <td class="p-4"><span class="px-2 py-0.5 rounded font-bold text-[10px] ${t.type === 'Individu' ? 'bg-blue-50 text-blue-600' : 'bg-purple-50 text-purple-600'}">${t.type}</span></td>
           <td class="p-4 font-semibold text-slate-600">${formatDateTime(t.deadline)}</td>
+          
+          <!-- EDIT STATUS PENGERJAAN -->
           <td class="p-4">
-            <span class="px-2.5 py-1 rounded-full font-bold text-[10px] text-white ${getTaskStatusClass(t.status)}">
-              ${t.status}
-            </span>
+            <select ${!isAuthenticated ? 'disabled' : ''} onchange="updateTaskStatus('${t.id}', this.value)" 
+                    class="px-2 py-1 rounded-lg text-xs font-bold border ${getTaskStatusSelectClass(t.status)} cursor-pointer outline-none">
+              <option value="Belum dikerjakan" ${t.status === 'Belum dikerjakan' ? 'selected' : ''}>Belum dikerjakan</option>
+              <option value="Dalam pengerjaan" ${t.status === 'Dalam pengerjaan' ? 'selected' : ''}>Dalam pengerjaan</option>
+              <option value="Selesai" ${t.status === 'Selesai' ? 'selected' : ''}>Sudah Selesai</option>
+            </select>
           </td>
+
+          <!-- EDIT STATUS PENGUMPULAN -->
           <td class="p-4">
-            <button ${!isAuthenticated ? 'disabled' : ''} onclick="toggleSubmission('${t.id}')" class="px-2.5 py-1 rounded-full font-bold text-[10px] text-white ${getSubmissionClass(t.submission)} ${!isAuthenticated ? 'opacity-70 cursor-not-allowed' : 'hover:opacity-80'}">
-              ${t.submission}
-            </button>
+            <select ${!isAuthenticated ? 'disabled' : ''} onchange="updateTaskSubmission('${t.id}', this.value)" 
+                    class="px-2 py-1 rounded-lg text-xs font-bold border ${getSubmissionSelectClass(t.submission)} cursor-pointer outline-none">
+              <option value="Belum dikumpulkan" ${t.submission === 'Belum dikumpulkan' ? 'selected' : ''}>Belum dikumpulkan</option>
+              <option value="Sudah dikumpulkan" ${t.submission === 'Sudah dikumpulkan' ? 'selected' : ''}>Sudah dikumpulkan</option>
+            </select>
           </td>
+
           <td class="p-4">
             ${t.fileName ? `
               <div class="space-y-1">
@@ -869,7 +903,7 @@
           </td>
           <td class="p-4 text-center">
             ${isAuthenticated ? `
-              <button onclick="deleteTask('${t.id}')" class="text-slate-400 hover:text-red-600 p-1">
+              <button onclick="deleteTask('${t.id}')" class="text-slate-400 hover:text-red-600 p-1" title="Hapus Tugas">
                 <i data-lucide="trash-2" class="w-4 h-4"></i>
               </button>
             ` : '<span class="text-[10px] text-slate-300">Terkunci</span>'}
@@ -878,17 +912,37 @@
       `).join('');
     }
 
-    function getTaskStatusClass(status) {
-      if (status === 'Belum dikerjakan') return 'bg-red-600';
-      if (status === 'Dalam pengerjaan') return 'bg-amber-400 text-slate-900';
-      if (status === 'Selesai') return 'bg-emerald-600';
-      return 'bg-slate-400';
+    function getTaskStatusSelectClass(status) {
+      if (status === 'Belum dikerjakan') return 'bg-red-50 text-red-600 border-red-200';
+      if (status === 'Dalam pengerjaan') return 'bg-amber-50 text-amber-700 border-amber-200';
+      if (status === 'Selesai') return 'bg-emerald-50 text-emerald-600 border-emerald-200';
+      return 'bg-slate-50 text-slate-600 border-slate-200';
     }
 
-    function getSubmissionClass(sub) {
-      if (sub === 'Belum dikumpulkan') return 'bg-red-600';
-      if (sub === 'Sudah dikumpulkan') return 'bg-blue-600';
-      return 'bg-slate-400';
+    function getSubmissionSelectClass(sub) {
+      if (sub === 'Belum dikumpulkan') return 'bg-red-50 text-red-600 border-red-200';
+      if (sub === 'Sudah dikumpulkan') return 'bg-blue-50 text-blue-600 border-blue-200';
+      return 'bg-slate-50 text-slate-600 border-slate-200';
+    }
+
+    function updateTaskStatus(id, newStatus) {
+      if (!isAuthenticated) return openLoginModal();
+      const t = tasks.find(x => x.id === id);
+      if (t) {
+        t.status = newStatus;
+        saveStorageData();
+        showToast(`Status pengerjaan diperbarui: ${newStatus}`, 'success');
+      }
+    }
+
+    function updateTaskSubmission(id, newSub) {
+      if (!isAuthenticated) return openLoginModal();
+      const t = tasks.find(x => x.id === id);
+      if (t) {
+        t.submission = newSub;
+        saveStorageData();
+        showToast(`Status pengumpulan diperbarui: ${newSub}`, 'success');
+      }
     }
 
     function openTaskModal() { if (!isAuthenticated) return openLoginModal(); document.getElementById('modal-task').classList.remove('hidden'); }
@@ -919,15 +973,6 @@
       showToast('Tugas berhasil disimpan!', 'success');
     }
 
-    function toggleSubmission(id) {
-      if (!isAuthenticated) return openLoginModal();
-      const t = tasks.find(x => x.id === id);
-      if (t) {
-        t.submission = t.submission === 'Belum dikumpulkan' ? 'Sudah dikumpulkan' : 'Belum dikumpulkan';
-        saveStorageData();
-      }
-    }
-
     function deleteTask(id) {
       if (!isAuthenticated) return openLoginModal();
       if (confirm('Hapus tugas ini secara permanen?')) {
@@ -937,6 +982,7 @@
       }
     }
 
+    // --- MANAJEMEN WAKTU & KEGIATAN DENGAN EDIT STATUS ---
     function renderAgendas() {
       const grid = document.getElementById('agenda-grid');
       if (agendas.length === 0) {
@@ -947,20 +993,27 @@
       grid.innerHTML = agendas.map(a => `
         <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm flex flex-col justify-between">
           <div>
-            <div class="flex justify-between items-start mb-2">
+            <div class="flex justify-between items-center mb-3">
               <span class="text-[10px] font-bold uppercase px-2 py-0.5 rounded bg-slate-100 text-slate-600">${a.criteria}</span>
-              <span class="text-xs font-bold px-2 py-0.5 rounded ${getAgendaStatusClass(a.status)}">${a.status}</span>
+              
+              <!-- EDIT STATUS KEGIATAN DROPDOWN -->
+              <select ${!isAuthenticated ? 'disabled' : ''} onchange="updateAgendaStatus('${a.id}', this.value)"
+                      class="px-2 py-0.5 rounded text-xs font-bold border ${getAgendaSelectClass(a.status)} cursor-pointer outline-none">
+                <option value="Belum terlaksana" ${a.status === 'Belum terlaksana' ? 'selected' : ''}>Belum terlaksana</option>
+                <option value="Terlaksana" ${a.status === 'Terlaksana' ? 'selected' : ''}>Terlaksana</option>
+                <option value="Tidak dihadiri" ${a.status === 'Tidak dihadiri' ? 'selected' : ''}>Tidak dihadiri</option>
+              </select>
             </div>
             <h4 class="font-bold text-slate-900 text-sm">${escapeHtml(a.title)}</h4>
             <div class="mt-3 space-y-1 text-xs text-slate-500">
-              <div class="flex items-center gap-1.5"><i data-lucide="clock" class="w-3.5 h-3.5"></i> ${formatDateTime(a.datetime)} (${a.duration} Mnt)</div>
+              <div class="flex items-center gap-1.5"><i data-lucide="clock" class="w-3.5 h-3.5"></i> ${formatDateTime(a.datetime)} (${a.duration} Jam)</div>
               <div class="flex items-center gap-1.5"><i data-lucide="map-pin" class="w-3.5 h-3.5"></i> ${escapeHtml(a.location)}</div>
             </div>
           </div>
           <div class="mt-4 pt-3 border-t border-slate-100 flex justify-between items-center text-[10px] text-slate-400">
             <span>Auto-hapus 6 jam pasca selesai</span>
             ${isAuthenticated ? `
-              <button onclick="deleteAgenda('${a.id}')" class="text-slate-400 hover:text-red-600 p-1">
+              <button onclick="deleteAgenda('${a.id}')" class="text-slate-400 hover:text-red-600 p-1" title="Hapus Agenda">
                 <i data-lucide="trash-2" class="w-4 h-4"></i>
               </button>
             ` : ''}
@@ -969,11 +1022,21 @@
       `).join('');
     }
 
-    function getAgendaStatusClass(status) {
-      if (status === 'Belum terlaksana') return 'bg-amber-400 text-slate-900';
-      if (status === 'Tidak dihadiri') return 'bg-red-600 text-white';
-      if (status === 'Terlaksana') return 'bg-blue-600 text-white';
-      return 'bg-slate-200 text-slate-700';
+    function getAgendaSelectClass(status) {
+      if (status === 'Belum terlaksana') return 'bg-amber-50 text-amber-800 border-amber-200';
+      if (status === 'Tidak dihadiri') return 'bg-red-50 text-red-600 border-red-200';
+      if (status === 'Terlaksana') return 'bg-blue-50 text-blue-600 border-blue-200';
+      return 'bg-slate-50 text-slate-600 border-slate-200';
+    }
+
+    function updateAgendaStatus(id, newStatus) {
+      if (!isAuthenticated) return openLoginModal();
+      const a = agendas.find(x => x.id === id);
+      if (a) {
+        a.status = newStatus;
+        saveStorageData();
+        showToast(`Status kegiatan diperbarui: ${newStatus}`, 'success');
+      }
     }
 
     function openAgendaModal() { if (!isAuthenticated) return openLoginModal(); document.getElementById('modal-agenda').classList.remove('hidden'); }
@@ -1014,7 +1077,7 @@
       agendas = agendas.filter(a => {
         if (a.status === 'Terlaksana') {
           const startTime = new Date(a.datetime);
-          const endTime = new Date(startTime.getTime() + (Number(a.duration) * 60000));
+          const endTime = new Date(startTime.getTime() + (Number(a.duration) * 3600000));
           const expireTime = new Date(endTime.getTime() + (6 * 3600000));
           if (now > expireTime) {
             hasChanges = true;
@@ -1154,8 +1217,8 @@
       const monthNames = ["Januari", "Februari", "Maret", "April", "Mei", "Juni", "Juli", "Agustus", "September", "Oktober", "November", "Desember"];
       document.getElementById('print-period').innerText = `Periode: ${monthNames[parseInt(month)-1]} ${year}`;
 
-      const filteredFinances = finances.filter(f => f.date.startsWith(monthVal));
-      const filteredTasks = tasks.filter(t => t.deadline.startsWith(monthVal));
+      const filteredFinances = finances.filter(f => f.date && f.date.startsWith(monthVal));
+      const filteredTasks = tasks.filter(t => t.deadline && t.deadline.startsWith(monthVal));
 
       let totalInc = filteredFinances.filter(f => f.type === 'pemasukan').reduce((a,b) => a + Number(b.amount), 0);
       let totalExp = filteredFinances.filter(f => f.type === 'pengeluaran').reduce((a,b) => a + Number(b.amount), 0);
@@ -1196,7 +1259,7 @@
     }
 
     function escapeHtml(text) {
-      return String(text).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+      return String(text || '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
     }
 
     function showToast(msg, type = 'info') {
