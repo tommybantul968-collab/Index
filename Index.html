@@ -376,7 +376,7 @@
       <div class="flex items-center gap-3">
         <img src="https://lh3.googleusercontent.com/d/14qsCeRufd1OlVQ_wOnBavEj2TR1ux4wy=s200" class="w-12 h-12 object-contain" alt="Logo">
         <div>
-          <h1 class="text-xl font-bold uppercase">LAPORAN REKAPITULASI ANGGARAN & WORKSPACE</h1>
+          <h1 class="text-xl font-bold uppercase">LAPORAN REKAPITULASI KEUANGAN & WORKSPACE</h1>
           <p id="print-period" class="text-xs font-semibold text-slate-600">Periode: Semua Data</p>
         </div>
       </div>
@@ -391,7 +391,7 @@
     </div>
 
     <div class="mb-6">
-      <h3 class="font-bold text-xs uppercase mb-2 border-b pb-1">1. Rincian Anggaran (Pemasukan & Pengeluaran)</h3>
+      <h3 class="font-bold text-xs uppercase mb-2 border-b pb-1">1. Rincian Keuangan (Pemasukan & Pengeluaran)</h3>
       <table class="w-full text-left text-xs border border-collapse">
         <thead>
           <tr class="bg-slate-100 border-b"><th class="p-2 border">Tanggal</th><th class="p-2 border">Keterangan</th><th class="p-2 border">Jenis</th><th class="p-2 border text-right">Nominal</th></tr>
@@ -418,7 +418,7 @@
     <div class="bg-white rounded-2xl max-w-sm w-full p-6 shadow-2xl space-y-4">
       <div class="text-center">
         <h3 class="text-base font-bold text-slate-900">Autentikasi Hak Akses Edit</h3>
-        <p class="text-xs text-slate-500 mt-1">Masukkan PIN terotorisasi untuk melihat data lengkap & mengedit.</p>
+        <p class="text-xs text-slate-500 mt-1">Masukkan PIN untuk melihat data lengkap & mengedit.</p>
       </div>
       <form onsubmit="handleLogin(event)" class="space-y-3">
         <input type="password" id="login-pin" placeholder="Masukkan PIN..." class="w-full text-center tracking-widest text-lg font-bold px-4 py-2 border rounded-xl focus:ring-2 focus:ring-indigo-500 focus:outline-none" required>
@@ -1191,7 +1191,7 @@
       finances.push(newFin);
       saveStorageData();
       closeFinanceModal();
-      showToast('Transaksi anggaran berhasil dicatat!', 'success');
+      showToast('Transaksi keuangan berhasil dicatat!', 'success');
     }
 
     function deleteFinance(id) {
