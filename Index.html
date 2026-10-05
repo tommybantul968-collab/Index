@@ -44,13 +44,13 @@
   <!-- HEADER & NAVIGATION -->
   <header class="sticky top-0 z-40 bg-white/95 backdrop-blur-md border-b border-slate-200 shadow-sm no-print">
     
-    <!-- 1. BAGIAN REALTIME CLOCK (PALING ATAS - UKURAN LEBIH BESAR) -->
+    <!-- 1. BAGIAN REALTIME CLOCK (PALING ATAS) -->
     <div class="bg-slate-900 text-white py-2 px-4 text-center text-sm sm:text-base font-semibold tracking-wide flex items-center justify-center gap-2.5 shadow-inner">
       <i data-lucide="clock" class="w-4 h-4 sm:w-5 sm:h-5 text-indigo-400 animate-pulse"></i>
       <span id="realtime-clock" class="font-bold text-indigo-100 tracking-wider">--:--:-- WIB</span>
     </div>
 
-    <!-- 2. BARIS KEDUA: LOGO, NAVIGASI (DASHBOARD, TUGAS, KEGIATAN & WAKTU, KEUANGAN), & AUTH -->
+    <!-- 2. BARIS KEDUA: LOGO, NAVIGASI & AUTH -->
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-2.5 flex flex-col md:flex-row items-center justify-between gap-3">
       
       <!-- LOGO & JUDUL -->
@@ -65,7 +65,7 @@
         </div>
       </div>
 
-      <!-- DERETAN MENU NAVIGASI DI BAWAH WAKTU REALTIME -->
+      <!-- DERETAN MENU NAVIGASI -->
       <nav class="hidden md:flex items-center space-x-1 bg-slate-100 p-1 rounded-xl border border-slate-200/80">
         <button onclick="switchPage('dashboard')" id="nav-dashboard" class="px-3.5 py-1.5 text-xs font-semibold rounded-lg transition-all">Dashboard</button>
         <button onclick="switchPage('tasks')" id="nav-tasks" class="px-3.5 py-1.5 text-xs font-semibold rounded-lg transition-all">Manajemen Tugas</button>
@@ -76,7 +76,7 @@
       <div id="auth-container" class="flex items-center gap-2"></div>
     </div>
 
-    <!-- NAVIGASI MOBILE (TAMPIL DI LAYAR KECIL) -->
+    <!-- NAVIGASI MOBILE -->
     <div class="md:hidden flex justify-around border-t border-slate-100 bg-white py-2 px-2 text-xs font-medium text-slate-600">
       <button onclick="switchPage('dashboard')" class="flex flex-col items-center py-0.5">
         <i data-lucide="home" class="w-4 h-4 mb-0.5"></i> Dashboard
@@ -96,14 +96,14 @@
   <!-- MAIN CONTENT CONTAINER -->
   <main class="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6 no-print">
 
-    <!-- BANNER KETERANGAN AKSES KHUSUS -->
+    <!-- BANNER INFORMASI MODE PUBLIK -->
     <div id="auth-lock-banner" class="hidden mb-6 p-4 bg-amber-50 border border-amber-200 rounded-2xl flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 text-amber-800">
       <div class="flex items-center gap-3">
-        <i data-lucide="eye-off" class="w-5 h-5 text-amber-600 shrink-0"></i>
-        <p class="text-xs sm:text-sm font-medium">Mode Publik (Lihat-saja). Untuk memasukkan data & mengedit status, silakan login dengan PIN terotorisasi.</p>
+        <i data-lucide="eye" class="w-5 h-5 text-amber-600 shrink-0"></i>
+        <p class="text-xs sm:text-sm font-medium">Anda dalam **Mode Publik (Lihat-Saja)**. Anda dapat melihat Tugas dan Agenda Kegiatan. Rekapitulasi Keuangan & Fitur Edit terkunci.</p>
       </div>
       <button onclick="openLoginModal()" class="px-3.5 py-1.5 bg-amber-600 text-white text-xs font-bold rounded-xl shadow-sm hover:bg-amber-700 whitespace-nowrap flex items-center gap-1.5">
-        <i data-lucide="key-round" class="w-3.5 h-3.5"></i> LOGIN PIN
+        <i data-lucide="key-round" class="w-3.5 h-3.5"></i> LOGIN PIN ADMIN
       </button>
     </div>
 
@@ -115,7 +115,7 @@
           <h2 class="text-2xl sm:text-3xl font-extrabold tracking-tight">Selamat Datang di Tommy Time Pro</h2>
           <p class="mt-2 text-indigo-100 text-xs sm:text-sm">Sistem terpadu Pengelolaan Tugas Akademik, Manajemen Waktu & Kegiatan, serta Manajemen Keuangan Otomatis.</p>
         </div>
-        <button onclick="openPrintModal()" class="px-4 py-2.5 bg-white text-indigo-700 hover:bg-indigo-50 font-bold text-xs rounded-xl shadow-lg flex items-center gap-2 transition-all shrink-0">
+        <button id="btn-print-dash" onclick="openPrintModal()" class="px-4 py-2.5 bg-white text-indigo-700 hover:bg-indigo-50 font-bold text-xs rounded-xl shadow-lg flex items-center gap-2 transition-all shrink-0">
           <i data-lucide="printer" class="w-4 h-4"></i> Cetak Keuangan PDF
         </button>
       </div>
@@ -175,11 +175,10 @@
           <div id="bar-task-todo" class="bg-red-500 h-full transition-all duration-500" style="width: 0%"></div>
         </div>
 
-        <!-- Rincian Kartu Persentase -->
         <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 pt-1">
           <div class="p-3 bg-emerald-50 border border-emerald-100 rounded-xl">
             <div class="flex justify-between items-center text-xs text-emerald-800 font-bold">
-              <span class="flex items-center gap-1.5"><span class="w-2.5 h-2.5 rounded-full bg-emerald-500"></span> Selesai (Hijau)</span>
+              <span class="flex items-center gap-1.5"><span class="w-2.5 h-2.5 rounded-full bg-emerald-500"></span> Selesai</span>
               <span id="pct-task-done-num">0%</span>
             </div>
             <p id="cnt-task-done" class="text-[11px] text-emerald-600 mt-1 font-semibold">0 dari 0 tugas</p>
@@ -187,7 +186,7 @@
 
           <div class="p-3 bg-amber-50 border border-amber-100 rounded-xl">
             <div class="flex justify-between items-center text-xs text-amber-900 font-bold">
-              <span class="flex items-center gap-1.5"><span class="w-2.5 h-2.5 rounded-full bg-amber-400"></span> Dalam Pengerjaan (Kuning)</span>
+              <span class="flex items-center gap-1.5"><span class="w-2.5 h-2.5 rounded-full bg-amber-400"></span> Dalam Pengerjaan</span>
               <span id="pct-task-progress-num">0%</span>
             </div>
             <p id="cnt-task-progress" class="text-[11px] text-amber-700 mt-1 font-semibold">0 dari 0 tugas</p>
@@ -195,7 +194,7 @@
 
           <div class="p-3 bg-red-50 border border-red-100 rounded-xl">
             <div class="flex justify-between items-center text-xs text-red-800 font-bold">
-              <span class="flex items-center gap-1.5"><span class="w-2.5 h-2.5 rounded-full bg-red-500"></span> Belum Dikerjakan (Merah)</span>
+              <span class="flex items-center gap-1.5"><span class="w-2.5 h-2.5 rounded-full bg-red-500"></span> Belum Dikerjakan</span>
               <span id="pct-task-todo-num">0%</span>
             </div>
             <p id="cnt-task-todo" class="text-[11px] text-red-600 mt-1 font-semibold">0 dari 0 tugas</p>
@@ -221,12 +220,17 @@
         <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm lg:col-span-2">
           <div class="flex items-center justify-between mb-4">
             <h3 class="font-bold text-slate-900 text-sm flex items-center gap-2">
-              <i data-lucide="pie-chart" class="w-4 h-4 text-purple-600"></i> Flowchart Rasio Anggaran & Persentase
+              <i data-lucide="pie-chart" class="w-4 h-4 text-purple-600"></i> Rasio Keuangan & Persentase
             </h3>
             <span id="dash-net-balance" class="text-xs font-bold px-2.5 py-1 bg-slate-100 rounded-lg text-slate-700">Saldo: Rp 0</span>
           </div>
           <div class="h-60 relative flex items-center justify-center">
             <canvas id="financeFlowchart"></canvas>
+            <div id="flowchart-locked-overlay" class="hidden absolute inset-0 bg-slate-900/60 backdrop-blur-sm rounded-xl flex flex-col items-center justify-center text-white p-4 text-center">
+              <i data-lucide="lock" class="w-8 h-8 text-amber-400 mb-2"></i>
+              <p class="font-bold text-sm">Grafik Keuangan Terkunci</p>
+              <p class="text-xs text-slate-300 mt-1">Diperlukan PIN terotorisasi untuk melihat data keuangan.</p>
+            </div>
           </div>
         </div>
       </div>
@@ -239,16 +243,16 @@
           <h2 class="text-xl font-bold text-slate-900">Manajemen Tugas Akademik</h2>
           <p class="text-xs text-slate-500">Kelola status pengerjaan, deadline, dan rangkuman otomatis dokumen tugas.</p>
         </div>
-        <button onclick="openTaskModal()" class="px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-xs rounded-xl shadow-md flex items-center gap-1.5 transition-all">
+        <button id="btn-add-task" onclick="openTaskModal()" class="px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-xs rounded-xl shadow-md flex items-center gap-1.5 transition-all">
           <i data-lucide="plus" class="w-4 h-4"></i> Tambah Tugas
         </button>
       </div>
 
-      <!-- RINGKASAN PERSENTASE TUGAS DIBAGIAN ATAS PAGE TASKS -->
+      <!-- RINGKASAN PERSENTASE TUGAS -->
       <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
         <div class="bg-white p-4 rounded-2xl border border-slate-200 shadow-sm flex items-center justify-between">
           <div>
-            <p class="text-[11px] font-bold text-emerald-600 uppercase">Selesai (Sudah Dikerjakan)</p>
+            <p class="text-[11px] font-bold text-emerald-600 uppercase">Selesai</p>
             <h4 id="task-pct-done" class="text-xl font-black text-slate-900 mt-0.5">0%</h4>
             <p id="task-count-done" class="text-[11px] text-slate-400">0 Tugas</p>
           </div>
@@ -286,8 +290,8 @@
                 <th class="p-4">Nama Tugas & Dosen</th>
                 <th class="p-4">Jenis</th>
                 <th class="p-4">Deadline</th>
-                <th class="p-4">Status Pengerjaan (Edit)</th>
-                <th class="p-4">Status Pengumpulan (Edit)</th>
+                <th class="p-4">Status Pengerjaan</th>
+                <th class="p-4">Status Pengumpulkan</th>
                 <th class="p-4">File & Rangkuman</th>
                 <th class="p-4 text-center">Aksi</th>
               </tr>
@@ -305,7 +309,7 @@
           <h2 class="text-xl font-bold text-slate-900">Manajemen Kegiatan dan Waktu</h2>
           <p class="text-xs text-slate-500">Jadwal kegiatan (Tersimpan otomatis, terhapus 6 jam pasca terlaksana atau hapus manual).</p>
         </div>
-        <button onclick="openAgendaModal()" class="px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-xs rounded-xl shadow-md flex items-center gap-1.5 transition-all">
+        <button id="btn-add-agenda" onclick="openAgendaModal()" class="px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-xs rounded-xl shadow-md flex items-center gap-1.5 transition-all">
           <i data-lucide="plus" class="w-4 h-4"></i> Tambah Agenda
         </button>
       </div>
@@ -313,14 +317,14 @@
       <div id="agenda-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5"></div>
     </section>
 
-    <!-- 4. HALAMAN REKAPITULASI ANGGARAN -->
+    <!-- 4. HALAMAN REKAPITULASI KEUANGAN -->
     <section id="page-finance" class="hidden space-y-6">
       <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
         <div>
-          <h2 class="text-xl font-bold text-slate-900">Rekapitulasi Anggaran</h2>
-          <p class="text-xs text-slate-500">Pemasukan (Hijau) & Pengeluaran (Merah) dengan penjumlahan & persentase otomatis.</p>
+          <h2 class="text-xl font-bold text-slate-900">Rekapitulasi Keuangan</h2>
+          <p class="text-xs text-slate-500">Pemasukan & Pengeluaran dengan penjumlahan & persentase otomatis.</p>
         </div>
-        <div class="flex gap-2">
+        <div id="finance-buttons-group" class="flex gap-2">
           <button onclick="openFinanceModal('pemasukan')" class="px-3.5 py-2 bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs rounded-xl shadow-md flex items-center gap-1.5 transition-all">
             <i data-lucide="plus-circle" class="w-4 h-4"></i> Tambah Pemasukan
           </button>
@@ -332,30 +336,30 @@
 
       <div class="grid grid-cols-1 md:grid-cols-3 gap-5">
         <div class="bg-gradient-to-br from-emerald-500 to-emerald-700 text-white p-5 rounded-2xl shadow-lg relative overflow-hidden">
-          <span class="text-[11px] font-bold uppercase tracking-wider opacity-80">Total Pemasukan (Hijau)</span>
+          <span class="text-[11px] font-bold uppercase tracking-wider opacity-80">Total Pemasukan</span>
           <h3 id="fin-income-total" class="text-2xl font-black mt-1">Rp 0</h3>
-          <p id="fin-income-pct" class="text-xs font-semibold mt-2 bg-white/20 inline-block px-2.5 py-0.5 rounded-md">0% dari Total Arus Kas</p>
+          <p id="fin-income-pct" class="text-xs font-semibold mt-2 bg-white/20 inline-block px-2.5 py-0.5 rounded-md">0% dari Total Arus Keuangan</p>
         </div>
 
         <div class="bg-gradient-to-br from-red-500 to-red-700 text-white p-5 rounded-2xl shadow-lg relative overflow-hidden">
-          <span class="text-[11px] font-bold uppercase tracking-wider opacity-80">Total Pengeluaran (Merah)</span>
+          <span class="text-[11px] font-bold uppercase tracking-wider opacity-80">Total Pengeluaran</span>
           <h3 id="fin-expense-total" class="text-2xl font-black mt-1">Rp 0</h3>
-          <p id="fin-expense-pct" class="text-xs font-semibold mt-2 bg-white/20 inline-block px-2.5 py-0.5 rounded-md">0% dari Total Arus Kas</p>
+          <p id="fin-expense-pct" class="text-xs font-semibold mt-2 bg-white/20 inline-block px-2.5 py-0.5 rounded-md">0% dari Total Arus Keuangan</p>
         </div>
 
         <div class="bg-white border border-slate-200 p-5 rounded-2xl shadow-sm flex flex-col justify-between">
           <div>
-            <span class="text-[11px] font-bold uppercase tracking-wider text-slate-400">Sisa Kas Anggaran</span>
+            <span class="text-[11px] font-bold uppercase tracking-wider text-slate-400">Sisa Keuangan</span>
             <h3 id="fin-net-total" class="text-2xl font-black text-slate-900 mt-1">Rp 0</h3>
           </div>
-          <button onclick="openPrintModal()" class="mt-3 w-full py-2 bg-indigo-50 text-indigo-700 border border-indigo-200 font-bold text-xs rounded-xl hover:bg-indigo-100 flex items-center justify-center gap-1.5">
+          <button id="btn-print-fin" onclick="openPrintModal()" class="mt-3 w-full py-2 bg-indigo-50 text-indigo-700 border border-indigo-200 font-bold text-xs rounded-xl hover:bg-indigo-100 flex items-center justify-center gap-1.5">
             <i data-lucide="printer" class="w-4 h-4"></i> Cetak Rekap PDF
           </button>
         </div>
       </div>
 
       <div class="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
-        <div class="p-4 border-b border-slate-100 font-bold text-slate-800 text-xs">Riwayat Transaksi Anggaran</div>
+        <div class="p-4 border-b border-slate-100 font-bold text-slate-800 text-xs">Riwayat Transaksi Keuangan</div>
         <div class="overflow-x-auto">
           <table class="w-full text-left border-collapse">
             <thead>
@@ -375,13 +379,13 @@
 
   </main>
 
-  <!-- PRINT AREA UNTUK CETAK PDF REKAPITULASI ANGGARAN -->
+  <!-- PRINT AREA UNTUK CETAK PDF REKAPITULASI KEUANGAN -->
   <div id="print-area" class="hidden">
     <div class="flex items-center justify-between border-b pb-4 mb-6">
       <div class="flex items-center gap-3">
         <img src="https://lh3.googleusercontent.com/d/14qsCeRufd1OlVQ_wOnBavEj2TR1ux4wy=s200" class="w-12 h-12 object-contain" alt="Logo">
         <div>
-          <h1 class="text-xl font-bold uppercase">LAPORAN REKAPITULASI ANGGARAN & WORKSPACE</h1>
+          <h1 class="text-xl font-bold uppercase">LAPORAN REKAPITULASI KEUANGAN & WORKSPACE</h1>
           <p id="print-period" class="text-xs font-semibold text-slate-600">Periode: Semua Data</p>
         </div>
       </div>
@@ -391,12 +395,12 @@
     <div class="grid grid-cols-4 gap-4 mb-6 border p-4 rounded-lg bg-slate-50 text-xs">
       <div><p class="font-bold uppercase text-slate-500">Total Tugas</p><p id="p-tasks-count" class="text-base font-bold">0</p></div>
       <div><p class="font-bold uppercase text-slate-500">Total Agenda</p><p id="p-agenda-count" class="text-base font-bold">0</p></div>
-      <div><p class="font-bold uppercase text-slate-500">Pemasukan (Hijau)</p><p id="p-income-sum" class="text-base font-bold text-emerald-700">Rp 0</p></div>
-      <div><p class="font-bold uppercase text-slate-500">Pengeluaran (Merah)</p><p id="p-expense-sum" class="text-base font-bold text-red-700">Rp 0</p></div>
+      <div><p class="font-bold uppercase text-slate-500">Pemasukan</p><p id="p-income-sum" class="text-base font-bold text-emerald-700">Rp 0</p></div>
+      <div><p class="font-bold uppercase text-slate-500">Pengeluaran</p><p id="p-expense-sum" class="text-base font-bold text-red-700">Rp 0</p></div>
     </div>
 
     <div class="mb-6">
-      <h3 class="font-bold text-xs uppercase mb-2 border-b pb-1">1. Rincian Anggaran (Pemasukan & Pengeluaran)</h3>
+      <h3 class="font-bold text-xs uppercase mb-2 border-b pb-1">1. Rincian Keuangan (Pemasukan & Pengeluaran)</h3>
       <table class="w-full text-left text-xs border border-collapse">
         <thead>
           <tr class="bg-slate-100 border-b"><th class="p-2 border">Tanggal</th><th class="p-2 border">Keterangan</th><th class="p-2 border">Jenis</th><th class="p-2 border text-right">Nominal</th></tr>
@@ -423,7 +427,7 @@
     <div class="bg-white rounded-2xl max-w-sm w-full p-6 shadow-2xl space-y-4">
       <div class="text-center">
         <h3 class="text-base font-bold text-slate-900">Autentikasi Hak Akses Edit</h3>
-        <p class="text-xs text-slate-500 mt-1">Masukkan PIN terotorisasi untuk melihat data lengkap & mengedit.</p>
+        <p class="text-xs text-slate-500 mt-1">Masukkan PIN untuk membuka rekapitulasi keuangan & hak akses mengedit.</p>
       </div>
       <form onsubmit="handleLogin(event)" class="space-y-3">
         <input type="password" id="login-pin" placeholder="Masukkan PIN..." class="w-full text-center tracking-widest text-lg font-bold px-4 py-2 border rounded-xl focus:ring-2 focus:ring-indigo-500 focus:outline-none" required>
@@ -540,7 +544,7 @@
     </div>
   </div>
 
-  <!-- Modal Tambah Transaksi Anggaran -->
+  <!-- Modal Tambah Transaksi Keuangan -->
   <div id="modal-finance" class="fixed inset-0 bg-slate-900/50 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4 no-print">
     <div class="bg-white rounded-2xl max-w-md w-full p-6 shadow-2xl space-y-3">
       <h3 id="finance-modal-title" class="text-base font-bold text-slate-900">Catat Transaksi</h3>
@@ -588,7 +592,7 @@
     const PIN_SECRET = "TOMMY";
     let isAuthenticated = false;
 
-    // Master Key terisolasi agar data aman & tidak terhapus saat update kode
+    // Master Key terisolasi agar data tetap tersimpan
     const KEYS = {
       TASKS: 'workspace_tasks_master_data',
       AGENDAS: 'workspace_agendas_master_data',
@@ -604,13 +608,13 @@
     let flowchartInstance = null;
 
     window.addEventListener('DOMContentLoaded', () => {
-      migrateOldStorageData(); // Migrasi otomatis data lama
+      migrateOldStorageData();
       loadStorageData();
       checkAuthSession();
       renderAuthBar();
       switchPage('dashboard');
       initLucide();
-      startRealtimeClock(); // Jalankan Jam Real Time
+      startRealtimeClock();
 
       setInterval(() => {
         autoCleanupAgendas();
@@ -622,7 +626,6 @@
       if (typeof lucide !== 'undefined') lucide.createIcons();
     }
 
-    // FUNGSI HITUNG JAM REAL-TIME (WIB)
     function startRealtimeClock() {
       const clockEl = document.getElementById('realtime-clock');
       function updateClock() {
@@ -638,7 +641,6 @@
       setInterval(updateClock, 1000);
     }
 
-    // FUNGSI MIGRASI DATA PENYAMBUNG: Mencegah data terhapus saat pembaruan kode
     function migrateOldStorageData() {
       const oldTaskKeys = ['app_tasks_v2', 'app_tasks'];
       const oldAgendaKeys = ['app_agendas_v2', 'app_agendas'];
@@ -685,23 +687,40 @@
 
     function renderAuthBar() {
       const container = document.getElementById('auth-container');
+      const lockBanner = document.getElementById('auth-lock-banner');
+      const btnAddTask = document.getElementById('btn-add-task');
+      const btnAddAgenda = document.getElementById('btn-add-agenda');
+      const groupFinanceBtns = document.getElementById('finance-buttons-group');
+      const btnPrintDash = document.getElementById('btn-print-dash');
+      const btnPrintFin = document.getElementById('btn-print-fin');
+
       if (isAuthenticated) {
         container.innerHTML = `
           <span class="inline-flex items-center gap-1.5 px-3 py-1 bg-emerald-50 text-emerald-700 text-xs font-bold rounded-lg border border-emerald-200">
-            <span class="w-2 h-2 rounded-full bg-emerald-500"></span> Anda berada di halaman
+            <span class="w-2 h-2 rounded-full bg-emerald-500"></span> Anda berada dihalaman Dashboard
           </span>
           <button onclick="handleLogout()" class="p-1.5 text-slate-400 hover:text-red-600 rounded-lg" title="Logout">
             <i data-lucide="log-out" class="w-4 h-4"></i>
           </button>
         `;
-        document.getElementById('auth-lock-banner').classList.add('hidden');
+        if (lockBanner) lockBanner.classList.add('hidden');
+        if (btnAddTask) btnAddTask.classList.remove('hidden');
+        if (btnAddAgenda) btnAddAgenda.classList.remove('hidden');
+        if (groupFinanceBtns) groupFinanceBtns.classList.remove('hidden');
+        if (btnPrintDash) btnPrintDash.classList.remove('hidden');
+        if (btnPrintFin) btnPrintFin.classList.remove('hidden');
       } else {
         container.innerHTML = `
           <button onclick="openLoginModal()" class="px-3.5 py-1.5 bg-indigo-600 text-white text-xs font-bold rounded-xl shadow-md flex items-center gap-1.5">
             <i data-lucide="lock" class="w-3.5 h-3.5"></i> LOGIN PIN
           </button>
         `;
-        document.getElementById('auth-lock-banner').classList.remove('hidden');
+        if (lockBanner) lockBanner.classList.remove('hidden');
+        if (btnAddTask) btnAddTask.classList.add('hidden');
+        if (btnAddAgenda) btnAddAgenda.classList.add('hidden');
+        if (groupFinanceBtns) groupFinanceBtns.classList.add('hidden');
+        if (btnPrintDash) btnPrintDash.classList.add('hidden');
+        if (btnPrintFin) btnPrintFin.classList.add('hidden');
       }
       initLucide();
     }
@@ -717,7 +736,7 @@
         closeLoginModal();
         renderAuthBar();
         refreshAllViews();
-        showToast('Login berhasil sebagai TOMMY', 'success');
+        showToast('Login berhasil sebagai Admin TOMMY', 'success');
       } else {
         document.getElementById('login-error').classList.remove('hidden');
       }
@@ -728,7 +747,7 @@
       localStorage.setItem(KEYS.AUTH, 'false');
       renderAuthBar();
       refreshAllViews();
-      showToast('Berhasil logout', 'info');
+      showToast('Berhasil logout, kembali ke Mode Publik', 'info');
     }
 
     function switchPage(pageId) {
@@ -774,9 +793,9 @@
       let totalInc = finances.filter(f => f.type === 'pemasukan').reduce((acc, f) => acc + Number(f.amount), 0);
       let totalExp = finances.filter(f => f.type === 'pengeluaran').reduce((acc, f) => acc + Number(f.amount), 0);
 
-      document.getElementById('dash-total-income').innerText = isAuthenticated ? formatIDR(totalInc) : 'Rp *** (Terkunci)';
-      document.getElementById('dash-total-expense').innerText = isAuthenticated ? formatIDR(totalExp) : 'Rp *** (Terkunci)';
-      document.getElementById('dash-net-balance').innerText = `Saldo: ${isAuthenticated ? formatIDR(totalInc - totalExp) : 'Rp ***'}`;
+      document.getElementById('dash-total-income').innerText = isAuthenticated ? formatIDR(totalInc) : '[Terkunci]';
+      document.getElementById('dash-total-expense').innerText = isAuthenticated ? formatIDR(totalExp) : '[Terkunci]';
+      document.getElementById('dash-net-balance').innerText = `Saldo: ${isAuthenticated ? formatIDR(totalInc - totalExp) : '[Terkunci]'}`;
 
       // Progress Bar Dashboard
       document.getElementById('dash-task-total-badge').innerText = `Total: ${totalTasks} Tugas`;
@@ -831,6 +850,14 @@
     }
 
     function renderFlowchart() {
+      const overlay = document.getElementById('flowchart-locked-overlay');
+      if (!isAuthenticated) {
+        if (overlay) overlay.classList.remove('hidden');
+        return;
+      } else {
+        if (overlay) overlay.classList.add('hidden');
+      }
+
       let totalInc = finances.filter(f => f.type === 'pemasukan').reduce((acc, f) => acc + Number(f.amount), 0);
       let totalExp = finances.filter(f => f.type === 'pengeluaran').reduce((acc, f) => acc + Number(f.amount), 0);
 
@@ -856,7 +883,7 @@
       });
     }
 
-    // --- TABEL MANAJEMEN TUGAS DENGAN DROPDOWN EDIT STATUS ---
+    // --- TABEL MANAJEMEN TUGAS ---
     function renderTasks() {
       document.getElementById('task-counter').innerText = `Jumlah Seluruh Tugas: ${tasks.length}`;
       const tbody = document.getElementById('task-table-body');
@@ -875,23 +902,23 @@
           <td class="p-4"><span class="px-2 py-0.5 rounded font-bold text-[10px] ${t.type === 'Individu' ? 'bg-blue-50 text-blue-600' : 'bg-purple-50 text-purple-600'}">${t.type}</span></td>
           <td class="p-4 font-semibold text-slate-600">${formatDateTime(t.deadline)}</td>
           
-          <!-- EDIT STATUS PENGERJAAN -->
           <td class="p-4">
-            <select ${!isAuthenticated ? 'disabled' : ''} onchange="updateTaskStatus('${t.id}', this.value)" 
-                    class="px-2 py-1 rounded-lg text-xs font-bold border ${getTaskStatusSelectClass(t.status)} cursor-pointer outline-none">
-              <option value="Belum dikerjakan" ${t.status === 'Belum dikerjakan' ? 'selected' : ''}>Belum dikerjakan</option>
-              <option value="Dalam pengerjaan" ${t.status === 'Dalam pengerjaan' ? 'selected' : ''}>Dalam pengerjaan</option>
-              <option value="Selesai" ${t.status === 'Selesai' ? 'selected' : ''}>Sudah Selesai</option>
-            </select>
+            ${isAuthenticated ? `
+              <select onchange="updateTaskStatus('${t.id}', this.value)" class="px-2 py-1 rounded-lg text-xs font-bold border ${getTaskStatusSelectClass(t.status)} cursor-pointer outline-none">
+                <option value="Belum dikerjakan" ${t.status === 'Belum dikerjakan' ? 'selected' : ''}>Belum dikerjakan</option>
+                <option value="Dalam pengerjaan" ${t.status === 'Dalam pengerjaan' ? 'selected' : ''}>Dalam pengerjaan</option>
+                <option value="Selesai" ${t.status === 'Selesai' ? 'selected' : ''}>Sudah Selesai</option>
+              </select>
+            ` : `<span class="px-2.5 py-1 rounded-lg text-xs font-bold border ${getTaskStatusSelectClass(t.status)}">${t.status}</span>`}
           </td>
 
-          <!-- EDIT STATUS PENGUMPULAN -->
           <td class="p-4">
-            <select ${!isAuthenticated ? 'disabled' : ''} onchange="updateTaskSubmission('${t.id}', this.value)" 
-                    class="px-2 py-1 rounded-lg text-xs font-bold border ${getSubmissionSelectClass(t.submission)} cursor-pointer outline-none">
-              <option value="Belum dikumpulkan" ${t.submission === 'Belum dikumpulkan' ? 'selected' : ''}>Belum dikumpulkan</option>
-              <option value="Sudah dikumpulkan" ${t.submission === 'Sudah dikumpulkan' ? 'selected' : ''}>Sudah dikumpulkan</option>
-            </select>
+            ${isAuthenticated ? `
+              <select onchange="updateTaskSubmission('${t.id}', this.value)" class="px-2 py-1 rounded-lg text-xs font-bold border ${getSubmissionSelectClass(t.submission)} cursor-pointer outline-none">
+                <option value="Belum dikumpulkan" ${t.submission === 'Belum dikumpulkan' ? 'selected' : ''}>Belum dikumpulkan</option>
+                <option value="Sudah dikumpulkan" ${t.submission === 'Sudah dikumpulkan' ? 'selected' : ''}>Sudah dikumpulkan</option>
+              </select>
+            ` : `<span class="px-2.5 py-1 rounded-lg text-xs font-bold border ${getSubmissionSelectClass(t.submission)}">${t.submission}</span>`}
           </td>
 
           <td class="p-4">
@@ -911,7 +938,7 @@
               <button onclick="deleteTask('${t.id}')" class="text-slate-400 hover:text-red-600 p-1" title="Hapus Tugas">
                 <i data-lucide="trash-2" class="w-4 h-4"></i>
               </button>
-            ` : '<span class="text-[10px] text-slate-300">Terkunci</span>'}
+            ` : '<span class="text-[11px] text-slate-400 font-medium">Lihat Saja</span>'}
           </td>
         </tr>
       `).join('');
@@ -946,7 +973,7 @@
       if (t) {
         t.submission = newSub;
         saveStorageData();
-        showToast(`Status pengumpulkan diperbarui: ${newSub}`, 'success');
+        showToast(`Status pengumpulan diperbarui: ${newSub}`, 'success');
       }
     }
 
@@ -987,7 +1014,7 @@
       }
     }
 
-    // --- MANAJEMEN WAKTU & KEGIATAN DENGAN EDIT STATUS ---
+    // --- MANAJEMEN WAKTU & KEGIATAN ---
     function renderAgendas() {
       const grid = document.getElementById('agenda-grid');
       if (agendas.length === 0) {
@@ -1001,13 +1028,13 @@
             <div class="flex justify-between items-center mb-3">
               <span class="text-[10px] font-bold uppercase px-2 py-0.5 rounded bg-slate-100 text-slate-600">${a.criteria}</span>
               
-              <!-- EDIT STATUS KEGIATAN DROPDOWN -->
-              <select ${!isAuthenticated ? 'disabled' : ''} onchange="updateAgendaStatus('${a.id}', this.value)"
-                      class="px-2 py-0.5 rounded text-xs font-bold border ${getAgendaSelectClass(a.status)} cursor-pointer outline-none">
-                <option value="Belum terlaksana" ${a.status === 'Belum terlaksana' ? 'selected' : ''}>Belum terlaksana</option>
-                <option value="Terlaksana" ${a.status === 'Terlaksana' ? 'selected' : ''}>Terlaksana</option>
-                <option value="Tidak dihadiri" ${a.status === 'Tidak dihadiri' ? 'selected' : ''}>Tidak dihadiri</option>
-              </select>
+              ${isAuthenticated ? `
+                <select onchange="updateAgendaStatus('${a.id}', this.value)" class="px-2 py-0.5 rounded text-xs font-bold border ${getAgendaSelectClass(a.status)} cursor-pointer outline-none">
+                  <option value="Belum terlaksana" ${a.status === 'Belum terlaksana' ? 'selected' : ''}>Belum terlaksana</option>
+                  <option value="Terlaksana" ${a.status === 'Terlaksana' ? 'selected' : ''}>Terlaksana</option>
+                  <option value="Tidak dihadiri" ${a.status === 'Tidak dihadiri' ? 'selected' : ''}>Tidak dihadiri</option>
+                </select>
+              ` : `<span class="px-2.5 py-0.5 rounded text-xs font-bold border ${getAgendaSelectClass(a.status)}">${a.status}</span>`}
             </div>
             <h4 class="font-bold text-slate-900 text-sm">${escapeHtml(a.title)}</h4>
             <div class="mt-3 space-y-1 text-xs text-slate-500">
@@ -1116,24 +1143,44 @@
       });
     }
 
+    // --- REKAPITULASI KEUANGAN (TERKUNCI UNTUK PUBLIK) ---
     function renderFinance() {
       let totalInc = finances.filter(f => f.type === 'pemasukan').reduce((acc, f) => acc + Number(f.amount), 0);
       let totalExp = finances.filter(f => f.type === 'pengeluaran').reduce((acc, f) => acc + Number(f.amount), 0);
       let totalFlow = totalInc + totalExp;
 
-      document.getElementById('fin-income-total').innerText = isAuthenticated ? formatIDR(totalInc) : 'Rp *** (Terkunci)';
-      document.getElementById('fin-expense-total').innerText = isAuthenticated ? formatIDR(totalExp) : 'Rp *** (Terkunci)';
-      document.getElementById('fin-net-total').innerText = isAuthenticated ? formatIDR(totalInc - totalExp) : 'Rp *** (Terkunci)';
+      document.getElementById('fin-income-total').innerText = isAuthenticated ? formatIDR(totalInc) : '[Terkunci]';
+      document.getElementById('fin-expense-total').innerText = isAuthenticated ? formatIDR(totalExp) : '[Terkunci]';
+      document.getElementById('fin-net-total').innerText = isAuthenticated ? formatIDR(totalInc - totalExp) : '[Terkunci]';
 
       let incPct = totalFlow > 0 ? Math.round((totalInc / totalFlow) * 100) : 0;
       let expPct = totalFlow > 0 ? Math.round((totalExp / totalFlow) * 100) : 0;
 
-      document.getElementById('fin-income-pct').innerText = `${incPct}% dari Total Arus Kas`;
-      document.getElementById('fin-expense-pct').innerText = `${expPct}% dari Total Arus Kas`;
+      document.getElementById('fin-income-pct').innerText = isAuthenticated ? `${incPct}% dari Total Arus Keuangan` : 'Akses Terkunci';
+      document.getElementById('fin-expense-pct').innerText = isAuthenticated ? `${expPct}% dari Total Arus Keuangan` : 'Akses Terkunci';
 
       const tbody = document.getElementById('finance-table-body');
+
+      if (!isAuthenticated) {
+        tbody.innerHTML = `
+          <tr>
+            <td colspan="5" class="p-8 text-center bg-slate-50/50">
+              <div class="flex flex-col items-center justify-center space-y-2">
+                <i data-lucide="lock" class="w-8 h-8 text-amber-500"></i>
+                <p class="font-bold text-slate-800 text-sm">Rekapitulasi Keuangan Terkunci</p>
+                <p class="text-xs text-slate-500 max-w-sm">Hanya pemilik PIN terotorisasi yang dapat melihat rincian riwayat transaksi keuangan.</p>
+                <button onclick="openLoginModal()" class="mt-2 px-4 py-1.5 bg-indigo-600 text-white rounded-xl text-xs font-bold shadow-md">
+                  Masukkan PIN
+                </button>
+              </div>
+            </td>
+          </tr>
+        `;
+        return;
+      }
+
       if (finances.length === 0) {
-        tbody.innerHTML = `<tr><td colspan="5" class="p-4 text-center text-slate-400">Belum ada data transaksi anggaran.</td></tr>`;
+        tbody.innerHTML = `<tr><td colspan="5" class="p-4 text-center text-slate-400">Belum ada data transaksi keuangan.</td></tr>`;
         return;
       }
 
@@ -1143,18 +1190,16 @@
           <td class="p-4 font-bold text-slate-900">${escapeHtml(f.source)}</td>
           <td class="p-4">
             ${f.type === 'pemasukan' 
-              ? `<span class="bg-emerald-100 text-emerald-700 font-bold px-2 py-0.5 rounded-full text-[10px]">Pemasukan (Uang Masuk)</span>` 
-              : `<span class="bg-red-100 text-red-700 font-bold px-2 py-0.5 rounded-full text-[10px]">Pengeluaran (Uang Keluar)</span>`}
+              ? `<span class="bg-emerald-100 text-emerald-700 font-bold px-2 py-0.5 rounded-full text-[10px]">Pemasukan</span>` 
+              : `<span class="bg-red-100 text-red-700 font-bold px-2 py-0.5 rounded-full text-[10px]">Pengeluaran</span>`}
           </td>
           <td class="p-4 text-right font-black ${f.type === 'pemasukan' ? 'text-emerald-600' : 'text-red-600'}">
-            ${f.type === 'pemasukan' ? '+' : '-'} ${isAuthenticated ? formatIDR(f.amount) : 'Rp ***'}
+            ${f.type === 'pemasukan' ? '+' : '-'} ${formatIDR(f.amount)}
           </td>
           <td class="p-4 text-center">
-            ${isAuthenticated ? `
-              <button onclick="deleteFinance('${f.id}')" class="text-slate-400 hover:text-red-600 p-1">
-                <i data-lucide="trash-2" class="w-4 h-4"></i>
-              </button>
-            ` : '<span class="text-[10px] text-slate-300">Terkunci</span>'}
+            <button onclick="deleteFinance('${f.id}')" class="text-slate-400 hover:text-red-600 p-1">
+              <i data-lucide="trash-2" class="w-4 h-4"></i>
+            </button>
           </td>
         </tr>
       `).join('');
@@ -1168,11 +1213,11 @@
       document.getElementById('fin-date').value = new Date().toISOString().split('T')[0];
 
       if (type === 'pemasukan') {
-        document.getElementById('finance-modal-title').innerText = 'Tambah Pemasukan (Warna Hijau)';
+        document.getElementById('finance-modal-title').innerText = 'Tambah Pemasukan';
         document.getElementById('fin-source-label').innerText = 'Sumber Pemasukan';
         document.getElementById('fin-submit-btn').className = 'px-4 py-2 bg-emerald-600 text-white rounded-xl text-xs font-semibold shadow-md';
       } else {
-        document.getElementById('finance-modal-title').innerText = 'Tambah Pengeluaran (Warna Merah)';
+        document.getElementById('finance-modal-title').innerText = 'Tambah Pengeluaran';
         document.getElementById('fin-source-label').innerText = 'Digunakan Untuk Apa';
         document.getElementById('fin-submit-btn').className = 'px-4 py-2 bg-red-600 text-white rounded-xl text-xs font-semibold shadow-md';
       }
@@ -1196,7 +1241,7 @@
       finances.push(newFin);
       saveStorageData();
       closeFinanceModal();
-      showToast('Transaksi anggaran berhasil dicatat!', 'success');
+      showToast('Transaksi keuangan berhasil dicatat!', 'success');
     }
 
     function deleteFinance(id) {
@@ -1208,6 +1253,7 @@
     }
 
     function openPrintModal() {
+      if (!isAuthenticated) return openLoginModal();
       const now = new Date();
       document.getElementById('print-month-picker').value = `${now.getFullYear()}-${String(now.getMonth()+1).padStart(2,'0')}`;
       document.getElementById('modal-print').classList.remove('hidden');
@@ -1215,6 +1261,7 @@
     function closePrintModal() { document.getElementById('modal-print').classList.add('hidden'); }
 
     function executePrint() {
+      if (!isAuthenticated) return;
       const monthVal = document.getElementById('print-month-picker').value;
       if (!monthVal) return alert('Pilih bulan terlebih dahulu!');
 
