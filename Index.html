@@ -42,36 +42,41 @@
   <div id="toast-container" class="fixed bottom-5 right-5 z-50 flex flex-col gap-2 no-print"></div>
 
   <!-- HEADER & NAVIGATION -->
-  <header class="sticky top-0 z-40 bg-white/90 backdrop-blur-md border-b border-slate-200 shadow-sm no-print">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+  <header class="sticky top-0 z-40 bg-white/95 backdrop-blur-md border-b border-slate-200 shadow-sm no-print">
+    
+    <!-- 1. BAGIAN REALTIME CLOCK (PALING ATAS - UKURAN LEBIH BESAR) -->
+    <div class="bg-slate-900 text-white py-2 px-4 text-center text-sm sm:text-base font-semibold tracking-wide flex items-center justify-center gap-2.5 shadow-inner">
+      <i data-lucide="clock" class="w-4 h-4 sm:w-5 sm:h-5 text-indigo-400 animate-pulse"></i>
+      <span id="realtime-clock" class="font-bold text-indigo-100 tracking-wider">--:--:-- WIB</span>
+    </div>
+
+    <!-- 2. BARIS KEDUA: LOGO, NAVIGASI (DASHBOARD, TUGAS, KEGIATAN & WAKTU, KEUANGAN), & AUTH -->
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-2.5 flex flex-col md:flex-row items-center justify-between gap-3">
       
+      <!-- LOGO & JUDUL -->
       <div class="flex items-center gap-3">
         <img src="https://lh3.googleusercontent.com/d/14qsCeRufd1OlVQ_wOnBavEj2TR1ux4wy=s200" 
              alt="Logo Workspace" 
              class="w-9 h-9 object-contain rounded-lg border border-slate-100 shadow-sm"
              onerror="this.onerror=null; this.src='https://cdn-icons-png.flaticon.com/512/5968/5968523.png'">
         <div>
-          <h1 class="text-base font-bold text-slate-900 leading-tight"> Time Pro</h1>
+          <h1 class="text-base font-bold text-slate-900 leading-tight">Tommy Time Pro</h1>
           <p class="text-[11px] text-slate-500">Tugas, Agenda & Rekap Anggaran</p>
         </div>
       </div>
 
-      <!-- FITUR REAL TIME CLOCK -->
-      <div class="hidden lg:flex items-center gap-2 bg-slate-50 px-3 py-1.5 rounded-xl border border-slate-200 text-xs font-semibold text-slate-700">
-        <i data-lucide="clock" class="w-4 h-4 text-indigo-600 animate-pulse"></i>
-        <span id="realtime-clock">--:--:-- WIB</span>
-      </div>
-
+      <!-- DERETAN MENU NAVIGASI DI BAWAH WAKTU REALTIME -->
       <nav class="hidden md:flex items-center space-x-1 bg-slate-100 p-1 rounded-xl border border-slate-200/80">
         <button onclick="switchPage('dashboard')" id="nav-dashboard" class="px-3.5 py-1.5 text-xs font-semibold rounded-lg transition-all">Dashboard</button>
         <button onclick="switchPage('tasks')" id="nav-tasks" class="px-3.5 py-1.5 text-xs font-semibold rounded-lg transition-all">Manajemen Tugas</button>
-        <button onclick="switchPage('agenda')" id="nav-agenda" class="px-3.5 py-1.5 text-xs font-semibold rounded-lg transition-all">Manajemen Waktu</button>
+        <button onclick="switchPage('agenda')" id="nav-agenda" class="px-3.5 py-1.5 text-xs font-semibold rounded-lg transition-all">Manajemen Kegiatan dan Waktu</button>
         <button onclick="switchPage('finance')" id="nav-finance" class="px-3.5 py-1.5 text-xs font-semibold rounded-lg transition-all">Manajemen Keuangan</button>
       </nav>
 
       <div id="auth-container" class="flex items-center gap-2"></div>
     </div>
 
+    <!-- NAVIGASI MOBILE (TAMPIL DI LAYAR KECIL) -->
     <div class="md:hidden flex justify-around border-t border-slate-100 bg-white py-2 px-2 text-xs font-medium text-slate-600">
       <button onclick="switchPage('dashboard')" class="flex flex-col items-center py-0.5">
         <i data-lucide="home" class="w-4 h-4 mb-0.5"></i> Dashboard
@@ -80,7 +85,7 @@
         <i data-lucide="check-square" class="w-4 h-4 mb-0.5"></i> Tugas
       </button>
       <button onclick="switchPage('agenda')" class="flex flex-col items-center py-0.5">
-        <i data-lucide="calendar" class="w-4 h-4 mb-0.5"></i> Kegiatan
+        <i data-lucide="calendar" class="w-4 h-4 mb-0.5"></i> Kegiatan & Waktu
       </button>
       <button onclick="switchPage('finance')" class="flex flex-col items-center py-0.5">
         <i data-lucide="wallet" class="w-4 h-4 mb-0.5"></i> Keuangan
@@ -95,7 +100,7 @@
     <div id="auth-lock-banner" class="hidden mb-6 p-4 bg-amber-50 border border-amber-200 rounded-2xl flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 text-amber-800">
       <div class="flex items-center gap-3">
         <i data-lucide="eye-off" class="w-5 h-5 text-amber-600 shrink-0"></i>
-        <p class="text-xs sm:text-sm font-medium">Mode Publik (Lihat-saja). Untuk memasukkan data & mengedit status, silakan Login!
+        <p class="text-xs sm:text-sm font-medium">Mode Publik (Lihat-saja). Untuk memasukkan data & mengedit status, silakan login dengan PIN terotorisasi.</p>
       </div>
       <button onclick="openLoginModal()" class="px-3.5 py-1.5 bg-amber-600 text-white text-xs font-bold rounded-xl shadow-sm hover:bg-amber-700 whitespace-nowrap flex items-center gap-1.5">
         <i data-lucide="key-round" class="w-3.5 h-3.5"></i> LOGIN PIN
@@ -139,7 +144,7 @@
           <div>
             <p class="text-xs font-bold text-slate-400 uppercase tracking-wider">Total Pemasukan</p>
             <h3 id="dash-total-income" class="text-lg font-extrabold text-emerald-600 mt-1">Rp 0</h3>
-            <p class="text-[11px] text-slate-400 mt-1">Masuk (Hijau)</p>
+            <p class="text-[11px] text-slate-400 mt-1">Masuk</p>
           </div>
           <div class="p-3 bg-emerald-50 text-emerald-600 rounded-2xl"><i data-lucide="arrow-down-right" class="w-6 h-6"></i></div>
         </div>
@@ -148,7 +153,7 @@
           <div>
             <p class="text-xs font-bold text-slate-400 uppercase tracking-wider">Total Pengeluaran</p>
             <h3 id="dash-total-expense" class="text-lg font-extrabold text-red-600 mt-1">Rp 0</h3>
-            <p class="text-[11px] text-slate-400 mt-1">Keluar (Merah)</p>
+            <p class="text-[11px] text-slate-400 mt-1">Keluar</p>
           </div>
           <div class="p-3 bg-red-50 text-red-600 rounded-2xl"><i data-lucide="arrow-up-right" class="w-6 h-6"></i></div>
         </div>
@@ -297,7 +302,7 @@
     <section id="page-agenda" class="hidden space-y-6">
       <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
         <div>
-          <h2 class="text-xl font-bold text-slate-900">Manajemen Waktu & Kegiatan</h2>
+          <h2 class="text-xl font-bold text-slate-900">Manajemen Kegiatan dan Waktu</h2>
           <p class="text-xs text-slate-500">Jadwal kegiatan (Tersimpan otomatis, terhapus 6 jam pasca terlaksana atau hapus manual).</p>
         </div>
         <button onclick="openAgendaModal()" class="px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-xs rounded-xl shadow-md flex items-center gap-1.5 transition-all">
@@ -376,7 +381,7 @@
       <div class="flex items-center gap-3">
         <img src="https://lh3.googleusercontent.com/d/14qsCeRufd1OlVQ_wOnBavEj2TR1ux4wy=s200" class="w-12 h-12 object-contain" alt="Logo">
         <div>
-          <h1 class="text-xl font-bold uppercase">LAPORAN REKAPITULASI KEUANGAN & WORKSPACE</h1>
+          <h1 class="text-xl font-bold uppercase">LAPORAN REKAPITULASI ANGGARAN & WORKSPACE</h1>
           <p id="print-period" class="text-xs font-semibold text-slate-600">Periode: Semua Data</p>
         </div>
       </div>
@@ -391,7 +396,7 @@
     </div>
 
     <div class="mb-6">
-      <h3 class="font-bold text-xs uppercase mb-2 border-b pb-1">1. Rincian Keuangan (Pemasukan & Pengeluaran)</h3>
+      <h3 class="font-bold text-xs uppercase mb-2 border-b pb-1">1. Rincian Anggaran (Pemasukan & Pengeluaran)</h3>
       <table class="w-full text-left text-xs border border-collapse">
         <thead>
           <tr class="bg-slate-100 border-b"><th class="p-2 border">Tanggal</th><th class="p-2 border">Keterangan</th><th class="p-2 border">Jenis</th><th class="p-2 border text-right">Nominal</th></tr>
@@ -418,7 +423,7 @@
     <div class="bg-white rounded-2xl max-w-sm w-full p-6 shadow-2xl space-y-4">
       <div class="text-center">
         <h3 class="text-base font-bold text-slate-900">Autentikasi Hak Akses Edit</h3>
-        <p class="text-xs text-slate-500 mt-1">Masukkan PIN untuk melihat data lengkap & mengedit.</p>
+        <p class="text-xs text-slate-500 mt-1">Masukkan PIN terotorisasi untuk melihat data lengkap & mengedit.</p>
       </div>
       <form onsubmit="handleLogin(event)" class="space-y-3">
         <input type="password" id="login-pin" placeholder="Masukkan PIN..." class="w-full text-center tracking-widest text-lg font-bold px-4 py-2 border rounded-xl focus:ring-2 focus:ring-indigo-500 focus:outline-none" required>
@@ -467,7 +472,7 @@
             </select>
           </div>
           <div>
-            <label class="block text-[11px] font-bold text-slate-700 mb-1">Status Pengumpulan</label>
+            <label class="block text-[11px] font-bold text-slate-700 mb-1">Status Pengumpulkan</label>
             <select id="task-submission" class="w-full px-3 py-2 border rounded-xl text-xs">
               <option value="Belum dikumpulkan">Belum dikumpulkan</option>
               <option value="Sudah dikumpulkan">Sudah dikumpulkan</option>
@@ -617,12 +622,12 @@
       if (typeof lucide !== 'undefined') lucide.createIcons();
     }
 
-    // FUNGSI HITUNG JAM REAL-TIME
+    // FUNGSI HITUNG JAM REAL-TIME (WIB)
     function startRealtimeClock() {
       const clockEl = document.getElementById('realtime-clock');
       function updateClock() {
         const now = new Date();
-        const options = { weekday: 'short', day: 'numeric', month: 'short', year: 'numeric' };
+        const options = { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' };
         const dateStr = now.toLocaleDateString('id-ID', options);
         const timeStr = now.toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
         if (clockEl) {
@@ -683,7 +688,7 @@
       if (isAuthenticated) {
         container.innerHTML = `
           <span class="inline-flex items-center gap-1.5 px-3 py-1 bg-emerald-50 text-emerald-700 text-xs font-bold rounded-lg border border-emerald-200">
-            <span class="w-2 h-2 rounded-full bg-emerald-500"></span> Akses PIN Terverifikasi (TOMMY)
+            <span class="w-2 h-2 rounded-full bg-emerald-500"></span> Anda berada di halaman
           </span>
           <button onclick="handleLogout()" class="p-1.5 text-slate-400 hover:text-red-600 rounded-lg" title="Logout">
             <i data-lucide="log-out" class="w-4 h-4"></i>
@@ -835,7 +840,7 @@
       flowchartInstance = new Chart(ctx, {
         type: 'doughnut',
         data: {
-          labels: ['Pemasukan (Hijau)', 'Pengeluaran (Merah)'],
+          labels: ['Pemasukan', 'Pengeluaran'],
           datasets: [{
             data: [totalInc || 1, totalExp],
             backgroundColor: ['#10b981', '#ef4444']
@@ -941,7 +946,7 @@
       if (t) {
         t.submission = newSub;
         saveStorageData();
-        showToast(`Status pengumpulan diperbarui: ${newSub}`, 'success');
+        showToast(`Status pengumpulkan diperbarui: ${newSub}`, 'success');
       }
     }
 
@@ -1191,7 +1196,7 @@
       finances.push(newFin);
       saveStorageData();
       closeFinanceModal();
-      showToast('Transaksi keuangan berhasil dicatat!', 'success');
+      showToast('Transaksi anggaran berhasil dicatat!', 'success');
     }
 
     function deleteFinance(id) {
