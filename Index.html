@@ -3,13 +3,13 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Tommy Time Pro - Tugas, Kegiatan & Rekap Anggaran</title>
+  <title>MasPram Time Pro - Portal Manajemen</title>
   
   <!-- Tailwind CSS CDN -->
   <script src="https://cdn.tailwindcss.com"></script>
   
-  <!-- Font Inter -->
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <!-- Font Inter & Plus Jakarta Sans -->
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
   
   <!-- Lucide Icons -->
   <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
@@ -18,8 +18,18 @@
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
   <style>
-    body { font-family: 'Inter', sans-serif; }
+    body { font-family: 'Plus Jakarta Sans', sans-serif; }
     
+    .glass-card {
+      background: rgba(255, 255, 255, 0.85);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+    }
+
+    .gradient-banner {
+      background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 50%, #9333ea 100%);
+    }
+
     @media print {
       body * { visibility: hidden; }
       #print-area, #print-area * { visibility: visible; }
@@ -28,7 +38,7 @@
         left: 0;
         top: 0;
         width: 100%;
-        padding: 20px;
+        padding: 24px;
         background: #ffffff;
         color: #000000;
       }
@@ -36,147 +46,163 @@
     }
   </style>
 </head>
-<body class="bg-slate-50 text-slate-800 min-h-screen flex flex-col antialiased">
+<body class="bg-slate-100/70 text-slate-800 min-h-screen flex flex-col antialiased selection:bg-indigo-500 selection:text-white">
 
   <!-- NOTIFIKASI TOAST CONTAINER -->
-  <div id="toast-container" class="fixed bottom-5 right-5 z-50 flex flex-col gap-2 no-print"></div>
+  <div id="toast-container" class="fixed bottom-5 right-5 z-50 flex flex-col gap-2.5 no-print"></div>
 
   <!-- HEADER & NAVIGATION -->
-  <header class="sticky top-0 z-40 bg-white/95 backdrop-blur-md border-b border-slate-200 shadow-sm no-print">
+  <header class="sticky top-0 z-40 bg-white/90 backdrop-blur-md border-b border-slate-200/80 shadow-sm no-print">
     
-    <!-- 1. BAGIAN REALTIME CLOCK (PALING ATAS) -->
-    <div class="bg-slate-900 text-white py-2 px-4 text-center text-sm sm:text-base font-semibold tracking-wide flex items-center justify-center gap-2.5 shadow-inner">
-      <i data-lucide="clock" class="w-4 h-4 sm:w-5 sm:h-5 text-indigo-400 animate-pulse"></i>
-      <span id="realtime-clock" class="font-bold text-indigo-100 tracking-wider">--:--:-- WIB</span>
+    <!-- Realtime Clock Banner -->
+    <div class="bg-slate-950 text-slate-200 py-1.5 px-4 text-center text-xs sm:text-sm font-semibold tracking-wide flex items-center justify-center gap-2">
+      <span class="relative flex h-2 w-2">
+        <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-indigo-400 opacity-75"></span>
+        <span class="relative inline-flex rounded-full h-2 w-2 bg-indigo-500"></span>
+      </span>
+      <span id="realtime-clock" class="font-bold text-indigo-200 tracking-wider">--:--:-- WIB</span>
     </div>
 
-    <!-- 2. BARIS KEDUA: LOGO, NAVIGASI & AUTH -->
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-2.5 flex flex-col md:flex-row items-center justify-between gap-3">
+    <!-- Navigation Bar -->
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3 flex flex-col md:flex-row items-center justify-between gap-4">
       
       <!-- LOGO & JUDUL -->
       <div class="flex items-center gap-3">
-        <img src="https://lh3.googleusercontent.com/d/14qsCeRufd1OlVQ_wOnBavEj2TR1ux4wy=s200" 
-             alt="Logo Workspace" 
-             class="w-9 h-9 object-contain rounded-lg border border-slate-100 shadow-sm"
-             onerror="this.onerror=null; this.src='https://cdn-icons-png.flaticon.com/512/5968/5968523.png'">
+        <div class="w-10 h-10 rounded-2xl bg-indigo-600 flex items-center justify-center text-white shadow-md shadow-indigo-200">
+          <i data-lucide="layout-dashboard" class="w-5 h-5"></i>
+        </div>
         <div>
-          <h1 class="text-base font-bold text-slate-900 leading-tight">Tommy Time Pro</h1>
-          <p class="text-[11px] text-slate-500">Tugas, Agenda & Rekap Anggaran</p>
+          <h1 class="text-lg font-extrabold text-slate-900 tracking-tight leading-none">MasPram Time <span class="text-indigo-600">Pro</span></h1>
+          <p class="text-[11px] font-medium text-slate-500 mt-0.5">Portal Manajemen</p>
         </div>
       </div>
 
-      <!-- DERETAN MENU NAVIGASI -->
-      <nav class="hidden md:flex items-center space-x-1 bg-slate-100 p-1 rounded-xl border border-slate-200/80">
-        <button onclick="switchPage('dashboard')" id="nav-dashboard" class="px-3.5 py-1.5 text-xs font-semibold rounded-lg transition-all">Dashboard</button>
-        <button onclick="switchPage('tasks')" id="nav-tasks" class="px-3.5 py-1.5 text-xs font-semibold rounded-lg transition-all">Manajemen Tugas</button>
-        <button onclick="switchPage('agenda')" id="nav-agenda" class="px-3.5 py-1.5 text-xs font-semibold rounded-lg transition-all">Manajemen Kegiatan dan Waktu</button>
-        <button onclick="switchPage('finance')" id="nav-finance" class="px-3.5 py-1.5 text-xs font-semibold rounded-lg transition-all">Manajemen Keuangan</button>
+      <!-- NAVIGASI DESKTOP -->
+      <nav class="hidden md:flex items-center gap-1 bg-slate-200/60 p-1.5 rounded-2xl border border-slate-300/40">
+        <button onclick="switchPage('dashboard')" id="nav-dashboard" class="px-4 py-2 text-xs font-bold rounded-xl transition-all">Dashboard</button>
+        <button onclick="switchPage('tasks')" id="nav-tasks" class="px-4 py-2 text-xs font-bold rounded-xl transition-all">Tugas</button>
+        <button onclick="switchPage('agenda')" id="nav-agenda" class="px-4 py-2 text-xs font-bold rounded-xl transition-all">Agenda & Waktu</button>
+        <button onclick="switchPage('finance')" id="nav-finance" class="px-4 py-2 text-xs font-bold rounded-xl transition-all">Keuangan</button>
       </nav>
 
-      <div id="auth-container" class="flex items-center gap-2"></div>
+      <!-- TOMBOL NOTIFIKASI, EKSPOR / IMPOR & AUTH -->
+      <div class="flex items-center gap-2">
+        <button id="btn-request-notif" onclick="requestNotificationPermission()" class="px-3 py-2 bg-indigo-50 hover:bg-indigo-100 text-indigo-700 text-xs font-bold rounded-xl border border-indigo-200 shadow-sm flex items-center gap-1.5 transition-all" title="Aktifkan Notifikasi HP / Laptop">
+          <i data-lucide="bell" class="w-3.5 h-3.5 text-indigo-600"></i> Aktifkan Notif
+        </button>
+        <button onclick="exportDataPublik()" class="px-3 py-2 bg-white hover:bg-slate-50 text-slate-700 text-xs font-bold rounded-xl border border-slate-200 shadow-sm flex items-center gap-1.5 transition-all" title="Bagikan file data tugas/kegiatan">
+          <i data-lucide="download" class="w-3.5 h-3.5 text-indigo-600"></i> Ekspor
+        </button>
+        <label class="px-3 py-2 bg-white hover:bg-slate-50 text-slate-700 text-xs font-bold rounded-xl border border-slate-200 shadow-sm flex items-center gap-1.5 cursor-pointer transition-all" title="Muat data tugas/kegiatan">
+          <i data-lucide="upload" class="w-3.5 h-3.5 text-indigo-600"></i> Impor
+          <input type="file" id="import-file-input" onchange="importDataPublik(event)" class="hidden" accept=".json">
+        </label>
+        <div id="auth-container" class="flex items-center gap-2"></div>
+      </div>
     </div>
 
     <!-- NAVIGASI MOBILE -->
-    <div class="md:hidden flex justify-around border-t border-slate-100 bg-white py-2 px-2 text-xs font-medium text-slate-600">
-      <button onclick="switchPage('dashboard')" class="flex flex-col items-center py-0.5">
-        <i data-lucide="home" class="w-4 h-4 mb-0.5"></i> Dashboard
+    <div class="md:hidden flex justify-around border-t border-slate-200/80 bg-white py-2 px-2 text-xs font-medium text-slate-600">
+      <button onclick="switchPage('dashboard')" class="flex flex-col items-center py-1 px-3 rounded-lg hover:bg-slate-50">
+        <i data-lucide="home" class="w-4 h-4 mb-1"></i> Dashboard
       </button>
-      <button onclick="switchPage('tasks')" class="flex flex-col items-center py-0.5">
-        <i data-lucide="check-square" class="w-4 h-4 mb-0.5"></i> Tugas
+      <button onclick="switchPage('tasks')" class="flex flex-col items-center py-1 px-3 rounded-lg hover:bg-slate-50">
+        <i data-lucide="check-square" class="w-4 h-4 mb-1"></i> Tugas
       </button>
-      <button onclick="switchPage('agenda')" class="flex flex-col items-center py-0.5">
-        <i data-lucide="calendar" class="w-4 h-4 mb-0.5"></i> Kegiatan & Waktu
+      <button onclick="switchPage('agenda')" class="flex flex-col items-center py-1 px-3 rounded-lg hover:bg-slate-50">
+        <i data-lucide="calendar" class="w-4 h-4 mb-1"></i> Agenda
       </button>
-      <button onclick="switchPage('finance')" class="flex flex-col items-center py-0.5">
-        <i data-lucide="wallet" class="w-4 h-4 mb-0.5"></i> Keuangan
+      <button onclick="switchPage('finance')" class="flex flex-col items-center py-1 px-3 rounded-lg hover:bg-slate-50">
+        <i data-lucide="wallet" class="w-4 h-4 mb-1"></i> Keuangan
       </button>
     </div>
   </header>
 
-  <!-- MAIN CONTENT CONTAINER -->
-  <main class="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6 no-print">
+  <!-- MAIN CONTAINER -->
+  <main class="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8 no-print">
 
     <!-- BANNER INFORMASI MODE PUBLIK -->
-    <div id="auth-lock-banner" class="hidden mb-6 p-4 bg-amber-50 border border-amber-200 rounded-2xl flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 text-amber-800">
+    <div id="auth-lock-banner" class="hidden mb-6 p-4 bg-amber-500/10 border border-amber-500/20 rounded-2xl flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 text-amber-900">
       <div class="flex items-center gap-3">
-        <i data-lucide="eye" class="w-5 h-5 text-amber-600 shrink-0"></i>
-        <p class="text-xs sm:text-sm font-medium">Anda dalam **Mode Publik (Lihat-Saja)**. Anda dapat melihat Tugas dan Agenda Kegiatan. Rekapitulasi Keuangan & Fitur Edit terkunci.</p>
+        <div class="p-2 bg-amber-500 text-white rounded-xl shadow-sm"><i data-lucide="eye" class="w-4 h-4"></i></div>
+        <p class="text-xs sm:text-sm font-medium">Anda dalam **Mode Publik (Lihat-Saja)**. Gunakan **Ekspor Data** untuk membagikan berkas ke perangkat lain.</p>
       </div>
-      <button onclick="openLoginModal()" class="px-3.5 py-1.5 bg-amber-600 text-white text-xs font-bold rounded-xl shadow-sm hover:bg-amber-700 whitespace-nowrap flex items-center gap-1.5">
-        <i data-lucide="key-round" class="w-3.5 h-3.5"></i> LOGIN PIN ADMIN
+      <button onclick="openLoginModal()" class="px-4 py-2 bg-amber-600 text-white text-xs font-bold rounded-xl shadow-md hover:bg-amber-700 transition-all whitespace-nowrap flex items-center gap-1.5">
+        <i data-lucide="key-round" class="w-3.5 h-3.5"></i> LOGIN ADMIN
       </button>
     </div>
 
     <!-- 1. HALAMAN DASHBOARD -->
     <section id="page-dashboard" class="space-y-6">
       
-      <div class="relative overflow-hidden rounded-3xl bg-gradient-to-r from-indigo-600 via-indigo-700 to-purple-700 p-6 sm:p-8 text-white shadow-xl flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
+      <!-- HERO BANNER -->
+      <div class="relative overflow-hidden rounded-3xl gradient-banner p-6 sm:p-8 text-white shadow-xl shadow-indigo-500/10 flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
         <div class="relative z-10 max-w-2xl">
-          <h2 class="text-2xl sm:text-3xl font-extrabold tracking-tight">Selamat Datang di Tommy Time Pro</h2>
-          <p class="mt-2 text-indigo-100 text-xs sm:text-sm">Sistem terpadu Pengelolaan Tugas Akademik, Manajemen Waktu & Kegiatan, serta Manajemen Keuangan Otomatis.</p>
+          <span class="px-3 py-1 bg-white/20 rounded-full text-[11px] font-bold tracking-wide uppercase backdrop-blur-md">Kontrol Kegiatan, Tugas, dan Keuangan</span>
+          <h2 class="text-2xl sm:text-3xl font-black tracking-tight mt-2">Selamat Datang di MasPram Time Pro</h2>
+          <p class="mt-2 text-indigo-100 text-xs sm:text-sm leading-relaxed">Sistem terpadu Pengelolaan Tugas Akademik, Manajemen Waktu & Keuangan.</p>
         </div>
-        <button id="btn-print-dash" onclick="openPrintModal()" class="px-4 py-2.5 bg-white text-indigo-700 hover:bg-indigo-50 font-bold text-xs rounded-xl shadow-lg flex items-center gap-2 transition-all shrink-0">
+        <button id="btn-print-dash" onclick="openPrintModal()" class="px-5 py-3 bg-white text-indigo-700 hover:bg-indigo-50 font-bold text-xs rounded-2xl shadow-xl flex items-center gap-2 transition-all shrink-0">
           <i data-lucide="printer" class="w-4 h-4"></i> Cetak Keuangan PDF
         </button>
       </div>
 
       <!-- Ringkasan Statistik Utama -->
-      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-        <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm flex items-center justify-between">
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
+        <div class="bg-white p-5 rounded-2xl border border-slate-200/80 shadow-sm hover:shadow-md transition-all flex items-center justify-between">
           <div>
-            <p class="text-xs font-bold text-slate-400 uppercase tracking-wider">Jumlah Seluruh Tugas</p>
+            <p class="text-[11px] font-extrabold text-slate-400 uppercase tracking-wider">Seluruh Tugas</p>
             <h3 id="dash-total-tasks" class="text-2xl font-black text-slate-900 mt-1">0</h3>
-            <p id="dash-completed-tasks" class="text-xs text-emerald-600 mt-1 font-semibold">0% Selesai</p>
+            <p id="dash-completed-tasks" class="text-xs text-emerald-600 mt-1 font-bold">0% Selesai</p>
           </div>
-          <div class="p-3 bg-blue-50 text-blue-600 rounded-2xl"><i data-lucide="file-text" class="w-6 h-6"></i></div>
+          <div class="p-3.5 bg-blue-50 text-blue-600 rounded-2xl"><i data-lucide="file-text" class="w-6 h-6"></i></div>
         </div>
 
-        <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm flex items-center justify-between">
+        <div class="bg-white p-5 rounded-2xl border border-slate-200/80 shadow-sm hover:shadow-md transition-all flex items-center justify-between">
           <div>
-            <p class="text-xs font-bold text-slate-400 uppercase tracking-wider">Jumlah Kegiatan</p>
+            <p class="text-[11px] font-extrabold text-slate-400 uppercase tracking-wider">Jumlah Agenda</p>
             <h3 id="dash-total-agendas" class="text-2xl font-black text-slate-900 mt-1">0</h3>
-            <p id="dash-active-agendas" class="text-xs text-indigo-600 mt-1 font-semibold">0 Belum Terlaksana</p>
+            <p id="dash-active-agendas" class="text-xs text-indigo-600 mt-1 font-bold">0 Belum Terlaksana</p>
           </div>
-          <div class="p-3 bg-amber-50 text-amber-600 rounded-2xl"><i data-lucide="calendar-days" class="w-6 h-6"></i></div>
+          <div class="p-3.5 bg-amber-50 text-amber-600 rounded-2xl"><i data-lucide="calendar-days" class="w-6 h-6"></i></div>
         </div>
 
-        <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm flex items-center justify-between">
+        <div class="bg-white p-5 rounded-2xl border border-slate-200/80 shadow-sm hover:shadow-md transition-all flex items-center justify-between">
           <div>
-            <p class="text-xs font-bold text-slate-400 uppercase tracking-wider">Total Pemasukan</p>
-            <h3 id="dash-total-income" class="text-lg font-extrabold text-emerald-600 mt-1">Rp 0</h3>
-            <p class="text-[11px] text-slate-400 mt-1">Masuk</p>
+            <p class="text-[11px] font-extrabold text-slate-400 uppercase tracking-wider">Total Pemasukan</p>
+            <h3 id="dash-total-income" class="text-lg font-black text-emerald-600 mt-1">Rp 0</h3>
+            <p class="text-[11px] text-slate-400 mt-1 font-medium">Masuk</p>
           </div>
-          <div class="p-3 bg-emerald-50 text-emerald-600 rounded-2xl"><i data-lucide="arrow-down-right" class="w-6 h-6"></i></div>
+          <div class="p-3.5 bg-emerald-50 text-emerald-600 rounded-2xl"><i data-lucide="arrow-down-right" class="w-6 h-6"></i></div>
         </div>
 
-        <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm flex items-center justify-between">
+        <div class="bg-white p-5 rounded-2xl border border-slate-200/80 shadow-sm hover:shadow-md transition-all flex items-center justify-between">
           <div>
-            <p class="text-xs font-bold text-slate-400 uppercase tracking-wider">Total Pengeluaran</p>
-            <h3 id="dash-total-expense" class="text-lg font-extrabold text-red-600 mt-1">Rp 0</h3>
-            <p class="text-[11px] text-slate-400 mt-1">Keluar</p>
+            <p class="text-[11px] font-extrabold text-slate-400 uppercase tracking-wider">Total Pengeluaran</p>
+            <h3 id="dash-total-expense" class="text-lg font-black text-red-600 mt-1">Rp 0</h3>
+            <p class="text-[11px] text-slate-400 mt-1 font-medium">Keluar</p>
           </div>
-          <div class="p-3 bg-red-50 text-red-600 rounded-2xl"><i data-lucide="arrow-up-right" class="w-6 h-6"></i></div>
+          <div class="p-3.5 bg-red-50 text-red-600 rounded-2xl"><i data-lucide="arrow-up-right" class="w-6 h-6"></i></div>
         </div>
       </div>
 
       <!-- KARTU PERSENTASE TUGAS DENGAN BAR PROGRES -->
-      <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm space-y-4">
+      <div class="bg-white p-6 rounded-3xl border border-slate-200/80 shadow-sm space-y-4">
         <div class="flex items-center justify-between">
           <h3 class="font-bold text-slate-900 text-sm flex items-center gap-2">
             <i data-lucide="pie-chart" class="w-4 h-4 text-indigo-600"></i> Persentase Keseluruhan Status Tugas
           </h3>
-          <span id="dash-task-total-badge" class="text-xs font-bold px-2.5 py-1 bg-slate-100 rounded-lg text-slate-700">Total: 0 Tugas</span>
+          <span id="dash-task-total-badge" class="text-xs font-bold px-3 py-1 bg-slate-100 rounded-xl text-slate-700">Total: 0 Tugas</span>
         </div>
 
-        <!-- Progress Bar Visual -->
-        <div class="w-full bg-slate-100 h-3.5 rounded-full overflow-hidden flex">
-          <div id="bar-task-done" class="bg-emerald-500 h-full transition-all duration-500" style="width: 0%"></div>
-          <div id="bar-task-progress" class="bg-amber-400 h-full transition-all duration-500" style="width: 0%"></div>
-          <div id="bar-task-todo" class="bg-red-500 h-full transition-all duration-500" style="width: 0%"></div>
+        <div class="w-full bg-slate-100 h-4 rounded-full overflow-hidden flex p-0.5 border border-slate-200/60">
+          <div id="bar-task-done" class="bg-emerald-500 h-full rounded-full transition-all duration-500" style="width: 0%"></div>
+          <div id="bar-task-progress" class="bg-amber-400 h-full rounded-full transition-all duration-500" style="width: 0%"></div>
+          <div id="bar-task-todo" class="bg-red-500 h-full rounded-full transition-all duration-500" style="width: 0%"></div>
         </div>
 
-        <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 pt-1">
-          <div class="p-3 bg-emerald-50 border border-emerald-100 rounded-xl">
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 pt-2">
+          <div class="p-3.5 bg-emerald-50/60 border border-emerald-100 rounded-2xl">
             <div class="flex justify-between items-center text-xs text-emerald-800 font-bold">
               <span class="flex items-center gap-1.5"><span class="w-2.5 h-2.5 rounded-full bg-emerald-500"></span> Selesai</span>
               <span id="pct-task-done-num">0%</span>
@@ -184,7 +210,7 @@
             <p id="cnt-task-done" class="text-[11px] text-emerald-600 mt-1 font-semibold">0 dari 0 tugas</p>
           </div>
 
-          <div class="p-3 bg-amber-50 border border-amber-100 rounded-xl">
+          <div class="p-3.5 bg-amber-50/60 border border-amber-100 rounded-2xl">
             <div class="flex justify-between items-center text-xs text-amber-900 font-bold">
               <span class="flex items-center gap-1.5"><span class="w-2.5 h-2.5 rounded-full bg-amber-400"></span> Dalam Pengerjaan</span>
               <span id="pct-task-progress-num">0%</span>
@@ -192,7 +218,7 @@
             <p id="cnt-task-progress" class="text-[11px] text-amber-700 mt-1 font-semibold">0 dari 0 tugas</p>
           </div>
 
-          <div class="p-3 bg-red-50 border border-red-100 rounded-xl">
+          <div class="p-3.5 bg-red-50/60 border border-red-100 rounded-2xl">
             <div class="flex justify-between items-center text-xs text-red-800 font-bold">
               <span class="flex items-center gap-1.5"><span class="w-2.5 h-2.5 rounded-full bg-red-500"></span> Belum Dikerjakan</span>
               <span id="pct-task-todo-num">0%</span>
@@ -204,7 +230,7 @@
 
       <!-- Kalender Kegiatan & Flowchart Anggaran -->
       <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm">
+        <div class="bg-white p-6 rounded-3xl border border-slate-200/80 shadow-sm">
           <div class="flex items-center justify-between mb-4">
             <h3 class="font-bold text-slate-900 text-sm flex items-center gap-2">
               <i data-lucide="calendar" class="w-4 h-4 text-indigo-600"></i> Kalender Kegiatan
@@ -217,16 +243,16 @@
           <div id="calendar-days-grid" class="grid grid-cols-7 gap-1 text-xs"></div>
         </div>
 
-        <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm lg:col-span-2">
+        <div class="bg-white p-6 rounded-3xl border border-slate-200/80 shadow-sm lg:col-span-2">
           <div class="flex items-center justify-between mb-4">
             <h3 class="font-bold text-slate-900 text-sm flex items-center gap-2">
               <i data-lucide="pie-chart" class="w-4 h-4 text-purple-600"></i> Rasio Keuangan & Persentase
             </h3>
-            <span id="dash-net-balance" class="text-xs font-bold px-2.5 py-1 bg-slate-100 rounded-lg text-slate-700">Saldo: Rp 0</span>
+            <span id="dash-net-balance" class="text-xs font-bold px-3 py-1 bg-slate-100 rounded-xl text-slate-700">Saldo: Rp 0</span>
           </div>
           <div class="h-60 relative flex items-center justify-center">
             <canvas id="financeFlowchart"></canvas>
-            <div id="flowchart-locked-overlay" class="hidden absolute inset-0 bg-slate-900/60 backdrop-blur-sm rounded-xl flex flex-col items-center justify-center text-white p-4 text-center">
+            <div id="flowchart-locked-overlay" class="hidden absolute inset-0 bg-slate-900/60 backdrop-blur-sm rounded-2xl flex flex-col items-center justify-center text-white p-4 text-center">
               <i data-lucide="lock" class="w-8 h-8 text-amber-400 mb-2"></i>
               <p class="font-bold text-sm">Grafik Keuangan Terkunci</p>
               <p class="text-xs text-slate-300 mt-1">Diperlukan PIN terotorisasi untuk melihat data keuangan.</p>
@@ -240,53 +266,51 @@
     <section id="page-tasks" class="hidden space-y-6">
       <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
         <div>
-          <h2 class="text-xl font-bold text-slate-900">Manajemen Tugas Akademik</h2>
-          <p class="text-xs text-slate-500">Kelola status pengerjaan, deadline, dan rangkuman otomatis dokumen tugas.</p>
+          <h2 class="text-xl font-black text-slate-900 tracking-tight">Manajemen Tugas Akademik</h2>
+          <p class="text-xs text-slate-500 mt-0.5">Kelola status pengerjaan, deadline, dan rangkuman dokumen tugas.</p>
         </div>
-        <button id="btn-add-task" onclick="openTaskModal()" class="px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-xs rounded-xl shadow-md flex items-center gap-1.5 transition-all">
+        <button id="btn-add-task" onclick="openTaskModal()" class="px-4 py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-xs rounded-xl shadow-md shadow-indigo-200 flex items-center gap-2 transition-all">
           <i data-lucide="plus" class="w-4 h-4"></i> Tambah Tugas
         </button>
       </div>
 
-      <!-- RINGKASAN PERSENTASE TUGAS -->
       <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
-        <div class="bg-white p-4 rounded-2xl border border-slate-200 shadow-sm flex items-center justify-between">
+        <div class="bg-white p-5 rounded-2xl border border-slate-200/80 shadow-sm flex items-center justify-between">
           <div>
-            <p class="text-[11px] font-bold text-emerald-600 uppercase">Selesai</p>
-            <h4 id="task-pct-done" class="text-xl font-black text-slate-900 mt-0.5">0%</h4>
-            <p id="task-count-done" class="text-[11px] text-slate-400">0 Tugas</p>
+            <p class="text-[11px] font-bold text-emerald-600 uppercase tracking-wider">Selesai</p>
+            <h4 id="task-pct-done" class="text-2xl font-black text-slate-900 mt-0.5">0%</h4>
+            <p id="task-count-done" class="text-[11px] text-slate-400 mt-1">0 Tugas</p>
           </div>
-          <div class="w-10 h-10 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center font-bold text-xs"><i data-lucide="check-circle" class="w-5 h-5"></i></div>
+          <div class="w-11 h-11 rounded-2xl bg-emerald-50 text-emerald-600 flex items-center justify-center font-bold"><i data-lucide="check-circle" class="w-5 h-5"></i></div>
         </div>
 
-        <div class="bg-white p-4 rounded-2xl border border-slate-200 shadow-sm flex items-center justify-between">
+        <div class="bg-white p-5 rounded-2xl border border-slate-200/80 shadow-sm flex items-center justify-between">
           <div>
-            <p class="text-[11px] font-bold text-amber-600 uppercase">Dalam Pengerjaan</p>
-            <h4 id="task-pct-prog" class="text-xl font-black text-slate-900 mt-0.5">0%</h4>
-            <p id="task-count-prog" class="text-[11px] text-slate-400">0 Tugas</p>
+            <p class="text-[11px] font-bold text-amber-600 uppercase tracking-wider">Dalam Pengerjaan</p>
+            <h4 id="task-pct-prog" class="text-2xl font-black text-slate-900 mt-0.5">0%</h4>
+            <p id="task-count-prog" class="text-[11px] text-slate-400 mt-1">0 Tugas</p>
           </div>
-          <div class="w-10 h-10 rounded-xl bg-amber-50 text-amber-600 flex items-center justify-center font-bold text-xs"><i data-lucide="clock" class="w-5 h-5"></i></div>
+          <div class="w-11 h-11 rounded-2xl bg-amber-50 text-amber-600 flex items-center justify-center font-bold"><i data-lucide="clock" class="w-5 h-5"></i></div>
         </div>
 
-        <div class="bg-white p-4 rounded-2xl border border-slate-200 shadow-sm flex items-center justify-between">
+        <div class="bg-white p-5 rounded-2xl border border-slate-200/80 shadow-sm flex items-center justify-between">
           <div>
-            <p class="text-[11px] font-bold text-red-600 uppercase">Belum Dikerjakan</p>
-            <h4 id="task-pct-todo" class="text-xl font-black text-slate-900 mt-0.5">0%</h4>
-            <p id="task-count-todo" class="text-[11px] text-slate-400">0 Tugas</p>
+            <p class="text-[11px] font-bold text-red-600 uppercase tracking-wider">Belum Dikerjakan</p>
+            <h4 id="task-pct-todo" class="text-2xl font-black text-slate-900 mt-0.5">0%</h4>
+            <p id="task-count-todo" class="text-[11px] text-slate-400 mt-1">0 Tugas</p>
           </div>
-          <div class="w-10 h-10 rounded-xl bg-red-50 text-red-600 flex items-center justify-center font-bold text-xs"><i data-lucide="alert-circle" class="w-5 h-5"></i></div>
+          <div class="w-11 h-11 rounded-2xl bg-red-50 text-red-600 flex items-center justify-center font-bold"><i data-lucide="alert-circle" class="w-5 h-5"></i></div>
         </div>
       </div>
 
-      <!-- Tabel Tugas -->
-      <div class="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
+      <div class="bg-white rounded-3xl border border-slate-200/80 shadow-sm overflow-hidden">
         <div class="p-4 border-b border-slate-100 bg-slate-50/50 flex justify-between items-center">
           <span id="task-counter" class="text-xs font-bold text-slate-600">Total Seluruh Tugas: 0</span>
         </div>
         <div class="overflow-x-auto">
           <table class="w-full text-left border-collapse">
             <thead>
-              <tr class="bg-slate-50 border-b border-slate-200 text-[11px] font-bold uppercase text-slate-500">
+              <tr class="bg-slate-50/80 border-b border-slate-200/80 text-[11px] font-extrabold uppercase text-slate-400 tracking-wider">
                 <th class="p-4">Nama Tugas & Dosen</th>
                 <th class="p-4">Jenis</th>
                 <th class="p-4">Deadline</th>
@@ -306,12 +330,17 @@
     <section id="page-agenda" class="hidden space-y-6">
       <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
         <div>
-          <h2 class="text-xl font-bold text-slate-900">Manajemen Kegiatan dan Waktu</h2>
-          <p class="text-xs text-slate-500">Jadwal kegiatan (Tersimpan otomatis, terhapus 6 jam pasca terlaksana atau hapus manual).</p>
+          <h2 class="text-xl font-black text-slate-900 tracking-tight">Manajemen Kegiatan dan Waktu</h2>
+          <p class="text-xs text-slate-500 mt-0.5">Jadwal kegiatan dilengkapi countdown waktu & notifikasi otomatis.</p>
         </div>
-        <button id="btn-add-agenda" onclick="openAgendaModal()" class="px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-xs rounded-xl shadow-md flex items-center gap-1.5 transition-all">
-          <i data-lucide="plus" class="w-4 h-4"></i> Tambah Agenda
-        </button>
+        <div class="flex gap-2">
+          <button onclick="executePrintAgenda()" class="px-4 py-2.5 bg-slate-900 hover:bg-slate-800 text-white font-bold text-xs rounded-xl shadow-md flex items-center gap-1.5 transition-all">
+            <i data-lucide="printer" class="w-4 h-4"></i> Cetak PDF
+          </button>
+          <button id="btn-add-agenda" onclick="openAgendaModal()" class="px-4 py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-xs rounded-xl shadow-md shadow-indigo-200 flex items-center gap-1.5 transition-all">
+            <i data-lucide="plus" class="w-4 h-4"></i> Tambah Agenda
+          </button>
+        </div>
       </div>
 
       <div id="agenda-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5"></div>
@@ -321,49 +350,49 @@
     <section id="page-finance" class="hidden space-y-6">
       <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
         <div>
-          <h2 class="text-xl font-bold text-slate-900">Rekapitulasi Keuangan</h2>
-          <p class="text-xs text-slate-500">Pemasukan & Pengeluaran dengan penjumlahan & persentase otomatis.</p>
+          <h2 class="text-xl font-black text-slate-900 tracking-tight">Rekapitulasi Keuangan</h2>
+          <p class="text-xs text-slate-500 mt-0.5">Pemasukan & Pengeluaran dengan perhitungan persentase otomatis.</p>
         </div>
         <div id="finance-buttons-group" class="flex gap-2">
-          <button onclick="openFinanceModal('pemasukan')" class="px-3.5 py-2 bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs rounded-xl shadow-md flex items-center gap-1.5 transition-all">
-            <i data-lucide="plus-circle" class="w-4 h-4"></i> Tambah Pemasukan
+          <button onclick="openFinanceModal('pemasukan')" class="px-4 py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs rounded-xl shadow-md shadow-emerald-100 flex items-center gap-1.5 transition-all">
+            <i data-lucide="plus-circle" class="w-4 h-4"></i> Pemasukan
           </button>
-          <button onclick="openFinanceModal('pengeluaran')" class="px-3.5 py-2 bg-red-600 hover:bg-red-700 text-white font-bold text-xs rounded-xl shadow-md flex items-center gap-1.5 transition-all">
-            <i data-lucide="minus-circle" class="w-4 h-4"></i> Tambah Pengeluaran
+          <button onclick="openFinanceModal('pengeluaran')" class="px-4 py-2.5 bg-red-600 hover:bg-red-700 text-white font-bold text-xs rounded-xl shadow-md shadow-red-100 flex items-center gap-1.5 transition-all">
+            <i data-lucide="minus-circle" class="w-4 h-4"></i> Pengeluaran
           </button>
         </div>
       </div>
 
       <div class="grid grid-cols-1 md:grid-cols-3 gap-5">
-        <div class="bg-gradient-to-br from-emerald-500 to-emerald-700 text-white p-5 rounded-2xl shadow-lg relative overflow-hidden">
-          <span class="text-[11px] font-bold uppercase tracking-wider opacity-80">Total Pemasukan</span>
+        <div class="bg-gradient-to-br from-emerald-500 to-emerald-700 text-white p-6 rounded-3xl shadow-lg shadow-emerald-500/10 relative overflow-hidden">
+          <span class="text-[11px] font-extrabold uppercase tracking-wider opacity-80">Total Pemasukan</span>
           <h3 id="fin-income-total" class="text-2xl font-black mt-1">Rp 0</h3>
-          <p id="fin-income-pct" class="text-xs font-semibold mt-2 bg-white/20 inline-block px-2.5 py-0.5 rounded-md">0% dari Total Arus Keuangan</p>
+          <p id="fin-income-pct" class="text-xs font-semibold mt-3 bg-white/20 inline-block px-3 py-1 rounded-xl backdrop-blur-md">0% dari Total Arus Keuangan</p>
         </div>
 
-        <div class="bg-gradient-to-br from-red-500 to-red-700 text-white p-5 rounded-2xl shadow-lg relative overflow-hidden">
-          <span class="text-[11px] font-bold uppercase tracking-wider opacity-80">Total Pengeluaran</span>
+        <div class="bg-gradient-to-br from-red-500 to-red-700 text-white p-6 rounded-3xl shadow-lg shadow-red-500/10 relative overflow-hidden">
+          <span class="text-[11px] font-extrabold uppercase tracking-wider opacity-80">Total Pengeluaran</span>
           <h3 id="fin-expense-total" class="text-2xl font-black mt-1">Rp 0</h3>
-          <p id="fin-expense-pct" class="text-xs font-semibold mt-2 bg-white/20 inline-block px-2.5 py-0.5 rounded-md">0% dari Total Arus Keuangan</p>
+          <p id="fin-expense-pct" class="text-xs font-semibold mt-3 bg-white/20 inline-block px-3 py-1 rounded-xl backdrop-blur-md">0% dari Total Arus Keuangan</p>
         </div>
 
-        <div class="bg-white border border-slate-200 p-5 rounded-2xl shadow-sm flex flex-col justify-between">
+        <div class="bg-white border border-slate-200/80 p-6 rounded-3xl shadow-sm flex flex-col justify-between">
           <div>
-            <span class="text-[11px] font-bold uppercase tracking-wider text-slate-400">Sisa Keuangan</span>
+            <span class="text-[11px] font-extrabold uppercase tracking-wider text-slate-400">Sisa Keuangan</span>
             <h3 id="fin-net-total" class="text-2xl font-black text-slate-900 mt-1">Rp 0</h3>
           </div>
-          <button id="btn-print-fin" onclick="openPrintModal()" class="mt-3 w-full py-2 bg-indigo-50 text-indigo-700 border border-indigo-200 font-bold text-xs rounded-xl hover:bg-indigo-100 flex items-center justify-center gap-1.5">
+          <button id="btn-print-fin" onclick="openPrintModal()" class="mt-4 w-full py-2.5 bg-indigo-50 text-indigo-700 border border-indigo-200 font-bold text-xs rounded-xl hover:bg-indigo-100 transition-all flex items-center justify-center gap-2">
             <i data-lucide="printer" class="w-4 h-4"></i> Cetak Rekap PDF
           </button>
         </div>
       </div>
 
-      <div class="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
+      <div class="bg-white rounded-3xl border border-slate-200/80 shadow-sm overflow-hidden">
         <div class="p-4 border-b border-slate-100 font-bold text-slate-800 text-xs">Riwayat Transaksi Keuangan</div>
         <div class="overflow-x-auto">
           <table class="w-full text-left border-collapse">
             <thead>
-              <tr class="bg-slate-50 border-b border-slate-200 text-[11px] font-bold uppercase text-slate-500">
+              <tr class="bg-slate-50/80 border-b border-slate-200/80 text-[11px] font-extrabold uppercase text-slate-400 tracking-wider">
                 <th class="p-4">Tanggal Transaksi</th>
                 <th class="p-4">Keterangan / Sumber / Peruntukan</th>
                 <th class="p-4">Jenis Transaksi</th>
@@ -379,135 +408,164 @@
 
   </main>
 
-  <!-- PRINT AREA UNTUK CETAK PDF REKAPITULASI KEUANGAN -->
+  <!-- PRINT AREA UNIVERSAL -->
   <div id="print-area" class="hidden">
     <div class="flex items-center justify-between border-b pb-4 mb-6">
       <div class="flex items-center gap-3">
         <img src="https://lh3.googleusercontent.com/d/14qsCeRufd1OlVQ_wOnBavEj2TR1ux4wy=s200" class="w-12 h-12 object-contain" alt="Logo">
         <div>
-          <h1 class="text-xl font-bold uppercase">LAPORAN REKAPITULASI KEUANGAN & WORKSPACE</h1>
+          <h1 id="print-document-title" class="text-xl font-bold uppercase">LAPORAN REKAPITULASI WORKSPACE</h1>
           <p id="print-period" class="text-xs font-semibold text-slate-600">Periode: Semua Data</p>
         </div>
       </div>
       <div class="text-right text-xs text-slate-500">Dicetak Otomatis Sistem</div>
     </div>
 
-    <div class="grid grid-cols-4 gap-4 mb-6 border p-4 rounded-lg bg-slate-50 text-xs">
-      <div><p class="font-bold uppercase text-slate-500">Total Tugas</p><p id="p-tasks-count" class="text-base font-bold">0</p></div>
-      <div><p class="font-bold uppercase text-slate-500">Total Agenda</p><p id="p-agenda-count" class="text-base font-bold">0</p></div>
-      <div><p class="font-bold uppercase text-slate-500">Pemasukan</p><p id="p-income-sum" class="text-base font-bold text-emerald-700">Rp 0</p></div>
-      <div><p class="font-bold uppercase text-slate-500">Pengeluaran</p><p id="p-expense-sum" class="text-base font-bold text-red-700">Rp 0</p></div>
+    <!-- AREA CETAK LAPORAN KEUANGAN & TUGAS -->
+    <div id="print-finance-section">
+      <div class="grid grid-cols-4 gap-4 mb-6 border p-4 rounded-lg bg-slate-50 text-xs">
+        <div><p class="font-bold uppercase text-slate-500">Total Tugas</p><p id="p-tasks-count" class="text-base font-bold">0</p></div>
+        <div><p class="font-bold uppercase text-slate-500">Total Agenda</p><p id="p-agenda-count" class="text-base font-bold">0</p></div>
+        <div><p class="font-bold uppercase text-slate-500">Pemasukan</p><p id="p-income-sum" class="text-base font-bold text-emerald-700">Rp 0</p></div>
+        <div><p class="font-bold uppercase text-slate-500">Pengeluaran</p><p id="p-expense-sum" class="text-base font-bold text-red-700">Rp 0</p></div>
+      </div>
+
+      <div class="mb-6">
+        <h3 class="font-bold text-xs uppercase mb-2 border-b pb-1">1. Rincian Keuangan (Pemasukan & Pengeluaran)</h3>
+        <table class="w-full text-left text-xs border border-collapse">
+          <thead>
+            <tr class="bg-slate-100 border-b"><th class="p-2 border">Tanggal</th><th class="p-2 border">Keterangan</th><th class="p-2 border">Jenis</th><th class="p-2 border text-right">Nominal</th></tr>
+          </thead>
+          <tbody id="print-finance-body"></tbody>
+        </table>
+      </div>
+
+      <div class="mb-6">
+        <h3 class="font-bold text-xs uppercase mb-2 border-b pb-1">2. Laporan Rekapitulasi Tugas</h3>
+        <table class="w-full text-left text-xs border border-collapse">
+          <thead>
+            <tr class="bg-slate-100 border-b"><th class="p-2 border">Nama Tugas</th><th class="p-2 border">Dosen</th><th class="p-2 border">Deadline</th><th class="p-2 border">Status Pengerjaan / Pengumpulkan</th></tr>
+          </thead>
+          <tbody id="print-task-body"></tbody>
+        </table>
+      </div>
     </div>
 
-    <div class="mb-6">
-      <h3 class="font-bold text-xs uppercase mb-2 border-b pb-1">1. Rincian Keuangan (Pemasukan & Pengeluaran)</h3>
-      <table class="w-full text-left text-xs border border-collapse">
-        <thead>
-          <tr class="bg-slate-100 border-b"><th class="p-2 border">Tanggal</th><th class="p-2 border">Keterangan</th><th class="p-2 border">Jenis</th><th class="p-2 border text-right">Nominal</th></tr>
-        </thead>
-        <tbody id="print-finance-body"></tbody>
-      </table>
-    </div>
-
-    <div class="mb-6">
-      <h3 class="font-bold text-xs uppercase mb-2 border-b pb-1">2. Laporan Rekapitulasi Tugas</h3>
-      <table class="w-full text-left text-xs border border-collapse">
-        <thead>
-          <tr class="bg-slate-100 border-b"><th class="p-2 border">Nama Tugas</th><th class="p-2 border">Dosen</th><th class="p-2 border">Deadline</th><th class="p-2 border">Status Pengerjaan / Pengumpulan</th></tr>
-        </thead>
-        <tbody id="print-task-body"></tbody>
-      </table>
+    <!-- AREA CETAK REKAPAN KEGIATAN SAJA -->
+    <div id="print-agenda-section" class="hidden">
+      <div class="mb-6">
+        <h3 class="font-bold text-xs uppercase mb-2 border-b pb-1">Daftar Agenda Kegiatan & Jadwal Waktu</h3>
+        <table class="w-full text-left text-xs border border-collapse">
+          <thead>
+            <tr class="bg-slate-100 border-b">
+              <th class="p-2 border">Nama Agenda</th>
+              <th class="p-2 border">Kriteria</th>
+              <th class="p-2 border">Waktu Pelaksanaan</th>
+              <th class="p-2 border">Durasi</th>
+              <th class="p-2 border">Lokasi</th>
+              <th class="p-2 border">Status</th>
+            </tr>
+          </thead>
+          <tbody id="print-agenda-body"></tbody>
+        </table>
+      </div>
     </div>
   </div>
 
   <!-- MODALS SYSTEM -->
 
-  <!-- Modal Login PIN TOMMY -->
-  <div id="modal-login" class="fixed inset-0 bg-slate-900/50 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4 no-print">
-    <div class="bg-white rounded-2xl max-w-sm w-full p-6 shadow-2xl space-y-4">
+  <!-- Modal Login PIN -->
+  <div id="modal-login" class="fixed inset-0 bg-slate-900/60 backdrop-blur-md z-50 hidden flex items-center justify-center p-4 no-print">
+    <div class="bg-white rounded-3xl max-w-sm w-full p-6 shadow-2xl space-y-4 border border-slate-100">
       <div class="text-center">
-        <h3 class="text-base font-bold text-slate-900">Autentikasi Hak Akses Edit</h3>
+        <div class="w-12 h-12 bg-indigo-50 text-indigo-600 rounded-2xl flex items-center justify-center mx-auto mb-2"><i data-lucide="lock" class="w-6 h-6"></i></div>
+        <h3 class="text-base font-extrabold text-slate-900">Autentikasi Hak Akses Edit</h3>
         <p class="text-xs text-slate-500 mt-1">Masukkan PIN untuk membuka rekapitulasi keuangan & hak akses mengedit.</p>
       </div>
       <form onsubmit="handleLogin(event)" class="space-y-3">
-        <input type="password" id="login-pin" placeholder="Masukkan PIN..." class="w-full text-center tracking-widest text-lg font-bold px-4 py-2 border rounded-xl focus:ring-2 focus:ring-indigo-500 focus:outline-none" required>
-        <div id="login-error" class="hidden text-xs text-red-500 text-center font-semibold">PIN Salah! Silakan coba lagi!</div>
+        <input type="password" id="login-pin" placeholder="PIN Admin..." class="w-full text-center tracking-widest text-lg font-black px-4 py-3 border border-slate-200 rounded-2xl focus:ring-2 focus:ring-indigo-500 focus:outline-none" required>
+        <div id="login-error" class="hidden text-xs text-red-500 text-center font-bold">PIN Salah! Silakan coba lagi!</div>
         <div class="flex gap-2">
-          <button type="button" onclick="closeLoginModal()" class="w-1/2 py-2 border rounded-xl font-semibold text-xs text-slate-600">Batal</button>
-          <button type="submit" class="w-1/2 py-2 bg-indigo-600 text-white rounded-xl font-semibold text-xs shadow-md">Buka Akses</button>
+          <button type="button" onclick="closeLoginModal()" class="w-1/2 py-2.5 border rounded-2xl font-bold text-xs text-slate-600 hover:bg-slate-50 transition-all">Batal</button>
+          <button type="submit" class="w-1/2 py-2.5 bg-indigo-600 text-white rounded-2xl font-bold text-xs shadow-md shadow-indigo-200 hover:bg-indigo-700 transition-all">Buka Akses</button>
         </div>
       </form>
     </div>
   </div>
 
-  <!-- Modal Tambah Tugas -->
-  <div id="modal-task" class="fixed inset-0 bg-slate-900/50 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4 no-print">
-    <div class="bg-white rounded-2xl max-w-md w-full p-6 shadow-2xl space-y-3 max-h-[90vh] overflow-y-auto">
-      <h3 class="text-base font-bold text-slate-900">Tambah Tugas Baru</h3>
+  <!-- Modal Tambah / Edit Tugas -->
+  <div id="modal-task" class="fixed inset-0 bg-slate-900/60 backdrop-blur-md z-50 hidden flex items-center justify-center p-4 no-print">
+    <div class="bg-white rounded-3xl max-w-md w-full p-6 shadow-2xl space-y-4 max-h-[90vh] overflow-y-auto border border-slate-100">
+      <h3 class="text-base font-extrabold text-slate-900">Tambah Tugas Baru</h3>
       <form onsubmit="saveTask(event)" class="space-y-3">
         <div>
           <label class="block text-[11px] font-bold text-slate-700 mb-1">Nama Tugas</label>
-          <input type="text" id="task-name" class="w-full px-3 py-2 border rounded-xl text-xs" required>
+          <input type="text" id="task-name" class="w-full px-3.5 py-2.5 border border-slate-200 rounded-xl text-xs focus:ring-2 focus:ring-indigo-500 focus:outline-none" required>
         </div>
         <div class="grid grid-cols-2 gap-2">
           <div>
             <label class="block text-[11px] font-bold text-slate-700 mb-1">Jenis Tugas</label>
-            <select id="task-type" class="w-full px-3 py-2 border rounded-xl text-xs">
+            <select id="task-type" class="w-full px-3.5 py-2.5 border border-slate-200 rounded-xl text-xs focus:ring-2 focus:ring-indigo-500 focus:outline-none">
               <option value="Individu">Individu</option>
               <option value="Kelompok">Kelompok</option>
             </select>
           </div>
           <div>
             <label class="block text-[11px] font-bold text-slate-700 mb-1">Dosen Pengampu</label>
-            <input type="text" id="task-lecturer" class="w-full px-3 py-2 border rounded-xl text-xs" required>
+            <input type="text" id="task-lecturer" class="w-full px-3.5 py-2.5 border border-slate-200 rounded-xl text-xs focus:ring-2 focus:ring-indigo-500 focus:outline-none" required>
           </div>
         </div>
         <div>
-          <label class="block text-[11px] font-bold text-slate-700 mb-1">Deadline Akhir (Hari, Tgl, Jam)</label>
-          <input type="datetime-local" id="task-deadline" class="w-full px-3 py-2 border rounded-xl text-xs" required>
+          <label class="block text-[11px] font-bold text-slate-700 mb-1">Deadline Akhir</label>
+          <input type="datetime-local" id="task-deadline" class="w-full px-3.5 py-2.5 border border-slate-200 rounded-xl text-xs focus:ring-2 focus:ring-indigo-500 focus:outline-none" required>
         </div>
         <div class="grid grid-cols-2 gap-2">
           <div>
             <label class="block text-[11px] font-bold text-slate-700 mb-1">Status Pengerjaan</label>
-            <select id="task-status" class="w-full px-3 py-2 border rounded-xl text-xs">
+            <select id="task-status" class="w-full px-3.5 py-2.5 border border-slate-200 rounded-xl text-xs focus:ring-2 focus:ring-indigo-500 focus:outline-none">
               <option value="Belum dikerjakan">Belum dikerjakan</option>
               <option value="Dalam pengerjaan">Dalam pengerjaan</option>
               <option value="Selesai">Selesai</option>
             </select>
           </div>
           <div>
-            <label class="block text-[11px] font-bold text-slate-700 mb-1">Status Pengumpulkan</label>
-            <select id="task-submission" class="w-full px-3 py-2 border rounded-xl text-xs">
+            <label class="block text-[11px] font-bold text-slate-700 mb-1">Status Pengumpulan</label>
+            <select id="task-submission" class="w-full px-3.5 py-2.5 border border-slate-200 rounded-xl text-xs focus:ring-2 focus:ring-indigo-500 focus:outline-none">
               <option value="Belum dikumpulkan">Belum dikumpulkan</option>
               <option value="Sudah dikumpulkan">Sudah dikumpulkan</option>
             </select>
           </div>
         </div>
         <div>
-          <label class="block text-[11px] font-bold text-slate-700 mb-1">Upload File Dokumen Tugas (Semua Jenis File)</label>
-          <input type="file" id="task-file-input" class="w-full text-xs text-slate-500 file:mr-2 file:py-1.5 file:px-3 file:rounded-xl file:border-0 file:text-xs file:font-semibold file:bg-indigo-50 file:text-indigo-700">
+          <label class="block text-[11px] font-bold text-slate-700 mb-1">Upload File Dokumen Tugas</label>
+          <input type="file" id="task-file-input" class="w-full text-xs text-slate-500 file:mr-2 file:py-2 file:px-3 file:rounded-xl file:border-0 file:text-xs file:font-semibold file:bg-indigo-50 file:text-indigo-700">
+        </div>
+        <div>
+          <label class="block text-[11px] font-bold text-slate-700 mb-1">Isi Rangkuman Singkat Tugas</label>
+          <textarea id="task-summary" rows="3" placeholder="Tuliskan poin-poin singkat instruksi atau rangkuman tugas..." class="w-full px-3.5 py-2.5 border border-slate-200 rounded-xl text-xs focus:ring-2 focus:ring-indigo-500 focus:outline-none"></textarea>
         </div>
         <div class="flex justify-end gap-2 pt-2">
-          <button type="button" onclick="closeTaskModal()" class="px-4 py-2 border rounded-xl text-xs font-semibold">Batal</button>
-          <button type="submit" class="px-4 py-2 bg-indigo-600 text-white rounded-xl text-xs font-semibold shadow-md">Simpan Tugas</button>
+          <button type="button" onclick="closeTaskModal()" class="px-4 py-2 border rounded-xl text-xs font-bold text-slate-600">Batal</button>
+          <button type="submit" class="px-4 py-2 bg-indigo-600 text-white rounded-xl text-xs font-bold shadow-md shadow-indigo-100">Simpan Tugas</button>
         </div>
       </form>
     </div>
   </div>
 
-  <!-- Modal Tambah Agenda -->
-  <div id="modal-agenda" class="fixed inset-0 bg-slate-900/50 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4 no-print">
-    <div class="bg-white rounded-2xl max-w-md w-full p-6 shadow-2xl space-y-3 max-h-[90vh] overflow-y-auto">
-      <h3 class="text-base font-bold text-slate-900">Tambah Agenda Kegiatan</h3>
+  <!-- Modal Tambah / Edit Agenda -->
+  <div id="modal-agenda" class="fixed inset-0 bg-slate-900/60 backdrop-blur-md z-50 hidden flex items-center justify-center p-4 no-print">
+    <div class="bg-white rounded-3xl max-w-md w-full p-6 shadow-2xl space-y-4 max-h-[90vh] overflow-y-auto border border-slate-100">
+      <h3 id="agenda-modal-title" class="text-base font-extrabold text-slate-900">Tambah Agenda Kegiatan</h3>
       <form onsubmit="saveAgenda(event)" class="space-y-3">
+        <input type="hidden" id="agenda-id">
         <div>
           <label class="block text-[11px] font-bold text-slate-700 mb-1">Nama Agenda</label>
-          <input type="text" id="agenda-title" class="w-full px-3 py-2 border rounded-xl text-xs" required>
+          <input type="text" id="agenda-title" class="w-full px-3.5 py-2.5 border border-slate-200 rounded-xl text-xs focus:ring-2 focus:ring-indigo-500 focus:outline-none" required>
         </div>
         <div class="grid grid-cols-2 gap-2">
           <div>
             <label class="block text-[11px] font-bold text-slate-700 mb-1">Kriteria Agenda</label>
-            <select id="agenda-criteria" class="w-full px-3 py-2 border rounded-xl text-xs">
+            <select id="agenda-criteria" class="w-full px-3.5 py-2.5 border border-slate-200 rounded-xl text-xs focus:ring-2 focus:ring-indigo-500 focus:outline-none">
               <option value="Umum">Umum</option>
               <option value="Khusus">Khusus</option>
               <option value="Tugas">Tugas</option>
@@ -515,7 +573,7 @@
           </div>
           <div>
             <label class="block text-[11px] font-bold text-slate-700 mb-1">Status Agenda</label>
-            <select id="agenda-status" class="w-full px-3 py-2 border rounded-xl text-xs">
+            <select id="agenda-status" class="w-full px-3.5 py-2.5 border border-slate-200 rounded-xl text-xs focus:ring-2 focus:ring-indigo-500 focus:outline-none">
               <option value="Belum terlaksana">Belum terlaksana</option>
               <option value="Terlaksana">Terlaksana</option>
               <option value="Tidak dihadiri">Tidak dihadiri</option>
@@ -525,63 +583,63 @@
         <div class="grid grid-cols-2 gap-2">
           <div>
             <label class="block text-[11px] font-bold text-slate-700 mb-1">Waktu & Tanggal Mulai</label>
-            <input type="datetime-local" id="agenda-datetime" class="w-full px-3 py-2 border rounded-xl text-xs" required>
+            <input type="datetime-local" id="agenda-datetime" class="w-full px-3.5 py-2.5 border border-slate-200 rounded-xl text-xs focus:ring-2 focus:ring-indigo-500 focus:outline-none" required>
           </div>
           <div>
             <label class="block text-[11px] font-bold text-slate-700 mb-1">Durasi (Jam)</label>
-            <input type="number" id="agenda-duration" value="1" min="1" step="1" class="w-full px-3 py-2 border rounded-xl text-xs" required>
+            <input type="number" id="agenda-duration" value="1" min="1" step="1" class="w-full px-3.5 py-2.5 border border-slate-200 rounded-xl text-xs focus:ring-2 focus:ring-indigo-500 focus:outline-none" required>
           </div>
         </div>
         <div>
           <label class="block text-[11px] font-bold text-slate-700 mb-1">Lokasi Pelaksanaan</label>
-          <input type="text" id="agenda-location" class="w-full px-3 py-2 border rounded-xl text-xs" required>
+          <input type="text" id="agenda-location" class="w-full px-3.5 py-2.5 border border-slate-200 rounded-xl text-xs focus:ring-2 focus:ring-indigo-500 focus:outline-none" required>
         </div>
         <div class="flex justify-end gap-2 pt-2">
-          <button type="button" onclick="closeAgendaModal()" class="px-4 py-2 border rounded-xl text-xs font-semibold">Batal</button>
-          <button type="submit" class="px-4 py-2 bg-indigo-600 text-white rounded-xl text-xs font-semibold shadow-md">Simpan Agenda</button>
+          <button type="button" onclick="closeAgendaModal()" class="px-4 py-2 border rounded-xl text-xs font-bold text-slate-600">Batal</button>
+          <button type="submit" class="px-4 py-2 bg-indigo-600 text-white rounded-xl text-xs font-bold shadow-md shadow-indigo-100">Simpan Agenda</button>
         </div>
       </form>
     </div>
   </div>
 
   <!-- Modal Tambah Transaksi Keuangan -->
-  <div id="modal-finance" class="fixed inset-0 bg-slate-900/50 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4 no-print">
-    <div class="bg-white rounded-2xl max-w-md w-full p-6 shadow-2xl space-y-3">
-      <h3 id="finance-modal-title" class="text-base font-bold text-slate-900">Catat Transaksi</h3>
+  <div id="modal-finance" class="fixed inset-0 bg-slate-900/60 backdrop-blur-md z-50 hidden flex items-center justify-center p-4 no-print">
+    <div class="bg-white rounded-3xl max-w-md w-full p-6 shadow-2xl space-y-4 border border-slate-100">
+      <h3 id="finance-modal-title" class="text-base font-extrabold text-slate-900">Catat Transaksi</h3>
       <form onsubmit="saveFinance(event)" class="space-y-3">
         <input type="hidden" id="fin-type">
         <div>
           <label class="block text-[11px] font-bold text-slate-700 mb-1" id="fin-source-label">Keterangan / Sumber / Peruntukan</label>
-          <input type="text" id="fin-source" class="w-full px-3 py-2 border rounded-xl text-xs" required>
+          <input type="text" id="fin-source" class="w-full px-3.5 py-2.5 border border-slate-200 rounded-xl text-xs focus:ring-2 focus:ring-indigo-500 focus:outline-none" required>
         </div>
         <div>
           <label class="block text-[11px] font-bold text-slate-700 mb-1">Nominal (Rp)</label>
-          <input type="number" id="fin-amount" min="1000" class="w-full px-3 py-2 border rounded-xl text-xs" required>
+          <input type="number" id="fin-amount" min="1000" class="w-full px-3.5 py-2.5 border border-slate-200 rounded-xl text-xs focus:ring-2 focus:ring-indigo-500 focus:outline-none" required>
         </div>
         <div>
           <label class="block text-[11px] font-bold text-slate-700 mb-1">Tanggal Transaksi</label>
-          <input type="date" id="fin-date" class="w-full px-3 py-2 border rounded-xl text-xs" required>
+          <input type="date" id="fin-date" class="w-full px-3.5 py-2.5 border border-slate-200 rounded-xl text-xs focus:ring-2 focus:ring-indigo-500 focus:outline-none" required>
         </div>
         <div class="flex justify-end gap-2 pt-2">
-          <button type="button" onclick="closeFinanceModal()" class="px-4 py-2 border rounded-xl text-xs font-semibold">Batal</button>
-          <button type="submit" id="fin-submit-btn" class="px-4 py-2 bg-emerald-600 text-white rounded-xl text-xs font-semibold shadow-md">Simpan Transaksi</button>
+          <button type="button" onclick="closeFinanceModal()" class="px-4 py-2 border rounded-xl text-xs font-bold text-slate-600">Batal</button>
+          <button type="submit" id="fin-submit-btn" class="px-4 py-2 bg-emerald-600 text-white rounded-xl text-xs font-bold shadow-md shadow-emerald-100">Simpan Transaksi</button>
         </div>
       </form>
     </div>
   </div>
 
-  <!-- Modal Cetak PDF Bulanan -->
-  <div id="modal-print" class="fixed inset-0 bg-slate-900/50 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4 no-print">
-    <div class="bg-white rounded-2xl max-w-sm w-full p-6 shadow-2xl space-y-4">
-      <h3 class="text-base font-bold text-slate-900">Cetak Rekapitulasi PDF</h3>
+  <!-- Modal Cetak PDF Bulanan Keuangan -->
+  <div id="modal-print" class="fixed inset-0 bg-slate-900/60 backdrop-blur-md z-50 hidden flex items-center justify-center p-4 no-print">
+    <div class="bg-white rounded-3xl max-w-sm w-full p-6 shadow-2xl space-y-4 border border-slate-100">
+      <h3 class="text-base font-extrabold text-slate-900">Cetak Rekapitulasi PDF</h3>
       <div class="space-y-3">
         <div>
           <label class="block text-xs font-bold text-slate-700 mb-1">Pilih Bulan & Tahun Rekap</label>
-          <input type="month" id="print-month-picker" class="w-full px-3 py-2 border rounded-xl text-xs focus:ring-2 focus:ring-indigo-500 focus:outline-none">
+          <input type="month" id="print-month-picker" class="w-full px-3.5 py-2.5 border border-slate-200 rounded-2xl text-xs focus:ring-2 focus:ring-indigo-500 focus:outline-none">
         </div>
         <div class="flex gap-2 pt-2">
-          <button onclick="closePrintModal()" class="w-1/2 py-2 border rounded-xl text-xs font-semibold">Batal</button>
-          <button onclick="executePrint()" class="w-1/2 py-2 bg-indigo-600 text-white rounded-xl text-xs font-semibold shadow-md">Cetak PDF</button>
+          <button onclick="closePrintModal()" class="w-1/2 py-2.5 border rounded-2xl text-xs font-bold text-slate-600">Batal</button>
+          <button onclick="executePrint()" class="w-1/2 py-2.5 bg-indigo-600 text-white rounded-2xl text-xs font-bold shadow-md shadow-indigo-100">Cetak PDF</button>
         </div>
       </div>
     </div>
@@ -592,7 +650,6 @@
     const PIN_SECRET = "TOMMY";
     let isAuthenticated = false;
 
-    // Master Key terisolasi agar data tetap tersimpan
     const KEYS = {
       TASKS: 'workspace_tasks_master_data',
       AGENDAS: 'workspace_agendas_master_data',
@@ -615,11 +672,14 @@
       switchPage('dashboard');
       initLucide();
       startRealtimeClock();
+      checkNotificationSupport();
 
+      // Interval setiap detik untuk memperbarui countdown waktu & notifikasi
       setInterval(() => {
+        updateAllCountdowns();
         autoCleanupAgendas();
         checkAgendaNotifications();
-      }, 30000);
+      }, 1000);
     });
 
     function initLucide() {
@@ -639,6 +699,45 @@
       }
       updateClock();
       setInterval(updateClock, 1000);
+    }
+
+    // --- SISTEM NOTIFIKASI HP / WEB ---
+    function checkNotificationSupport() {
+      const btn = document.getElementById('btn-request-notif');
+      if (!("Notification" in window)) {
+        if (btn) btn.classList.add('hidden');
+      } else if (Notification.permission === 'granted') {
+        if (btn) {
+          btn.innerHTML = `<i data-lucide="bell-check" class="w-3.5 h-3.5 text-emerald-600"></i> Notif Aktif`;
+          btn.className = "px-3 py-2 bg-emerald-50 text-emerald-700 text-xs font-bold rounded-xl border border-emerald-200 flex items-center gap-1.5";
+        }
+      }
+    }
+
+    function requestNotificationPermission() {
+      if (!("Notification" in window)) {
+        alert("Browser Anda tidak mendukung notifikasi sistem.");
+        return;
+      }
+      Notification.requestPermission().then(permission => {
+        if (permission === 'granted') {
+          showToast('Notifikasi sistem berhasil diaktifkan!', 'success');
+          sendSystemNotification('Tommy Time Pro', 'Notifikasi HP berhasil diaktifkan untuk pengingat kegiatan.');
+          checkNotificationSupport();
+        } else {
+          showToast('Izin notifikasi ditolak.', 'danger');
+        }
+      });
+    }
+
+    function sendSystemNotification(title, body) {
+      if ("Notification" in window && Notification.permission === 'granted') {
+        new Notification(title, {
+          body: body,
+          icon: 'https://lh3.googleusercontent.com/d/14qsCeRufd1OlVQ_wOnBavEj2TR1ux4wy=s200',
+          vibrate: [200, 100, 200]
+        });
+      }
     }
 
     function migrateOldStorageData() {
@@ -681,6 +780,47 @@
       refreshAllViews();
     }
 
+    function exportDataPublik() {
+      const publicData = {
+        tasks: tasks,
+        agendas: agendas,
+        exportedAt: new Date().toISOString()
+      };
+      
+      const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(publicData, null, 2));
+      const downloadAnchor = document.createElement('a');
+      downloadAnchor.setAttribute("href", dataStr);
+      downloadAnchor.setAttribute("download", `tommy_workspace_jadwal_${new Date().toISOString().split('T')[0]}.json`);
+      document.body.appendChild(downloadAnchor);
+      downloadAnchor.click();
+      downloadAnchor.remove();
+
+      showToast('File data tugas & kegiatan berhasil diunduh!', 'success');
+    }
+
+    function importDataPublik(event) {
+      const file = event.target.files[0];
+      if (!file) return;
+
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        try {
+          const imported = JSON.parse(e.target.result);
+          if (imported.tasks && imported.agendas) {
+            tasks = imported.tasks;
+            agendas = imported.agendas;
+            saveStorageData();
+            showToast('Data Tugas & Kegiatan berhasil diperbarui dari file!', 'success');
+          } else {
+            alert('Format file JSON tidak valid!');
+          }
+        } catch (err) {
+          alert('Gagal membaca file data JSON!');
+        }
+      };
+      reader.readAsText(file);
+    }
+
     function checkAuthSession() {
       isAuthenticated = localStorage.getItem(KEYS.AUTH) === 'true';
     }
@@ -696,10 +836,10 @@
 
       if (isAuthenticated) {
         container.innerHTML = `
-          <span class="inline-flex items-center gap-1.5 px-3 py-1 bg-emerald-50 text-emerald-700 text-xs font-bold rounded-lg border border-emerald-200">
-            <span class="w-2 h-2 rounded-full bg-emerald-500"></span> Anda berada dihalaman Dashboard
+          <span class="inline-flex items-center gap-1.5 px-3 py-1.5 bg-emerald-50 text-emerald-700 text-xs font-extrabold rounded-xl border border-emerald-200/80">
+            <span class="w-2 h-2 rounded-full bg-emerald-500"></span> Halaman Edit
           </span>
-          <button onclick="handleLogout()" class="p-1.5 text-slate-400 hover:text-red-600 rounded-lg" title="Logout">
+          <button onclick="handleLogout()" class="p-2 text-slate-400 hover:text-red-600 rounded-xl hover:bg-slate-100 transition-all" title="Logout">
             <i data-lucide="log-out" class="w-4 h-4"></i>
           </button>
         `;
@@ -711,8 +851,8 @@
         if (btnPrintFin) btnPrintFin.classList.remove('hidden');
       } else {
         container.innerHTML = `
-          <button onclick="openLoginModal()" class="px-3.5 py-1.5 bg-indigo-600 text-white text-xs font-bold rounded-xl shadow-md flex items-center gap-1.5">
-            <i data-lucide="lock" class="w-3.5 h-3.5"></i> LOGIN PIN
+          <button onclick="openLoginModal()" class="px-3.5 py-2 bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-bold rounded-xl shadow-md shadow-indigo-100 flex items-center gap-1.5 transition-all">
+            <i data-lucide="lock" class="w-3.5 h-3.5"></i> LOGIN
           </button>
         `;
         if (lockBanner) lockBanner.classList.remove('hidden');
@@ -736,7 +876,7 @@
         closeLoginModal();
         renderAuthBar();
         refreshAllViews();
-        showToast('Login berhasil sebagai Admin TOMMY', 'success');
+        showToast('Login berhasil sebagai Admin', 'success');
       } else {
         document.getElementById('login-error').classList.remove('hidden');
       }
@@ -754,12 +894,12 @@
       ['dashboard', 'tasks', 'agenda', 'finance'].forEach(p => {
         document.getElementById(`page-${p}`).classList.add('hidden');
         const navBtn = document.getElementById(`nav-${p}`);
-        if (navBtn) navBtn.className = "px-3.5 py-1.5 text-xs font-semibold rounded-lg text-slate-600 hover:text-slate-900";
+        if (navBtn) navBtn.className = "px-4 py-2 text-xs font-bold rounded-xl text-slate-600 hover:text-slate-900 transition-all";
       });
 
       document.getElementById(`page-${pageId}`).classList.remove('hidden');
       const activeNav = document.getElementById(`nav-${pageId}`);
-      if (activeNav) activeNav.className = "px-3.5 py-1.5 text-xs font-semibold rounded-lg bg-white text-indigo-600 shadow-sm";
+      if (activeNav) activeNav.className = "px-4 py-2 text-xs font-bold rounded-xl bg-white text-indigo-600 shadow-sm transition-all";
 
       refreshAllViews();
     }
@@ -774,7 +914,6 @@
       initLucide();
     }
 
-    // --- DASHBOARD RENDER ---
     function renderDashboard() {
       const totalTasks = tasks.length;
       const doneTasks = tasks.filter(t => t.status === 'Selesai').length;
@@ -797,7 +936,6 @@
       document.getElementById('dash-total-expense').innerText = isAuthenticated ? formatIDR(totalExp) : '[Terkunci]';
       document.getElementById('dash-net-balance').innerText = `Saldo: ${isAuthenticated ? formatIDR(totalInc - totalExp) : '[Terkunci]'}`;
 
-      // Progress Bar Dashboard
       document.getElementById('dash-task-total-badge').innerText = `Total: ${totalTasks} Tugas`;
       document.getElementById('bar-task-done').style.width = `${donePct}%`;
       document.getElementById('bar-task-progress').style.width = `${progPct}%`;
@@ -811,7 +949,6 @@
       document.getElementById('cnt-task-progress').innerText = `${progTasks} dari ${totalTasks} tugas`;
       document.getElementById('cnt-task-todo').innerText = `${todoTasks} dari ${totalTasks} tugas`;
 
-      // Halaman Tugas
       document.getElementById('task-pct-done').innerText = `${donePct}%`;
       document.getElementById('task-count-done').innerText = `${doneTasks} Tugas`;
       document.getElementById('task-pct-prog').innerText = `${progPct}%`;
@@ -841,7 +978,7 @@
         const isToday = d === now.getDate();
 
         grid.innerHTML += `
-          <div class="p-1.5 text-center font-bold rounded-lg text-xs relative ${isToday ? 'bg-indigo-600 text-white' : 'hover:bg-slate-100 text-slate-700'}">
+          <div class="p-1.5 text-center font-bold rounded-xl text-xs relative ${isToday ? 'bg-indigo-600 text-white shadow-md shadow-indigo-200' : 'hover:bg-slate-100 text-slate-700'}">
             ${d}
             ${hasAgenda ? `<span class="absolute top-1 right-1 w-1.5 h-1.5 rounded-full ${isToday ? 'bg-amber-300' : 'bg-indigo-600'}"></span>` : ''}
           </div>
@@ -883,59 +1020,55 @@
       });
     }
 
-    // --- TABEL MANAJEMEN TUGAS ---
     function renderTasks() {
       document.getElementById('task-counter').innerText = `Jumlah Seluruh Tugas: ${tasks.length}`;
       const tbody = document.getElementById('task-table-body');
 
       if (tasks.length === 0) {
-        tbody.innerHTML = `<tr><td colspan="7" class="p-4 text-center text-slate-400">Belum ada tugas tercatat.</td></tr>`;
+        tbody.innerHTML = `<tr><td colspan="7" class="p-8 text-center text-slate-400">Belum ada tugas tercatat.</td></tr>`;
         return;
       }
 
       tbody.innerHTML = tasks.map(t => `
-        <tr class="hover:bg-slate-50 border-b border-slate-100">
+        <tr class="hover:bg-slate-50/80 transition-all border-b border-slate-100">
           <td class="p-4">
-            <div class="font-bold text-slate-900">${escapeHtml(t.name)}</div>
-            <div class="text-[11px] text-slate-400">Dosen: ${escapeHtml(t.lecturer)}</div>
+            <div class="font-extrabold text-slate-900">${escapeHtml(t.name)}</div>
+            <div class="text-[11px] font-semibold text-slate-400 mt-0.5">Dosen: ${escapeHtml(t.lecturer)}</div>
           </td>
-          <td class="p-4"><span class="px-2 py-0.5 rounded font-bold text-[10px] ${t.type === 'Individu' ? 'bg-blue-50 text-blue-600' : 'bg-purple-50 text-purple-600'}">${t.type}</span></td>
-          <td class="p-4 font-semibold text-slate-600">${formatDateTime(t.deadline)}</td>
+          <td class="p-4"><span class="px-2.5 py-1 rounded-lg font-extrabold text-[10px] ${t.type === 'Individu' ? 'bg-blue-50 text-blue-600 border border-blue-100' : 'bg-purple-50 text-purple-600 border border-purple-100'}">${t.type}</span></td>
+          <td class="p-4 font-bold text-slate-600">${formatDateTime(t.deadline)}</td>
           
           <td class="p-4">
             ${isAuthenticated ? `
-              <select onchange="updateTaskStatus('${t.id}', this.value)" class="px-2 py-1 rounded-lg text-xs font-bold border ${getTaskStatusSelectClass(t.status)} cursor-pointer outline-none">
+              <select onchange="updateTaskStatus('${t.id}', this.value)" class="px-2.5 py-1 rounded-xl text-xs font-bold border ${getTaskStatusSelectClass(t.status)} cursor-pointer outline-none">
                 <option value="Belum dikerjakan" ${t.status === 'Belum dikerjakan' ? 'selected' : ''}>Belum dikerjakan</option>
                 <option value="Dalam pengerjaan" ${t.status === 'Dalam pengerjaan' ? 'selected' : ''}>Dalam pengerjaan</option>
                 <option value="Selesai" ${t.status === 'Selesai' ? 'selected' : ''}>Sudah Selesai</option>
               </select>
-            ` : `<span class="px-2.5 py-1 rounded-lg text-xs font-bold border ${getTaskStatusSelectClass(t.status)}">${t.status}</span>`}
+            ` : `<span class="px-2.5 py-1 rounded-xl text-xs font-bold border ${getTaskStatusSelectClass(t.status)}">${t.status}</span>`}
           </td>
 
           <td class="p-4">
             ${isAuthenticated ? `
-              <select onchange="updateTaskSubmission('${t.id}', this.value)" class="px-2 py-1 rounded-lg text-xs font-bold border ${getSubmissionSelectClass(t.submission)} cursor-pointer outline-none">
+              <select onchange="updateTaskSubmission('${t.id}', this.value)" class="px-2.5 py-1 rounded-xl text-xs font-bold border ${getSubmissionSelectClass(t.submission)} cursor-pointer outline-none">
                 <option value="Belum dikumpulkan" ${t.submission === 'Belum dikumpulkan' ? 'selected' : ''}>Belum dikumpulkan</option>
                 <option value="Sudah dikumpulkan" ${t.submission === 'Sudah dikumpulkan' ? 'selected' : ''}>Sudah dikumpulkan</option>
               </select>
-            ` : `<span class="px-2.5 py-1 rounded-lg text-xs font-bold border ${getSubmissionSelectClass(t.submission)}">${t.submission}</span>`}
+            ` : `<span class="px-2.5 py-1 rounded-xl text-xs font-bold border ${getSubmissionSelectClass(t.submission)}">${t.submission}</span>`}
           </td>
 
           <td class="p-4">
-            ${t.fileName ? `
-              <div class="space-y-1">
-                <span class="font-bold text-indigo-600 flex items-center gap-1"><i data-lucide="file" class="w-3 h-3"></i> ${escapeHtml(t.fileName)}</span>
-                <div class="bg-slate-50 p-2 rounded border border-slate-200 text-[10px] space-y-0.5">
-                  <p class="font-bold text-slate-700">Rangkuman Poin Auto-AI:</p>
-                  <p>• Dokumen terverifikasi (${t.fileSize || 'N/A'})</p>
-                  <p>• Ringkasan tugas penugasan ${escapeHtml(t.name)}</p>
-                </div>
+            <div class="space-y-1.5">
+              ${t.fileName ? `<span class="font-bold text-indigo-600 flex items-center gap-1 text-xs"><i data-lucide="file" class="w-3.5 h-3.5"></i> ${escapeHtml(t.fileName)}</span>` : '<span class="text-slate-300 italic text-xs">Tidak ada file</span>'}
+              <div class="bg-slate-50 p-2.5 rounded-xl border border-slate-200/60 text-[11px] space-y-0.5">
+                <p class="font-bold text-slate-700">Rangkuman Singkat Tugas:</p>
+                <p class="text-slate-600 leading-relaxed">${t.summary ? escapeHtml(t.summary) : '• Tidak ada rangkuman singkat.'}</p>
               </div>
-            ` : '<span class="text-slate-300 italic">Tidak ada file</span>'}
+            </div>
           </td>
           <td class="p-4 text-center">
             ${isAuthenticated ? `
-              <button onclick="deleteTask('${t.id}')" class="text-slate-400 hover:text-red-600 p-1" title="Hapus Tugas">
+              <button onclick="deleteTask('${t.id}')" class="p-2 text-slate-400 hover:text-red-600 hover:bg-red-50 rounded-xl transition-all" title="Hapus Tugas">
                 <i data-lucide="trash-2" class="w-4 h-4"></i>
               </button>
             ` : '<span class="text-[11px] text-slate-400 font-medium">Lihat Saja</span>'}
@@ -977,7 +1110,15 @@
       }
     }
 
-    function openTaskModal() { if (!isAuthenticated) return openLoginModal(); document.getElementById('modal-task').classList.remove('hidden'); }
+    function openTaskModal() { 
+      if (!isAuthenticated) return openLoginModal(); 
+      document.getElementById('task-name').value = '';
+      document.getElementById('task-lecturer').value = '';
+      document.getElementById('task-deadline').value = '';
+      document.getElementById('task-summary').value = '';
+      document.getElementById('task-file-input').value = '';
+      document.getElementById('modal-task').classList.remove('hidden'); 
+    }
     function closeTaskModal() { document.getElementById('modal-task').classList.add('hidden'); }
 
     function saveTask(e) {
@@ -995,6 +1136,7 @@
         deadline: document.getElementById('task-deadline').value,
         status: document.getElementById('task-status').value,
         submission: document.getElementById('task-submission').value,
+        summary: document.getElementById('task-summary').value,
         fileName: file ? file.name : null,
         fileSize: file ? Math.round(file.size / 1024) + ' KB' : null
       };
@@ -1014,44 +1156,102 @@
       }
     }
 
-    // --- MANAJEMEN WAKTU & KEGIATAN ---
+    // --- MANAJEMEN AGENDA DENGAN COUNTDOWN HITUNG MUNDUR ---
     function renderAgendas() {
       const grid = document.getElementById('agenda-grid');
       if (agendas.length === 0) {
-        grid.innerHTML = `<div class="col-span-full p-8 text-center text-slate-400 text-xs">Belum ada agenda kegiatan.</div>`;
+        grid.innerHTML = `<div class="col-span-full p-12 text-center text-slate-400 text-xs">Belum ada agenda kegiatan.</div>`;
         return;
       }
 
       grid.innerHTML = agendas.map(a => `
-        <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm flex flex-col justify-between">
+        <div class="bg-white p-6 rounded-3xl border border-slate-200/80 shadow-sm hover:shadow-md transition-all flex flex-col justify-between">
           <div>
             <div class="flex justify-between items-center mb-3">
-              <span class="text-[10px] font-bold uppercase px-2 py-0.5 rounded bg-slate-100 text-slate-600">${a.criteria}</span>
+              <span class="text-[10px] font-extrabold uppercase px-2.5 py-1 rounded-xl bg-slate-100 text-slate-600">${a.criteria}</span>
               
               ${isAuthenticated ? `
-                <select onchange="updateAgendaStatus('${a.id}', this.value)" class="px-2 py-0.5 rounded text-xs font-bold border ${getAgendaSelectClass(a.status)} cursor-pointer outline-none">
+                <select onchange="updateAgendaStatus('${a.id}', this.value)" class="px-2.5 py-1 rounded-xl text-xs font-bold border ${getAgendaSelectClass(a.status)} cursor-pointer outline-none">
                   <option value="Belum terlaksana" ${a.status === 'Belum terlaksana' ? 'selected' : ''}>Belum terlaksana</option>
                   <option value="Terlaksana" ${a.status === 'Terlaksana' ? 'selected' : ''}>Terlaksana</option>
                   <option value="Tidak dihadiri" ${a.status === 'Tidak dihadiri' ? 'selected' : ''}>Tidak dihadiri</option>
                 </select>
-              ` : `<span class="px-2.5 py-0.5 rounded text-xs font-bold border ${getAgendaSelectClass(a.status)}">${a.status}</span>`}
+              ` : `<span class="px-2.5 py-1 rounded-xl text-xs font-bold border ${getAgendaSelectClass(a.status)}">${a.status}</span>`}
             </div>
-            <h4 class="font-bold text-slate-900 text-sm">${escapeHtml(a.title)}</h4>
-            <div class="mt-3 space-y-1 text-xs text-slate-500">
-              <div class="flex items-center gap-1.5"><i data-lucide="clock" class="w-3.5 h-3.5"></i> ${formatDateTime(a.datetime)} (${a.duration} Jam)</div>
-              <div class="flex items-center gap-1.5"><i data-lucide="map-pin" class="w-3.5 h-3.5"></i> ${escapeHtml(a.location)}</div>
+
+            <h4 class="font-extrabold text-slate-900 text-base leading-snug">${escapeHtml(a.title)}</h4>
+
+            <!-- TAMPILAN COUNTDOWN HITUNG MUNDUR REALTIME -->
+            <div class="mt-3 p-3 bg-indigo-50/70 border border-indigo-100/80 rounded-2xl flex items-center gap-2.5">
+              <div class="p-2 bg-indigo-600 text-white rounded-xl shadow-sm"><i data-lucide="timer" class="w-4 h-4"></i></div>
+              <div>
+                <p class="text-[10px] font-extrabold text-indigo-500 uppercase tracking-wider">Hitung Mundur Pelaksanaan</p>
+                <p id="countdown-${a.id}" class="text-xs font-black text-indigo-950 font-mono mt-0.5">Memuat countdown...</p>
+              </div>
+            </div>
+
+            <div class="mt-4 space-y-1.5 text-xs text-slate-500 font-medium">
+              <div class="flex items-center gap-2"><i data-lucide="clock" class="w-4 h-4 text-indigo-500"></i> ${formatDateTime(a.datetime)} (${a.duration} Jam)</div>
+              <div class="flex items-center gap-2"><i data-lucide="map-pin" class="w-4 h-4 text-indigo-500"></i> ${escapeHtml(a.location)}</div>
             </div>
           </div>
-          <div class="mt-4 pt-3 border-t border-slate-100 flex justify-between items-center text-[10px] text-slate-400">
+
+          <div class="mt-5 pt-3 border-t border-slate-100 flex justify-between items-center text-[10px] text-slate-400 font-medium">
             <span>Auto-hapus 6 jam pasca selesai</span>
             ${isAuthenticated ? `
-              <button onclick="deleteAgenda('${a.id}')" class="text-slate-400 hover:text-red-600 p-1" title="Hapus Agenda">
-                <i data-lucide="trash-2" class="w-4 h-4"></i>
-              </button>
+              <div class="flex gap-1">
+                <button onclick="editAgenda('${a.id}')" class="p-1.5 text-indigo-600 hover:bg-indigo-50 rounded-xl transition-all" title="Edit Agenda">
+                  <i data-lucide="edit-3" class="w-4 h-4"></i>
+                </button>
+                <button onclick="deleteAgenda('${a.id}')" class="p-1.5 text-slate-400 hover:text-red-600 hover:bg-red-50 rounded-xl transition-all" title="Hapus Agenda">
+                  <i data-lucide="trash-2" class="w-4 h-4"></i>
+                </button>
+              </div>
             ` : ''}
           </div>
         </div>
       `).join('');
+
+      updateAllCountdowns();
+    }
+
+    function updateAllCountdowns() {
+      const now = new Date();
+
+      agendas.forEach(a => {
+        const el = document.getElementById(`countdown-${a.id}`);
+        if (!el) return;
+
+        if (a.status !== 'Belum terlaksana') {
+          el.innerText = `Status: ${a.status}`;
+          el.className = "text-xs font-bold text-slate-500";
+          return;
+        }
+
+        const targetTime = new Date(a.datetime);
+        const diffMs = targetTime - now;
+
+        if (diffMs <= 0) {
+          el.innerText = 'Kegiatan Sedang / Telah Berlangsung!';
+          el.className = "text-xs font-extrabold text-emerald-600 animate-pulse";
+        } else {
+          const days = Math.floor(diffMs / (1000 * 60 * 60 * 24));
+          const hours = Math.floor((diffMs % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+          const minutes = Math.floor((diffMs % (1000 * 60 * 60)) / (1000 * 60));
+          const seconds = Math.floor((diffMs % (1000 * 60)) / 1000);
+
+          let str = '';
+          if (days > 0) str += `${days}hr `;
+          str += `${String(hours).padStart(2,'0')}j ${String(minutes).padStart(2,'0')}m ${String(seconds).padStart(2,'0')}d`;
+          
+          el.innerText = str;
+          if (days === 0 && hours < 2) {
+            el.className = "text-xs font-black text-red-600 font-mono animate-pulse";
+          } else {
+            el.className = "text-xs font-black text-indigo-950 font-mono";
+          }
+        }
+      });
     }
 
     function getAgendaSelectClass(status) {
@@ -1071,27 +1271,70 @@
       }
     }
 
-    function openAgendaModal() { if (!isAuthenticated) return openLoginModal(); document.getElementById('modal-agenda').classList.remove('hidden'); }
+    function openAgendaModal() { 
+      if (!isAuthenticated) return openLoginModal(); 
+      document.getElementById('agenda-id').value = '';
+      document.getElementById('agenda-title').value = '';
+      document.getElementById('agenda-criteria').value = 'Umum';
+      document.getElementById('agenda-status').value = 'Belum terlaksana';
+      document.getElementById('agenda-datetime').value = '';
+      document.getElementById('agenda-duration').value = '1';
+      document.getElementById('agenda-location').value = '';
+      document.getElementById('agenda-modal-title').innerText = 'Tambah Agenda Kegiatan';
+      document.getElementById('modal-agenda').classList.remove('hidden'); 
+    }
+    
     function closeAgendaModal() { document.getElementById('modal-agenda').classList.add('hidden'); }
+
+    function editAgenda(id) {
+      if (!isAuthenticated) return openLoginModal();
+      const a = agendas.find(x => x.id === id);
+      if (a) {
+        document.getElementById('agenda-id').value = a.id;
+        document.getElementById('agenda-title').value = a.title;
+        document.getElementById('agenda-criteria').value = a.criteria;
+        document.getElementById('agenda-status').value = a.status;
+        document.getElementById('agenda-datetime').value = a.datetime;
+        document.getElementById('agenda-duration').value = a.duration;
+        document.getElementById('agenda-location').value = a.location;
+        document.getElementById('agenda-modal-title').innerText = 'Edit Agenda Kegiatan';
+        document.getElementById('modal-agenda').classList.remove('hidden');
+      }
+    }
 
     function saveAgenda(e) {
       e.preventDefault();
       if (!isAuthenticated) return;
 
-      const newAgenda = {
-        id: 'agenda_' + Date.now(),
-        title: document.getElementById('agenda-title').value,
-        criteria: document.getElementById('agenda-criteria').value,
-        status: document.getElementById('agenda-status').value,
-        datetime: document.getElementById('agenda-datetime').value,
-        duration: document.getElementById('agenda-duration').value,
-        location: document.getElementById('agenda-location').value
-      };
+      const agendaId = document.getElementById('agenda-id').value;
 
-      agendas.push(newAgenda);
+      if (agendaId) {
+        const a = agendas.find(x => x.id === agendaId);
+        if (a) {
+          a.title = document.getElementById('agenda-title').value;
+          a.criteria = document.getElementById('agenda-criteria').value;
+          a.status = document.getElementById('agenda-status').value;
+          a.datetime = document.getElementById('agenda-datetime').value;
+          a.duration = document.getElementById('agenda-duration').value;
+          a.location = document.getElementById('agenda-location').value;
+          showToast('Agenda berhasil diperbarui!', 'success');
+        }
+      } else {
+        const newAgenda = {
+          id: 'agenda_' + Date.now(),
+          title: document.getElementById('agenda-title').value,
+          criteria: document.getElementById('agenda-criteria').value,
+          status: document.getElementById('agenda-status').value,
+          datetime: document.getElementById('agenda-datetime').value,
+          duration: document.getElementById('agenda-duration').value,
+          location: document.getElementById('agenda-location').value
+        };
+        agendas.push(newAgenda);
+        showToast('Agenda berhasil disimpan!', 'success');
+      }
+
       saveStorageData();
       closeAgendaModal();
-      showToast('Agenda berhasil disimpan!', 'success');
     }
 
     function deleteAgenda(id) {
@@ -1122,6 +1365,7 @@
       if (hasChanges) saveStorageData();
     }
 
+    // --- PENGIRIMAN NOTIFIKASI OTOMATIS 6 JAM & 2 JAM ---
     function checkAgendaNotifications() {
       const now = new Date();
 
@@ -1130,20 +1374,25 @@
           const startTime = new Date(a.datetime);
           const diffHours = (startTime - now) / 3600000;
 
+          // Notifikasi 6 Jam Sebelum Kegiatan
           if (diffHours > 5.8 && diffHours <= 6.0 && !notifiedAgendas.has(a.id + '_6h')) {
-            showToast(`PENGINGAT (6 Jam Lagi): Agenda "${a.title}" pukul ${formatTimeOnly(a.datetime)}`, 'warning');
+            const msg = `PENGINGAT (6 Jam Lagi): Agenda "${a.title}" dimulai pukul ${formatTimeOnly(a.datetime)} di ${a.location}`;
+            showToast(msg, 'warning');
+            sendSystemNotification('Pengingat Kegiatan (6 Jam)', msg);
             notifiedAgendas.add(a.id + '_6h');
           }
 
+          // Notifikasi 2 Jam Sebelum Kegiatan
           if (diffHours > 1.8 && diffHours <= 2.0 && !notifiedAgendas.has(a.id + '_2h')) {
-            showToast(`PENGINGAT URGENT (2 Jam Lagi): Agenda "${a.title}" di ${a.location}`, 'danger');
+            const msg = `PENGINGAT URGENT (2 Jam Lagi): Agenda "${a.title}" lokasi di ${a.location}`;
+            showToast(msg, 'danger');
+            sendSystemNotification('⚠️ PERSIAPAN KEGIATAN (2 Jam Lagi)', msg);
             notifiedAgendas.add(a.id + '_2h');
           }
         }
       });
     }
 
-    // --- REKAPITULASI KEUANGAN (TERKUNCI UNTUK PUBLIK) ---
     function renderFinance() {
       let totalInc = finances.filter(f => f.type === 'pemasukan').reduce((acc, f) => acc + Number(f.amount), 0);
       let totalExp = finances.filter(f => f.type === 'pengeluaran').reduce((acc, f) => acc + Number(f.amount), 0);
@@ -1164,13 +1413,13 @@
       if (!isAuthenticated) {
         tbody.innerHTML = `
           <tr>
-            <td colspan="5" class="p-8 text-center bg-slate-50/50">
-              <div class="flex flex-col items-center justify-center space-y-2">
-                <i data-lucide="lock" class="w-8 h-8 text-amber-500"></i>
-                <p class="font-bold text-slate-800 text-sm">Rekapitulasi Keuangan Terkunci</p>
-                <p class="text-xs text-slate-500 max-w-sm">Hanya pemilik PIN terotorisasi yang dapat melihat rincian riwayat transaksi keuangan.</p>
-                <button onclick="openLoginModal()" class="mt-2 px-4 py-1.5 bg-indigo-600 text-white rounded-xl text-xs font-bold shadow-md">
-                  Masukkan PIN
+            <td colspan="5" class="p-12 text-center bg-slate-50/50">
+              <div class="flex flex-col items-center justify-center space-y-3">
+                <div class="w-12 h-12 rounded-2xl bg-amber-50 text-amber-500 flex items-center justify-center"><i data-lucide="lock" class="w-6 h-6"></i></div>
+                <p class="font-extrabold text-slate-800 text-sm">Rekapitulasi Keuangan Terkunci</p>
+                <p class="text-xs text-slate-500 max-w-xs leading-relaxed">Hanya pemilik PIN terotorisasi yang dapat melihat rincian riwayat transaksi keuangan.</p>
+                <button onclick="openLoginModal()" class="mt-2 px-5 py-2.5 bg-indigo-600 text-white rounded-xl text-xs font-bold shadow-md shadow-indigo-100">
+                  Masukkan PIN Admin
                 </button>
               </div>
             </td>
@@ -1180,24 +1429,24 @@
       }
 
       if (finances.length === 0) {
-        tbody.innerHTML = `<tr><td colspan="5" class="p-4 text-center text-slate-400">Belum ada data transaksi keuangan.</td></tr>`;
+        tbody.innerHTML = `<tr><td colspan="5" class="p-8 text-center text-slate-400">Belum ada data transaksi keuangan.</td></tr>`;
         return;
       }
 
       tbody.innerHTML = finances.map(f => `
-        <tr class="hover:bg-slate-50 border-b border-slate-100">
-          <td class="p-4 text-slate-500 font-medium">${f.date}</td>
-          <td class="p-4 font-bold text-slate-900">${escapeHtml(f.source)}</td>
+        <tr class="hover:bg-slate-50/80 transition-all border-b border-slate-100">
+          <td class="p-4 text-slate-500 font-bold">${f.date}</td>
+          <td class="p-4 font-extrabold text-slate-900">${escapeHtml(f.source)}</td>
           <td class="p-4">
             ${f.type === 'pemasukan' 
-              ? `<span class="bg-emerald-100 text-emerald-700 font-bold px-2 py-0.5 rounded-full text-[10px]">Pemasukan</span>` 
-              : `<span class="bg-red-100 text-red-700 font-bold px-2 py-0.5 rounded-full text-[10px]">Pengeluaran</span>`}
+              ? `<span class="bg-emerald-50 text-emerald-700 font-extrabold px-2.5 py-1 rounded-lg text-[10px] border border-emerald-100">Pemasukan</span>` 
+              : `<span class="bg-red-50 text-red-700 font-extrabold px-2.5 py-1 rounded-lg text-[10px] border border-red-100">Pengeluaran</span>`}
           </td>
           <td class="p-4 text-right font-black ${f.type === 'pemasukan' ? 'text-emerald-600' : 'text-red-600'}">
             ${f.type === 'pemasukan' ? '+' : '-'} ${formatIDR(f.amount)}
           </td>
           <td class="p-4 text-center">
-            <button onclick="deleteFinance('${f.id}')" class="text-slate-400 hover:text-red-600 p-1">
+            <button onclick="deleteFinance('${f.id}')" class="p-2 text-slate-400 hover:text-red-600 hover:bg-red-50 rounded-xl transition-all">
               <i data-lucide="trash-2" class="w-4 h-4"></i>
             </button>
           </td>
@@ -1215,11 +1464,11 @@
       if (type === 'pemasukan') {
         document.getElementById('finance-modal-title').innerText = 'Tambah Pemasukan';
         document.getElementById('fin-source-label').innerText = 'Sumber Pemasukan';
-        document.getElementById('fin-submit-btn').className = 'px-4 py-2 bg-emerald-600 text-white rounded-xl text-xs font-semibold shadow-md';
+        document.getElementById('fin-submit-btn').className = 'px-4 py-2 bg-emerald-600 text-white rounded-xl text-xs font-bold shadow-md shadow-emerald-100';
       } else {
         document.getElementById('finance-modal-title').innerText = 'Tambah Pengeluaran';
         document.getElementById('fin-source-label').innerText = 'Digunakan Untuk Apa';
-        document.getElementById('fin-submit-btn').className = 'px-4 py-2 bg-red-600 text-white rounded-xl text-xs font-semibold shadow-md';
+        document.getElementById('fin-submit-btn').className = 'px-4 py-2 bg-red-600 text-white rounded-xl text-xs font-bold shadow-md shadow-red-100';
       }
 
       document.getElementById('modal-finance').classList.remove('hidden');
@@ -1267,7 +1516,11 @@
 
       const [year, month] = monthVal.split('-');
       const monthNames = ["Januari", "Februari", "Maret", "April", "Mei", "Juni", "Juli", "Agustus", "September", "Oktober", "November", "Desember"];
+      document.getElementById('print-document-title').innerText = 'LAPORAN REKAPITULASI KEUANGAN & WORKSPACE';
       document.getElementById('print-period').innerText = `Periode: ${monthNames[parseInt(month)-1]} ${year}`;
+
+      document.getElementById('print-finance-section').classList.remove('hidden');
+      document.getElementById('print-agenda-section').classList.add('hidden');
 
       const filteredFinances = finances.filter(f => f.date && f.date.startsWith(monthVal));
       const filteredTasks = tasks.filter(t => t.deadline && t.deadline.startsWith(monthVal));
@@ -1289,6 +1542,36 @@
         : filteredTasks.map(t => `<tr><td class="p-2 border font-bold">${escapeHtml(t.name)}</td><td class="p-2 border">${escapeHtml(t.lecturer)}</td><td class="p-2 border">${formatDateTime(t.deadline)}</td><td class="p-2 border">${t.status} (${t.submission})</td></tr>`).join('');
 
       closePrintModal();
+      document.getElementById('print-area').classList.remove('hidden');
+      window.print();
+      document.getElementById('print-area').classList.add('hidden');
+    }
+
+    function executePrintAgenda() {
+      const now = new Date();
+      const options = { year: 'numeric', month: 'long', day: 'numeric' };
+      document.getElementById('print-document-title').innerText = 'LAPORAN REKAPITULASI AGENDA & KEGIATAN';
+      document.getElementById('print-period').innerText = `Tanggal Cetak: ${now.toLocaleDateString('id-ID', options)}`;
+
+      document.getElementById('print-finance-section').classList.add('hidden');
+      document.getElementById('print-agenda-section').classList.remove('hidden');
+
+      const tbody = document.getElementById('print-agenda-body');
+      if (agendas.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="6" class="p-2 border text-center">Tidak ada agenda kegiatan.</td></tr>`;
+      } else {
+        tbody.innerHTML = agendas.map(a => `
+          <tr>
+            <td class="p-2 border font-bold">${escapeHtml(a.title)}</td>
+            <td class="p-2 border">${escapeHtml(a.criteria)}</td>
+            <td class="p-2 border">${formatDateTime(a.datetime)}</td>
+            <td class="p-2 border">${a.duration} Jam</td>
+            <td class="p-2 border">${escapeHtml(a.location)}</td>
+            <td class="p-2 border font-semibold">${a.status}</td>
+          </tr>
+        `).join('');
+      }
+
       document.getElementById('print-area').classList.remove('hidden');
       window.print();
       document.getElementById('print-area').classList.add('hidden');
@@ -1317,7 +1600,7 @@
     function showToast(msg, type = 'info') {
       const container = document.getElementById('toast-container');
       const toast = document.createElement('div');
-      toast.className = `p-3 rounded-xl shadow-lg text-xs font-bold text-white flex items-center gap-2 transition-all duration-300 ${type === 'success' ? 'bg-emerald-600' : type === 'warning' ? 'bg-amber-500' : type === 'danger' ? 'bg-red-600' : 'bg-indigo-600'}`;
+      toast.className = `p-3.5 rounded-2xl shadow-xl text-xs font-bold text-white flex items-center gap-2 transition-all duration-300 ${type === 'success' ? 'bg-emerald-600 shadow-emerald-200' : type === 'warning' ? 'bg-amber-500 shadow-amber-200' : type === 'danger' ? 'bg-red-600 shadow-red-200' : 'bg-indigo-600 shadow-indigo-200'}`;
       toast.innerHTML = `<span>${msg}</span>`;
       container.appendChild(toast);
       setTimeout(() => toast.remove(), 4000);
