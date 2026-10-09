@@ -66,11 +66,9 @@
     <!-- Navigation Bar -->
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3 flex flex-col md:flex-row items-center justify-between gap-4">
       
-      <!-- LOGO & JUDUL -->
+      <!-- LOGO & JUDUL HEADER -->
       <div class="flex items-center gap-3">
-        <div class="w-10 h-10 rounded-2xl bg-indigo-600 flex items-center justify-center text-white shadow-md shadow-indigo-200">
-          <i data-lucide="layout-dashboard" class="w-5 h-5"></i>
-        </div>
+        <img src="https://lh3.googleusercontent.com/d/1LRbbBhUU94258Ke728c6yqSweIrk8kBy" class="w-10 h-10 object-contain rounded-2xl shadow-md" alt="Logo Header">
         <div>
           <h1 class="text-lg font-extrabold text-slate-900 tracking-tight leading-none">MasPram Time <span class="text-indigo-600">Pro</span></h1>
           <p class="text-[11px] font-medium text-slate-500 mt-0.5">Portal Manajemen</p>
@@ -125,7 +123,7 @@
     <div id="auth-lock-banner" class="hidden mb-6 p-4 bg-amber-500/10 border border-amber-500/20 rounded-2xl flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 text-amber-900">
       <div class="flex items-center gap-3">
         <div class="p-2 bg-amber-500 text-white rounded-xl shadow-sm"><i data-lucide="eye" class="w-4 h-4"></i></div>
-        <p class="text-xs sm:text-sm font-medium">Anda dalam **Mode Publik (Lihat-Saja)**. Gunakan **Ekspor Data** untuk membagikan berkas ke perangkat lain.</p>
+        <p class="text-xs sm:text-sm font-medium">Anda dalam <strong>Mode Publik (Lihat-Saja)</strong>. Gunakan <strong>Ekspor Data</strong> untuk membagikan berkas ke perangkat lain.</p>
       </div>
       <button onclick="openLoginModal()" class="px-4 py-2 bg-amber-600 text-white text-xs font-bold rounded-xl shadow-md hover:bg-amber-700 transition-all whitespace-nowrap flex items-center gap-1.5">
         <i data-lucide="key-round" class="w-3.5 h-3.5"></i> LOGIN ADMIN
@@ -135,13 +133,20 @@
     <!-- 1. HALAMAN DASHBOARD -->
     <section id="page-dashboard" class="space-y-6">
       
-      <!-- HERO BANNER -->
-      <div class="relative overflow-hidden rounded-3xl gradient-banner p-6 sm:p-8 text-white shadow-xl shadow-indigo-500/10 flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
-        <div class="relative z-10 max-w-2xl">
-          <span class="px-3 py-1 bg-white/20 rounded-full text-[11px] font-bold tracking-wide uppercase backdrop-blur-md">Kontrol Kegiatan, Tugas, dan Keuangan</span>
-          <h2 class="text-2xl sm:text-3xl font-black tracking-tight mt-2">Selamat Datang di MasPram Time Pro</h2>
-          <p class="mt-2 text-indigo-100 text-xs sm:text-sm leading-relaxed">Sistem terpadu Pengelolaan Tugas Akademik, Manajemen Waktu & Keuangan.</p>
+      <!-- HERO BANNER DENGAN LOGO PERBESAR DI SAMPING TEKS -->
+      <div class="relative overflow-hidden rounded-3xl gradient-banner p-6 sm:p-8 text-white shadow-xl shadow-indigo-500/10 flex flex-col md:flex-row justify-between items-center gap-6">
+        <div class="relative z-10 flex flex-col sm:flex-row items-center sm:items-start gap-5 sm:gap-8 max-w-3xl text-center sm:text-left">
+          <!-- Logo Samping Hero Banner diperbesar -->
+          <div class="p-4 bg-white/10 backdrop-blur-md rounded-3xl border border-white/20 shrink-0 shadow-xl">
+            <img src="https://lh3.googleusercontent.com/d/1uq1NkH5scHcT2pFRiQzLHSKv1H54bX9s" class="w-24 h-24 sm:w-32 sm:h-32 object-contain drop-shadow-lg" alt="Logo Banner">
+          </div>
+          <div class="flex flex-col justify-center">
+            <span class="px-3 py-1 bg-white/20 rounded-full text-[11px] font-bold tracking-wide uppercase backdrop-blur-md inline-block self-center sm:self-start">Kontrol Kegiatan, Tugas, dan Keuangan</span>
+            <h2 class="text-2xl sm:text-3xl font-black tracking-tight mt-3">Selamat Datang di MasPram Time Pro</h2>
+            <p class="mt-2 text-indigo-100 text-xs sm:text-sm leading-relaxed">Sistem terpadu Pengelolaan Tugas Akademik, Manajemen Waktu & Keuangan.</p>
+          </div>
         </div>
+        
         <button id="btn-print-dash" onclick="openPrintModal()" class="px-5 py-3 bg-white text-indigo-700 hover:bg-indigo-50 font-bold text-xs rounded-2xl shadow-xl flex items-center gap-2 transition-all shrink-0">
           <i data-lucide="printer" class="w-4 h-4"></i> Cetak Keuangan PDF
         </button>
@@ -183,6 +188,38 @@
             <p class="text-[11px] text-slate-400 mt-1 font-medium">Keluar</p>
           </div>
           <div class="p-3.5 bg-red-50 text-red-600 rounded-2xl"><i data-lucide="arrow-up-right" class="w-6 h-6"></i></div>
+        </div>
+      </div>
+
+      <!-- KARTU TABEL JADWAL KULIAH (DASHBOARD) -->
+      <div class="bg-white p-6 rounded-3xl border border-slate-200/80 shadow-sm space-y-4">
+        <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 border-b border-slate-100 pb-4">
+          <div class="flex items-center gap-2">
+            <div class="p-2 bg-indigo-50 text-indigo-600 rounded-xl"><i data-lucide="book-open" class="w-5 h-5"></i></div>
+            <div>
+              <h3 class="font-extrabold text-slate-900 text-base">JADWAL KULIAH</h3>
+              <p class="text-xs text-slate-500">Jadwal tatap muka mingguan perkuliahan</p>
+            </div>
+          </div>
+          <button id="btn-add-schedule-dash" onclick="openScheduleModal()" class="px-3.5 py-2 bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-xs rounded-xl shadow-md shadow-indigo-100 flex items-center gap-1.5 transition-all">
+            <i data-lucide="plus" class="w-3.5 h-3.5"></i> Tambah / Edit Jadwal
+          </button>
+        </div>
+
+        <div class="overflow-x-auto">
+          <table class="w-full text-left border-collapse">
+            <thead>
+              <tr class="bg-slate-50 border-b border-slate-200/80 text-[11px] font-extrabold uppercase text-slate-400 tracking-wider">
+                <th class="p-3">Hari</th>
+                <th class="p-3">Waktu</th>
+                <th class="p-3">Ruangan</th>
+                <th class="p-3">Mata Kuliah / Kegiatan</th>
+                <th class="p-3">Dosen Pengampu</th>
+                <th class="p-3 text-center btn-schedule-action">Aksi</th>
+              </tr>
+            </thead>
+            <tbody id="schedule-tbody-dash" class="divide-y divide-slate-100 text-xs"></tbody>
+          </table>
         </div>
       </div>
 
@@ -272,6 +309,38 @@
         <button id="btn-add-task" onclick="openTaskModal()" class="px-4 py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-xs rounded-xl shadow-md shadow-indigo-200 flex items-center gap-2 transition-all">
           <i data-lucide="plus" class="w-4 h-4"></i> Tambah Tugas
         </button>
+      </div>
+
+      <!-- KARTU TABEL JADWAL KULIAH (HALAMAN TUGAS) -->
+      <div class="bg-white p-6 rounded-3xl border border-slate-200/80 shadow-sm space-y-4">
+        <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 border-b border-slate-100 pb-4">
+          <div class="flex items-center gap-2">
+            <div class="p-2 bg-indigo-50 text-indigo-600 rounded-xl"><i data-lucide="book-open" class="w-5 h-5"></i></div>
+            <div>
+              <h3 class="font-extrabold text-slate-900 text-base">JADWAL KULIAH</h3>
+              <p class="text-xs text-slate-500">Panduan perkuliahan mingguan untuk mempermudah pengerjaan tugas</p>
+            </div>
+          </div>
+          <button id="btn-add-schedule-tasks" onclick="openScheduleModal()" class="px-3.5 py-2 bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-xs rounded-xl shadow-md shadow-indigo-100 flex items-center gap-1.5 transition-all">
+            <i data-lucide="plus" class="w-3.5 h-3.5"></i> Tambah / Edit Jadwal
+          </button>
+        </div>
+
+        <div class="overflow-x-auto">
+          <table class="w-full text-left border-collapse">
+            <thead>
+              <tr class="bg-slate-50 border-b border-slate-200/80 text-[11px] font-extrabold uppercase text-slate-400 tracking-wider">
+                <th class="p-3">Hari</th>
+                <th class="p-3">Waktu</th>
+                <th class="p-3">Ruangan</th>
+                <th class="p-3">Mata Kuliah / Kegiatan</th>
+                <th class="p-3">Dosen Pengampu</th>
+                <th class="p-3 text-center btn-schedule-action">Aksi</th>
+              </tr>
+            </thead>
+            <tbody id="schedule-tbody-tasks" class="divide-y divide-slate-100 text-xs"></tbody>
+          </table>
+        </div>
       </div>
 
       <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
@@ -412,7 +481,7 @@
   <div id="print-area" class="hidden">
     <div class="flex items-center justify-between border-b pb-4 mb-6">
       <div class="flex items-center gap-3">
-        <img src="https://lh3.googleusercontent.com/d/14qsCeRufd1OlVQ_wOnBavEj2TR1ux4wy=s200" class="w-12 h-12 object-contain" alt="Logo">
+        <img src="https://lh3.googleusercontent.com/d/1LRbbBhUU94258Ke728c6yqSweIrk8kBy" class="w-12 h-12 object-contain" alt="Logo">
         <div>
           <h1 id="print-document-title" class="text-xl font-bold uppercase">LAPORAN REKAPITULASI WORKSPACE</h1>
           <p id="print-period" class="text-xs font-semibold text-slate-600">Periode: Semua Data</p>
@@ -488,6 +557,50 @@
         <div class="flex gap-2">
           <button type="button" onclick="closeLoginModal()" class="w-1/2 py-2.5 border rounded-2xl font-bold text-xs text-slate-600 hover:bg-slate-50 transition-all">Batal</button>
           <button type="submit" class="w-1/2 py-2.5 bg-indigo-600 text-white rounded-2xl font-bold text-xs shadow-md shadow-indigo-200 hover:bg-indigo-700 transition-all">Buka Akses</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Modal Tambah / Edit Jadwal Kuliah -->
+  <div id="modal-schedule" class="fixed inset-0 bg-slate-900/60 backdrop-blur-md z-50 hidden flex items-center justify-center p-4 no-print">
+    <div class="bg-white rounded-3xl max-w-md w-full p-6 shadow-2xl space-y-4 max-h-[90vh] overflow-y-auto border border-slate-100">
+      <h3 id="schedule-modal-title" class="text-base font-extrabold text-slate-900">Tambah / Edit Jadwal Kuliah</h3>
+      <form onsubmit="saveSchedule(event)" class="space-y-3">
+        <input type="hidden" id="schedule-id">
+        <div>
+          <label class="block text-[11px] font-bold text-slate-700 mb-1">Hari</label>
+          <select id="schedule-day" class="w-full px-3.5 py-2.5 border border-slate-200 rounded-xl text-xs focus:ring-2 focus:ring-indigo-500 focus:outline-none" required>
+            <option value="Senin">Senin</option>
+            <option value="Selasa">Selasa</option>
+            <option value="Rabu">Rabu</option>
+            <option value="Kamis">Kamis</option>
+            <option value="Jumat">Jumat</option>
+            <option value="Sabtu">Sabtu</option>
+            <option value="Minggu">Minggu</option>
+          </select>
+        </div>
+        <div class="grid grid-cols-2 gap-2">
+          <div>
+            <label class="block text-[11px] font-bold text-slate-700 mb-1">Jam Perkuliahan</label>
+            <input type="text" id="schedule-time" placeholder="Contoh: 07.30-09.00" class="w-full px-3.5 py-2.5 border border-slate-200 rounded-xl text-xs focus:ring-2 focus:ring-indigo-500 focus:outline-none" required>
+          </div>
+          <div>
+            <label class="block text-[11px] font-bold text-slate-700 mb-1">Ruangan</label>
+            <input type="text" id="schedule-room" placeholder="Contoh: Ruang 404 PPB" class="w-full px-3.5 py-2.5 border border-slate-200 rounded-xl text-xs focus:ring-2 focus:ring-indigo-500 focus:outline-none" required>
+          </div>
+        </div>
+        <div>
+          <label class="block text-[11px] font-bold text-slate-700 mb-1">Mata Kuliah / Nama Kegiatan</label>
+          <input type="text" id="schedule-subject" placeholder="Nama mata kuliah..." class="w-full px-3.5 py-2.5 border border-slate-200 rounded-xl text-xs focus:ring-2 focus:ring-indigo-500 focus:outline-none" required>
+        </div>
+        <div>
+          <label class="block text-[11px] font-bold text-slate-700 mb-1">Dosen Pengampu / Pengajar</label>
+          <input type="text" id="schedule-lecturer" placeholder="Contoh: Pak BJ Sujibto (Opsional)" class="w-full px-3.5 py-2.5 border border-slate-200 rounded-xl text-xs focus:ring-2 focus:ring-indigo-500 focus:outline-none">
+        </div>
+        <div class="flex justify-end gap-2 pt-2">
+          <button type="button" onclick="closeScheduleModal()" class="px-4 py-2 border rounded-xl text-xs font-bold text-slate-600">Batal</button>
+          <button type="submit" class="px-4 py-2 bg-indigo-600 text-white rounded-xl text-xs font-bold shadow-md shadow-indigo-100">Simpan Jadwal</button>
         </div>
       </form>
     </div>
@@ -654,12 +767,28 @@
       TASKS: 'workspace_tasks_master_data',
       AGENDAS: 'workspace_agendas_master_data',
       FINANCES: 'workspace_finances_master_data',
+      SCHEDULES: 'workspace_schedules_master_data',
       AUTH: 'workspace_auth_session_state'
     };
+
+    // JADWAL DEFAULT PERKULIAHAN LENGKAP
+    const defaultSchedules = [
+      { id: 'sch_1', day: 'Senin', time: '07.30-09.00', room: 'Ruang 404 PPB', subject: 'Latihan Bahasa', lecturer: '-' },
+      { id: 'sch_2', day: 'Senin', time: '09.00-11.20', room: 'Ruang 325', subject: 'Filsafat Ilmu Sosial', lecturer: 'Pak BJ Sujibto' },
+      { id: 'sch_3', day: 'Senin', time: '13.00-14.40', room: 'Ruang 325', subject: 'Pancasila', lecturer: 'Ibu Muryanti' },
+      { id: 'sch_4', day: 'Senin', time: '15.40-17.00', room: 'Ruang 325', subject: 'Antropologi Sosial', lecturer: 'Pak Andri' },
+      { id: 'sch_5', day: 'Selasa', time: '09.40-11.20', room: 'Ruang 110-B', subject: 'B.Indonesia', lecturer: 'Ibu Pipit' },
+      { id: 'sch_6', day: 'Selasa', time: '13.00-14.40', room: 'Ruang 324', subject: 'Pengantar Studi Islam', lecturer: 'Pak Yayan' },
+      { id: 'sch_7', day: 'Rabu', time: '08.30-09.30', room: 'Ruang 223', subject: 'Pengantar Studi Islam', lecturer: 'Pak Yayan' },
+      { id: 'sch_8', day: 'Rabu', time: '09.40-11.20', room: 'Ruang 324', subject: 'Islam dan Sains', lecturer: 'Pak Ahmad Norma P' },
+      { id: 'sch_9', day: 'Rabu', time: '13.00-14.40', room: 'Ruang 108', subject: "Ulumul Qur'an", lecturer: 'Pak Yayan' },
+      { id: 'sch_10', day: 'Kamis', time: '09.40-12.10', room: 'Ruang 324', subject: 'Pengantar Sosiologi', lecturer: 'Bu Muryanti' }
+    ];
 
     let tasks = [];
     let agendas = [];
     let finances = [];
+    let schedules = [];
     let notifiedAgendas = new Set();
 
     let flowchartInstance = null;
@@ -722,7 +851,7 @@
       Notification.requestPermission().then(permission => {
         if (permission === 'granted') {
           showToast('Notifikasi sistem berhasil diaktifkan!', 'success');
-          sendSystemNotification('Tommy Time Pro', 'Notifikasi HP berhasil diaktifkan untuk pengingat kegiatan.');
+          sendSystemNotification('MasPram Time Pro', 'Notifikasi HP berhasil diaktifkan untuk pengingat kegiatan.');
           checkNotificationSupport();
         } else {
           showToast('Izin notifikasi ditolak.', 'danger');
@@ -734,7 +863,7 @@
       if ("Notification" in window && Notification.permission === 'granted') {
         new Notification(title, {
           body: body,
-          icon: 'https://lh3.googleusercontent.com/d/14qsCeRufd1OlVQ_wOnBavEj2TR1ux4wy=s200',
+          icon: 'https://lh3.googleusercontent.com/d/1LRbbBhUU94258Ke728c6yqSweIrk8kBy',
           vibrate: [200, 100, 200]
         });
       }
@@ -771,12 +900,21 @@
       tasks = JSON.parse(localStorage.getItem(KEYS.TASKS) || '[]');
       agendas = JSON.parse(localStorage.getItem(KEYS.AGENDAS) || '[]');
       finances = JSON.parse(localStorage.getItem(KEYS.FINANCES) || '[]');
+      
+      const storedSchedules = localStorage.getItem(KEYS.SCHEDULES);
+      if (storedSchedules) {
+        schedules = JSON.parse(storedSchedules);
+      } else {
+        schedules = [...defaultSchedules];
+        localStorage.setItem(KEYS.SCHEDULES, JSON.stringify(schedules));
+      }
     }
 
     function saveStorageData() {
       localStorage.setItem(KEYS.TASKS, JSON.stringify(tasks));
       localStorage.setItem(KEYS.AGENDAS, JSON.stringify(agendas));
       localStorage.setItem(KEYS.FINANCES, JSON.stringify(finances));
+      localStorage.setItem(KEYS.SCHEDULES, JSON.stringify(schedules));
       refreshAllViews();
     }
 
@@ -784,13 +922,14 @@
       const publicData = {
         tasks: tasks,
         agendas: agendas,
+        schedules: schedules,
         exportedAt: new Date().toISOString()
       };
       
       const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(publicData, null, 2));
       const downloadAnchor = document.createElement('a');
       downloadAnchor.setAttribute("href", dataStr);
-      downloadAnchor.setAttribute("download", `tommy_workspace_jadwal_${new Date().toISOString().split('T')[0]}.json`);
+      downloadAnchor.setAttribute("download", `maspram_workspace_jadwal_${new Date().toISOString().split('T')[0]}.json`);
       document.body.appendChild(downloadAnchor);
       downloadAnchor.click();
       downloadAnchor.remove();
@@ -809,6 +948,7 @@
           if (imported.tasks && imported.agendas) {
             tasks = imported.tasks;
             agendas = imported.agendas;
+            if (imported.schedules) schedules = imported.schedules;
             saveStorageData();
             showToast('Data Tugas & Kegiatan berhasil diperbarui dari file!', 'success');
           } else {
@@ -830,6 +970,8 @@
       const lockBanner = document.getElementById('auth-lock-banner');
       const btnAddTask = document.getElementById('btn-add-task');
       const btnAddAgenda = document.getElementById('btn-add-agenda');
+      const btnAddSchedDash = document.getElementById('btn-add-schedule-dash');
+      const btnAddSchedTasks = document.getElementById('btn-add-schedule-tasks');
       const groupFinanceBtns = document.getElementById('finance-buttons-group');
       const btnPrintDash = document.getElementById('btn-print-dash');
       const btnPrintFin = document.getElementById('btn-print-fin');
@@ -846,6 +988,8 @@
         if (lockBanner) lockBanner.classList.add('hidden');
         if (btnAddTask) btnAddTask.classList.remove('hidden');
         if (btnAddAgenda) btnAddAgenda.classList.remove('hidden');
+        if (btnAddSchedDash) btnAddSchedDash.classList.remove('hidden');
+        if (btnAddSchedTasks) btnAddSchedTasks.classList.remove('hidden');
         if (groupFinanceBtns) groupFinanceBtns.classList.remove('hidden');
         if (btnPrintDash) btnPrintDash.classList.remove('hidden');
         if (btnPrintFin) btnPrintFin.classList.remove('hidden');
@@ -858,6 +1002,8 @@
         if (lockBanner) lockBanner.classList.remove('hidden');
         if (btnAddTask) btnAddTask.classList.add('hidden');
         if (btnAddAgenda) btnAddAgenda.classList.add('hidden');
+        if (btnAddSchedDash) btnAddSchedDash.classList.add('hidden');
+        if (btnAddSchedTasks) btnAddSchedTasks.classList.add('hidden');
         if (groupFinanceBtns) groupFinanceBtns.classList.add('hidden');
         if (btnPrintDash) btnPrintDash.classList.add('hidden');
         if (btnPrintFin) btnPrintFin.classList.add('hidden');
@@ -906,6 +1052,7 @@
 
     function refreshAllViews() {
       renderDashboard();
+      renderSchedules();
       renderTasks();
       renderAgendas();
       renderFinance();
@@ -955,6 +1102,152 @@
       document.getElementById('task-count-prog').innerText = `${progTasks} Tugas`;
       document.getElementById('task-pct-todo').innerText = `${todoPct}%`;
       document.getElementById('task-count-todo').innerText = `${todoTasks} Tugas`;
+    }
+
+    // --- MANAJEMEN TABEL JADWAL KULIAH (FORMAT JAM DIPERJELAS) ---
+    function renderSchedules() {
+      const tbodyDash = document.getElementById('schedule-tbody-dash');
+      const tbodyTasks = document.getElementById('schedule-tbody-tasks');
+
+      const actionHeaderCols = document.querySelectorAll('.btn-schedule-action');
+      actionHeaderCols.forEach(col => {
+        if (isAuthenticated) col.classList.remove('hidden');
+        else col.classList.add('hidden');
+      });
+
+      if (schedules.length === 0) {
+        const emptyHtml = `<tr><td colspan="6" class="p-6 text-center text-slate-400">Belum ada jadwal perkuliahan. Klik tombol di atas untuk membuat jadwal.</td></tr>`;
+        if (tbodyDash) tbodyDash.innerHTML = emptyHtml;
+        if (tbodyTasks) tbodyTasks.innerHTML = emptyHtml;
+        return;
+      }
+
+      // Kelompokkan data jadwal berdasarkan Hari
+      const groupedSchedules = {};
+      schedules.forEach(s => {
+        if (!groupedSchedules[s.day]) {
+          groupedSchedules[s.day] = [];
+        }
+        groupedSchedules[s.day].push(s);
+      });
+
+      let rowsHtml = '';
+      for (const day in groupedSchedules) {
+        const items = groupedSchedules[day];
+        const rowSpan = items.length;
+
+        items.forEach((s, index) => {
+          rowsHtml += `<tr class="hover:bg-slate-50/80 transition-all border-b border-slate-100">`;
+
+          // Tampilkan sel Hari hanya pada item pertama dari kelompok harinya (menggunakan rowspan)
+          if (index === 0) {
+            rowsHtml += `
+              <td rowspan="${rowSpan}" class="p-3 font-extrabold text-indigo-600 align-top bg-slate-50/40 border-r border-slate-100">
+                <span class="px-2.5 py-1 bg-indigo-50 rounded-lg text-indigo-700 border border-indigo-100 inline-block shadow-sm">${escapeHtml(s.day)}</span>
+              </td>
+            `;
+          }
+
+          rowsHtml += `
+            <td class="p-3">
+              <span class="px-2.5 py-1 bg-amber-50 text-amber-900 border border-amber-200/80 rounded-lg font-mono text-xs font-black inline-block shadow-xs tracking-wider">
+                ${escapeHtml(s.time)} WIB
+              </span>
+            </td>
+            <td class="p-3 font-bold text-slate-700">${escapeHtml(s.room)}</td>
+            <td class="p-3 font-extrabold text-slate-900">${escapeHtml(s.subject)}</td>
+            <td class="p-3 font-medium text-slate-500">${escapeHtml(s.lecturer || '-')}</td>
+            ${isAuthenticated ? `
+              <td class="p-3 text-center">
+                <div class="flex items-center justify-center gap-1">
+                  <button onclick="editSchedule('${s.id}')" class="p-1.5 text-indigo-600 hover:bg-indigo-50 rounded-lg transition-all" title="Edit Jadwal">
+                    <i data-lucide="edit-3" class="w-4 h-4"></i>
+                  </button>
+                  <button onclick="deleteSchedule('${s.id}')" class="p-1.5 text-slate-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition-all" title="Hapus Jadwal">
+                    <i data-lucide="trash-2" class="w-4 h-4"></i>
+                  </button>
+                </div>
+              </td>
+            ` : ''}
+          </tr>`;
+        });
+      }
+
+      if (tbodyDash) tbodyDash.innerHTML = rowsHtml;
+      if (tbodyTasks) tbodyTasks.innerHTML = rowsHtml;
+    }
+
+    function openScheduleModal() {
+      if (!isAuthenticated) return openLoginModal();
+      document.getElementById('schedule-id').value = '';
+      document.getElementById('schedule-day').value = 'Senin';
+      document.getElementById('schedule-time').value = '';
+      document.getElementById('schedule-room').value = '';
+      document.getElementById('schedule-subject').value = '';
+      document.getElementById('schedule-lecturer').value = '';
+      document.getElementById('schedule-modal-title').innerText = 'Tambah Jadwal Kuliah Baru';
+      document.getElementById('modal-schedule').classList.remove('hidden');
+    }
+
+    function closeScheduleModal() {
+      document.getElementById('modal-schedule').classList.add('hidden');
+    }
+
+    function editSchedule(id) {
+      if (!isAuthenticated) return openLoginModal();
+      const s = schedules.find(x => x.id === id);
+      if (s) {
+        document.getElementById('schedule-id').value = s.id;
+        document.getElementById('schedule-day').value = s.day;
+        document.getElementById('schedule-time').value = s.time;
+        document.getElementById('schedule-room').value = s.room;
+        document.getElementById('schedule-subject').value = s.subject;
+        document.getElementById('schedule-lecturer').value = s.lecturer || '';
+        document.getElementById('schedule-modal-title').innerText = 'Edit Jadwal Kuliah';
+        document.getElementById('modal-schedule').classList.remove('hidden');
+      }
+    }
+
+    function saveSchedule(e) {
+      e.preventDefault();
+      if (!isAuthenticated) return;
+
+      const scheduleId = document.getElementById('schedule-id').value;
+
+      if (scheduleId) {
+        const s = schedules.find(x => x.id === scheduleId);
+        if (s) {
+          s.day = document.getElementById('schedule-day').value;
+          s.time = document.getElementById('schedule-time').value;
+          s.room = document.getElementById('schedule-room').value;
+          s.subject = document.getElementById('schedule-subject').value;
+          s.lecturer = document.getElementById('schedule-lecturer').value;
+          showToast('Jadwal perkuliahan diperbarui!', 'success');
+        }
+      } else {
+        const newSchedule = {
+          id: 'sch_' + Date.now(),
+          day: document.getElementById('schedule-day').value,
+          time: document.getElementById('schedule-time').value,
+          room: document.getElementById('schedule-room').value,
+          subject: document.getElementById('schedule-subject').value,
+          lecturer: document.getElementById('schedule-lecturer').value
+        };
+        schedules.push(newSchedule);
+        showToast('Jadwal perkuliahan baru berhasil ditambahkan!', 'success');
+      }
+
+      saveStorageData();
+      closeScheduleModal();
+    }
+
+    function deleteSchedule(id) {
+      if (!isAuthenticated) return openLoginModal();
+      if (confirm('Apakah Anda yakin ingin menghapus jadwal perkuliahan ini?')) {
+        schedules = schedules.filter(s => s.id !== id);
+        saveStorageData();
+        showToast('Jadwal berhasil dihapus', 'info');
+      }
     }
 
     function renderCalendar() {
@@ -1106,7 +1399,7 @@
       if (t) {
         t.submission = newSub;
         saveStorageData();
-        showToast(`Status pengumpulan diperbarui: ${newSub}`, 'success');
+        showToast(`Status pengumpulkan diperbarui: ${newSub}`, 'success');
       }
     }
 
