@@ -38,9 +38,9 @@
       transform: translate(-50%, -50%);
       width: 60%;
       max-width: 450px;
-      opacity: 0.10;
+      opacity: 0.15;
       pointer-events: none;
-      z-index: 0;
+      z-index: -1;
     }
 
     @media print {
@@ -52,8 +52,16 @@
         top: 0;
         width: 100%;
         padding: 24px;
-        background: #ffffff;
+        background: transparent !important;
         color: #000000;
+      }
+      /* Membuat background tabel dan kotak laporan transparan agar watermark terlihat jelas di bawah teks/tabel */
+      #print-area table, 
+      #print-area th, 
+      #print-area td, 
+      #print-area tr,
+      #print-area div {
+        background-color: transparent !important;
       }
       .no-print { display: none !important; }
     }
@@ -145,11 +153,8 @@
 
     <!-- 1. HALAMAN DASHBOARD -->
     <section id="page-dashboard" class="space-y-6">
-      
-      <!-- HERO BANNER DENGAN LOGO PERBESAR DI SAMPING TEKS -->
       <div class="relative overflow-hidden rounded-3xl gradient-banner p-6 sm:p-8 text-white shadow-xl shadow-indigo-500/10 flex flex-col md:flex-row justify-between items-center gap-6">
         <div class="relative z-10 flex flex-col sm:flex-row items-center sm:items-start gap-5 sm:gap-8 max-w-3xl text-center sm:text-left">
-          <!-- Logo Samping Hero Banner diperbesar -->
           <div class="p-4 bg-white/10 backdrop-blur-md rounded-3xl border border-white/20 shrink-0 shadow-xl">
             <img src="https://lh3.googleusercontent.com/d/1uq1NkH5scHcT2pFRiQzLHSKv1H54bX9s" class="w-24 h-24 sm:w-32 sm:h-32 object-contain drop-shadow-lg" alt="Logo Banner">
           </div>
@@ -204,7 +209,7 @@
         </div>
       </div>
 
-      <!-- KARTU TABEL JADWAL KULIAH (DASHBOARD) -->
+      <!-- KARTU TABEL JADWAL KULIAH -->
       <div class="bg-white p-6 rounded-3xl border border-slate-200/80 shadow-sm space-y-4">
         <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 border-b border-slate-100 pb-4">
           <div class="flex items-center gap-2">
@@ -236,7 +241,7 @@
         </div>
       </div>
 
-      <!-- KARTU PERSENTASE TUGAS DENGAN BAR PROGRES -->
+      <!-- KARTU PERSENTASE TUGAS -->
       <div class="bg-white p-6 rounded-3xl border border-slate-200/80 shadow-sm space-y-4">
         <div class="flex items-center justify-between">
           <h3 class="font-bold text-slate-900 text-sm flex items-center gap-2">
@@ -324,7 +329,6 @@
         </button>
       </div>
 
-      <!-- KARTU TABEL JADWAL KULIAH (HALAMAN TUGAS) -->
       <div class="bg-white p-6 rounded-3xl border border-slate-200/80 shadow-sm space-y-4">
         <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 border-b border-slate-100 pb-4">
           <div class="flex items-center gap-2">
@@ -558,7 +562,6 @@
   </div>
 
   <!-- MODALS SYSTEM -->
-
   <!-- Modal Login PIN -->
   <div id="modal-login" class="fixed inset-0 bg-slate-900/60 backdrop-blur-md z-50 hidden flex items-center justify-center p-4 no-print">
     <div class="bg-white rounded-3xl max-w-sm w-full p-6 shadow-2xl space-y-4 border border-slate-100">
@@ -787,7 +790,6 @@
       AUTH: 'workspace_auth_session_state'
     };
 
-    // JADWAL DEFAULT PERKULIAHAN LENGKAP
     const defaultSchedules = [
       { id: 'sch_1', day: 'Senin', time: '07.30-09.00', room: 'Ruang 404 PPB', subject: 'Latihan Bahasa', lecturer: '-' },
       { id: 'sch_2', day: 'Senin', time: '09.00-11.20', room: 'Ruang 325', subject: 'Filsafat Ilmu Sosial', lecturer: 'Pak BJ Sujibto' },
@@ -806,7 +808,6 @@
     let finances = [];
     let schedules = [];
     let notifiedAgendas = new Set();
-
     let flowchartInstance = null;
 
     window.addEventListener('DOMContentLoaded', () => {
@@ -819,7 +820,6 @@
       startRealtimeClock();
       checkNotificationSupport();
 
-      // Interval setiap detik untuk memperbarui countdown waktu & notifikasi
       setInterval(() => {
         updateAllCountdowns();
         autoCleanupAgendas();
@@ -846,7 +846,6 @@
       setInterval(updateClock, 1000);
     }
 
-    // --- SISTEM NOTIFIKASI HP / WEB ---
     function checkNotificationSupport() {
       const btn = document.getElementById('btn-request-notif');
       if (!("Notification" in window)) {
@@ -1120,7 +1119,6 @@
       document.getElementById('task-count-todo').innerText = `${todoTasks} Tugas`;
     }
 
-    // --- MANAJEMEN TABEL JADWAL KULIAH (FORMAT JAM DIPERJELAS) ---
     function renderSchedules() {
       const tbodyDash = document.getElementById('schedule-tbody-dash');
       const tbodyTasks = document.getElementById('schedule-tbody-tasks');
@@ -1138,7 +1136,6 @@
         return;
       }
 
-      // Kelompokkan data jadwal berdasarkan Hari
       const groupedSchedules = {};
       schedules.forEach(s => {
         if (!groupedSchedules[s.day]) {
@@ -1155,7 +1152,6 @@
         items.forEach((s, index) => {
           rowsHtml += `<tr class="hover:bg-slate-50/80 transition-all border-b border-slate-100">`;
 
-          // Tampilkan sel Hari hanya pada item pertama dari kelompok harinya (menggunakan rowspan)
           if (index === 0) {
             rowsHtml += `
               <td rowspan="${rowSpan}" class="p-3 font-extrabold text-indigo-600 align-top bg-slate-50/40 border-r border-slate-100">
@@ -1465,7 +1461,6 @@
       }
     }
 
-    // --- MANAJEMEN AGENDA DENGAN COUNTDOWN HITUNG MUNDUR ---
     function renderAgendas() {
       const grid = document.getElementById('agenda-grid');
       if (agendas.length === 0) {
@@ -1490,7 +1485,6 @@
 
             <h4 class="font-extrabold text-slate-900 text-base leading-snug">${escapeHtml(a.title)}</h4>
 
-            <!-- TAMPILAN COUNTDOWN HITUNG MUNDUR REALTIME -->
             <div class="mt-3 p-3 bg-indigo-50/70 border border-indigo-100/80 rounded-2xl flex items-center gap-2.5">
               <div class="p-2 bg-indigo-600 text-white rounded-xl shadow-sm"><i data-lucide="timer" class="w-4 h-4"></i></div>
               <div>
@@ -1674,7 +1668,6 @@
       if (hasChanges) saveStorageData();
     }
 
-    // --- PENGIRIMAN NOTIFIKASI OTOMATIS 6 JAM & 2 JAM ---
     function checkAgendaNotifications() {
       const now = new Date();
 
@@ -1683,7 +1676,6 @@
           const startTime = new Date(a.datetime);
           const diffHours = (startTime - now) / 3600000;
 
-          // Notifikasi 6 Jam Sebelum Kegiatan
           if (diffHours > 5.8 && diffHours <= 6.0 && !notifiedAgendas.has(a.id + '_6h')) {
             const msg = `PENGINGAT (6 Jam Lagi): Agenda "${a.title}" dimulai pukul ${formatTimeOnly(a.datetime)} di ${a.location}`;
             showToast(msg, 'warning');
@@ -1691,7 +1683,6 @@
             notifiedAgendas.add(a.id + '_6h');
           }
 
-          // Notifikasi 2 Jam Sebelum Kegiatan
           if (diffHours > 1.8 && diffHours <= 2.0 && !notifiedAgendas.has(a.id + '_2h')) {
             const msg = `PENGINGAT URGENT (2 Jam Lagi): Agenda "${a.title}" lokasi di ${a.location}`;
             showToast(msg, 'danger');
