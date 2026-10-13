@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>MasPram Time Pro - Portal Manajemen & AI Workspace</title>
+  <title>MasPram Time Pro - Portal Manajemen Workspace</title>
   
   <!-- Tailwind CSS CDN -->
   <script src="https://cdn.tailwindcss.com"></script>
@@ -89,7 +89,7 @@
 </head>
 <body class="bg-slate-50 text-slate-800 min-h-screen flex flex-col antialiased selection:bg-indigo-500 selection:text-white">
 
-  <!-- SPLASH SCREEN / ANIMASI SELAMAT DATANG -->
+  <!-- SPLASH SCREEN -->
   <div id="welcome-splash" class="fixed inset-0 z-50 gradient-banner flex flex-col items-center justify-center text-white transition-opacity duration-700 no-print">
     <div class="animate-welcome flex flex-col items-center text-center p-6 space-y-5">
       <div class="w-28 h-28 bg-white/10 backdrop-blur-2xl rounded-3xl border border-white/20 flex items-center justify-center shadow-2xl p-4">
@@ -135,16 +135,11 @@
         </div>
       </div>
 
-     <!-- NAVIGASI DESKTOP -->
+      <!-- NAVIGASI DESKTOP -->
       <nav class="hidden md:flex items-center gap-1.5 bg-slate-100/80 p-1.5 rounded-2xl border border-slate-200/60 text-xs font-bold shadow-inner">
         <button onclick="switchPage('dashboard')" id="nav-dashboard" class="px-3.5 py-2 rounded-xl transition-all duration-200">Dashboard</button>
+        <button onclick="switchPage('schedules')" id="nav-schedules" class="px-3.5 py-2 rounded-xl transition-all duration-200">Jadwal Kuliah</button>
         <button onclick="switchPage('tasks')" id="nav-tasks" class="px-3.5 py-2 rounded-xl transition-all duration-200">Tugas</button>
-        
-        <!-- TERHUBUNG KE HALAMAN AI SUMMARY TERPISAH -->
-        <a href="ai-summary.html" class="px-3.5 py-2 rounded-xl transition-all duration-200 flex items-center gap-1.5 text-purple-700 bg-purple-50/80 border border-purple-200/80 shadow-2xs font-extrabold">
-          <i data-lucide="sparkles" class="w-3.5 h-3.5"></i> AI Rangkuman
-        </a>
-
         <button onclick="switchPage('agenda')" id="nav-agenda" class="px-3.5 py-2 rounded-xl transition-all duration-200">Agenda</button>
         <button onclick="switchPage('finance')" id="nav-finance" class="px-3.5 py-2 rounded-xl transition-all duration-200">Keuangan</button>
       </nav>
@@ -165,20 +160,17 @@
       </div>
     </div>
 
-   <!-- NAVIGASI MOBILE -->
+    <!-- NAVIGASI MOBILE -->
     <div class="md:hidden flex justify-around border-t border-slate-100 bg-white/90 backdrop-blur-md py-2.5 px-2 text-[11px] font-semibold text-slate-600">
       <button onclick="switchPage('dashboard')" class="flex flex-col items-center gap-0.5">
-        <i data-lucide="home" class="w-4 h-4"></i> Dashboard
+        <i data-lucide="home" class="w-4 h-4"></i> Beranda
+      </button>
+      <button onclick="switchPage('schedules')" class="flex flex-col items-center gap-0.5">
+        <i data-lucide="book-open" class="w-4 h-4"></i> Jadwal
       </button>
       <button onclick="switchPage('tasks')" class="flex flex-col items-center gap-0.5">
         <i data-lucide="check-square" class="w-4 h-4"></i> Tugas
       </button>
-      
-      <!-- TERHUBUNG KE HALAMAN AI SUMMARY TERPISAH (MOBILE) -->
-      <a href="ai-summary.html" class="flex flex-col items-center gap-0.5 text-purple-700 font-bold">
-        <i data-lucide="sparkles" class="w-4 h-4"></i> AI Rangkum
-      </a>
-
       <button onclick="switchPage('agenda')" class="flex flex-col items-center gap-0.5">
         <i data-lucide="calendar" class="w-4 h-4"></i> Agenda
       </button>
@@ -210,9 +202,9 @@
             <img src="https://lh3.googleusercontent.com/d/1uq1NkH5scHcT2pFRiQzLHSKv1H54bX9s" class="w-20 h-20 sm:w-24 sm:h-24 object-contain drop-shadow-md" alt="Logo Banner Utama">
           </div>
           <div class="flex flex-col justify-center">
-            <span class="px-3 py-1 bg-white/20 rounded-full text-[10px] font-extrabold tracking-wider uppercase backdrop-blur-md inline-block self-center sm:self-start">Kontrol Kegiatan, Tugas, dan Keuangan</span>
+            <span class="px-3 py-1 bg-white/20 rounded-full text-[10px] font-extrabold tracking-wider uppercase backdrop-blur-md inline-block self-center sm:self-start">Kontrol Jadwal, Tugas, dan Keuangan</span>
             <h2 class="text-xl sm:text-2xl lg:text-3xl font-black tracking-tight mt-2.5">Selamat Datang di MasPram Time Pro</h2>
-            <p class="mt-1.5 text-indigo-100 text-xs sm:text-sm leading-relaxed font-medium">Sistem terpadu Pengelolaan Tugas Akademik, Manajemen Waktu & Keuangan.</p>
+            <p class="mt-1.5 text-indigo-100 text-xs sm:text-sm leading-relaxed font-medium">Sistem terpadu Pengelolaan Jadwal Kuliah, Tugas Akademik, & Keuangan.</p>
           </div>
         </div>
         
@@ -260,18 +252,18 @@
         </div>
       </div>
 
-      <!-- KARTU TABEL JADWAL KULIAH -->
+      <!-- KARTU RINGKASAN JADWAL KULIAH DI DASHBOARD -->
       <div class="bg-white p-6 rounded-3xl border border-slate-200/80 shadow-xs space-y-4">
         <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 border-b border-slate-100 pb-4">
           <div class="flex items-center gap-2.5">
             <div class="p-2.5 bg-indigo-50 text-indigo-600 rounded-xl"><i data-lucide="book-open" class="w-5 h-5"></i></div>
             <div>
-              <h3 class="font-extrabold text-slate-900 text-base">JADWAL KULIAH</h3>
-              <p class="text-xs text-slate-500 font-medium">Jadwal tatap muka mingguan perkuliahan</p>
+              <h3 class="font-extrabold text-slate-900 text-base">JADWAL KULIAH MINGGUAN</h3>
+              <p class="text-xs text-slate-500 font-medium">Jadwal tatap muka perkuliahan aktif</p>
             </div>
           </div>
-          <button id="btn-add-schedule-dash" onclick="openScheduleModal()" class="px-4 py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-xs rounded-xl shadow-md shadow-indigo-100 flex items-center gap-1.5 transition-all">
-            <i data-lucide="plus" class="w-3.5 h-3.5"></i> Tambah / Edit Jadwal
+          <button onclick="switchPage('schedules')" class="px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold text-xs rounded-xl transition-all">
+            Kelola Jadwal Lengkap &rarr;
           </button>
         </div>
 
@@ -282,55 +274,12 @@
                 <th class="p-3.5">Hari</th>
                 <th class="p-3.5">Waktu</th>
                 <th class="p-3.5">Ruangan</th>
-                <th class="p-3.5">Mata Kuliah / Kegiatan</th>
+                <th class="p-3.5">Mata Kuliah</th>
                 <th class="p-3.5">Dosen Pengampu</th>
-                <th class="p-3.5 text-center btn-schedule-action">Aksi</th>
               </tr>
             </thead>
             <tbody id="schedule-tbody-dash" class="divide-y divide-slate-100 text-xs font-medium"></tbody>
           </table>
-        </div>
-      </div>
-
-      <!-- KARTU PERSENTASE TUGAS -->
-      <div class="bg-white p-6 rounded-3xl border border-slate-200/80 shadow-xs space-y-4">
-        <div class="flex items-center justify-between">
-          <h3 class="font-extrabold text-slate-900 text-sm flex items-center gap-2">
-            <i data-lucide="pie-chart" class="w-4 h-4 text-indigo-600"></i> Persentase Keseluruhan Status Tugas
-          </h3>
-          <span id="dash-task-total-badge" class="text-xs font-bold px-3 py-1 bg-slate-100 rounded-xl text-slate-700">Total: 0 Tugas</span>
-        </div>
-
-        <div class="w-full bg-slate-100 h-4 rounded-full overflow-hidden flex p-0.5 border border-slate-200/60 shadow-inner">
-          <div id="bar-task-done" class="bg-emerald-500 h-full rounded-full transition-all duration-500" style="width: 0%"></div>
-          <div id="bar-task-progress" class="bg-amber-400 h-full rounded-full transition-all duration-500" style="width: 0%"></div>
-          <div id="bar-task-todo" class="bg-red-500 h-full rounded-full transition-all duration-500" style="width: 0%"></div>
-        </div>
-
-        <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 pt-2">
-          <div class="p-3.5 bg-emerald-50/60 border border-emerald-100 rounded-2xl">
-            <div class="flex justify-between items-center text-xs text-emerald-800 font-bold">
-              <span class="flex items-center gap-1.5"><span class="w-2.5 h-2.5 rounded-full bg-emerald-500 shadow-xs"></span> Selesai</span>
-              <span id="pct-task-done-num">0%</span>
-            </div>
-            <p id="cnt-task-done" class="text-[11px] text-emerald-600 mt-1 font-semibold">0 dari 0 tugas</p>
-          </div>
-
-          <div class="p-3.5 bg-amber-50/60 border border-amber-100 rounded-2xl">
-            <div class="flex justify-between items-center text-xs text-amber-900 font-bold">
-              <span class="flex items-center gap-1.5"><span class="w-2.5 h-2.5 rounded-full bg-amber-400 shadow-xs"></span> Dalam Pengerjaan</span>
-              <span id="pct-task-progress-num">0%</span>
-            </div>
-            <p id="cnt-task-progress" class="text-[11px] text-amber-700 mt-1 font-semibold">0 dari 0 tugas</p>
-          </div>
-
-          <div class="p-3.5 bg-red-50/60 border border-red-100 rounded-2xl">
-            <div class="flex justify-between items-center text-xs text-red-800 font-bold">
-              <span class="flex items-center gap-1.5"><span class="w-2.5 h-2.5 rounded-full bg-red-500 shadow-xs"></span> Belum Dikerjakan</span>
-              <span id="pct-task-todo-num">0%</span>
-            </div>
-            <p id="cnt-task-todo" class="text-[11px] text-red-600 mt-1 font-semibold">0 dari 0 tugas</p>
-          </div>
         </div>
       </div>
 
@@ -368,7 +317,40 @@
       </div>
     </section>
 
-    <!-- 2. HALAMAN MANAJEMEN TUGAS -->
+    <!-- 2. HALAMAN JADWAL KULIAH (FITUR TERPISAH BARU) -->
+    <section id="page-schedules" class="hidden space-y-6">
+      <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 bg-white p-6 rounded-3xl border border-slate-200/80 shadow-xs">
+        <div>
+          <h2 class="text-xl font-black text-slate-900 tracking-tight flex items-center gap-2">
+            <i data-lucide="book-open" class="w-6 h-6 text-indigo-600"></i> Manajemen Jadwal Kuliah
+          </h2>
+          <p class="text-xs text-slate-500 mt-0.5 font-medium">Halaman khusus untuk mengatur waktu perkuliahan, ruangan, dan dosen pengampu.</p>
+        </div>
+        <button id="btn-add-schedule-page" onclick="openScheduleModal()" class="px-4 py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-xs rounded-xl shadow-md shadow-indigo-200 flex items-center gap-2 transition-all">
+          <i data-lucide="plus" class="w-4 h-4"></i> Tambah Jadwal Kuliah
+        </button>
+      </div>
+
+      <div class="bg-white p-6 rounded-3xl border border-slate-200/80 shadow-xs space-y-4">
+        <div class="overflow-x-auto">
+          <table class="w-full text-left border-collapse">
+            <thead>
+              <tr class="bg-slate-50/80 border-b border-slate-200/80 text-[11px] font-extrabold uppercase text-slate-400 tracking-wider">
+                <th class="p-3.5">Hari</th>
+                <th class="p-3.5">Waktu</th>
+                <th class="p-3.5">Ruangan</th>
+                <th class="p-3.5">Mata Kuliah</th>
+                <th class="p-3.5">Dosen Pengampu</th>
+                <th class="p-3.5 text-center btn-schedule-action">Aksi</th>
+              </tr>
+            </thead>
+            <tbody id="schedule-tbody-full" class="divide-y divide-slate-100 text-xs font-medium"></tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- 3. HALAMAN MANAJEMEN TUGAS -->
     <section id="page-tasks" class="hidden space-y-6">
       <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
         <div>
@@ -378,37 +360,6 @@
         <button id="btn-add-task" onclick="openTaskModal()" class="px-4 py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-xs rounded-xl shadow-md shadow-indigo-200 flex items-center gap-2 transition-all">
           <i data-lucide="plus" class="w-4 h-4"></i> Tambah Tugas
         </button>
-      </div>
-
-      <div class="bg-white p-6 rounded-3xl border border-slate-200/80 shadow-xs space-y-4">
-        <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 border-b border-slate-100 pb-4">
-          <div class="flex items-center gap-2.5">
-            <div class="p-2.5 bg-indigo-50 text-indigo-600 rounded-xl"><i data-lucide="book-open" class="w-5 h-5"></i></div>
-            <div>
-              <h3 class="font-extrabold text-slate-900 text-base">JADWAL KULIAH</h3>
-              <p class="text-xs text-slate-500 font-medium">Panduan perkuliahan mingguan untuk mempermudah pengerjaan tugas</p>
-            </div>
-          </div>
-          <button id="btn-add-schedule-tasks" onclick="openScheduleModal()" class="px-4 py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-xs rounded-xl shadow-md shadow-indigo-100 flex items-center gap-1.5 transition-all">
-            <i data-lucide="plus" class="w-3.5 h-3.5"></i> Tambah / Edit Jadwal
-          </button>
-        </div>
-
-        <div class="overflow-x-auto">
-          <table class="w-full text-left border-collapse">
-            <thead>
-              <tr class="bg-slate-50/80 border-b border-slate-200/80 text-[11px] font-extrabold uppercase text-slate-400 tracking-wider">
-                <th class="p-3.5">Hari</th>
-                <th class="p-3.5">Waktu</th>
-                <th class="p-3.5">Ruangan</th>
-                <th class="p-3.5">Mata Kuliah / Kegiatan</th>
-                <th class="p-3.5">Dosen Pengampu</th>
-                <th class="p-3.5 text-center btn-schedule-action">Aksi</th>
-              </tr>
-            </thead>
-            <tbody id="schedule-tbody-tasks" class="divide-y divide-slate-100 text-xs font-medium"></tbody>
-          </table>
-        </div>
       </div>
 
       <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
@@ -452,84 +403,13 @@
                 <th class="p-4">Jenis</th>
                 <th class="p-4">Deadline</th>
                 <th class="p-4">Status Pengerjaan</th>
-                <th class="p-4">Status Pengumpulkan</th>
-                <th class="p-4">File & Rangkuman</th>
+                <th class="p-4">Status Pengumpulan</th>
+                <th class="p-4">File & Catatan</th>
                 <th class="p-4 text-center">Aksi</th>
               </tr>
             </thead>
             <tbody id="task-table-body" class="divide-y divide-slate-100 text-xs font-medium"></tbody>
           </table>
-        </div>
-      </div>
-    </section>
-
-    <!-- 3. HALAMAN AI PERANGKUM MATERI (TERPISAH & TERHUBUNG API AI) -->
-    <section id="page-ai-summary" class="hidden space-y-6">
-      <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 bg-white p-6 rounded-3xl border border-slate-200/80 shadow-xs">
-        <div>
-          <h2 class="text-xl font-black text-slate-900 tracking-tight flex items-center gap-2">
-            <i data-lucide="sparkles" class="w-6 h-6 text-purple-600"></i> AI Perangkum Materi Akademik
-          </h2>
-          <p class="text-xs text-slate-500 mt-0.5 font-medium">Halaman khusus pemrosesan dokumen dan teks materi kuliah menggunakan kecerdasan buatan Gemini AI.</p>
-        </div>
-        <div class="flex items-center gap-2">
-          <input type="password" id="gemini-api-key" placeholder="Masukkan Gemini API Key..." class="px-3 py-2 border border-slate-200 rounded-xl text-xs w-52 focus:ring-2 focus:ring-purple-500 focus:outline-none" title="Masukkan API Key Google Gemini">
-          <button onclick="saveApiKey()" class="px-3.5 py-2 bg-slate-900 text-white font-bold text-xs rounded-xl hover:bg-slate-800 transition-all">Simpan Key</button>
-        </div>
-      </div>
-
-      <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        <div class="bg-white p-6 rounded-3xl border border-slate-200/80 shadow-xs space-y-4">
-          <h3 class="font-extrabold text-slate-900 text-sm flex items-center gap-2">
-            <i data-lucide="upload-cloud" class="w-4 h-4 text-purple-600"></i> Sumber Materi (Upload File / Teks)
-          </h3>
-
-          <div class="border-2 border-dashed border-purple-200 bg-purple-50/30 rounded-2xl p-6 text-center hover:bg-purple-50/60 transition-all cursor-pointer relative" onclick="document.getElementById('ai-file-upload').click()">
-            <input type="file" id="ai-file-upload" onchange="handleAiFileUpload(event)" class="hidden" accept=".txt,.pdf,.doc,.docx,.md">
-            <div class="flex flex-col items-center justify-center space-y-2">
-              <div class="p-3.5 bg-purple-100 text-purple-700 rounded-2xl shadow-2xs">
-                <i data-lucide="file-up" class="w-5 h-5"></i>
-              </div>
-              <div>
-                <p id="ai-uploaded-file-name" class="text-xs font-extrabold text-slate-800">Klik untuk unggah file materi (TXT, MD)</p>
-                <p class="text-[11px] text-slate-400 mt-0.5">Atau tempel teks catatan Anda secara langsung di bawah ini</p>
-              </div>
-            </div>
-          </div>
-
-          <div>
-            <label class="block text-[11px] font-bold text-slate-700 mb-1">Judul / Topik Materi</label>
-            <input type="text" id="ai-material-title" placeholder="Contoh: Pengantar Sosiologi Modern" class="w-full px-3.5 py-2.5 border border-slate-200 rounded-xl text-xs focus:ring-2 focus:ring-purple-500 focus:outline-none transition-all">
-          </div>
-          <div>
-            <label class="block text-[11px] font-bold text-slate-700 mb-1">Isi / Catatan Materi</label>
-            <textarea id="ai-material-input" rows="6" placeholder="Tempel (paste) teks catatan kuliah atau materi panjang di sini..." class="w-full px-3.5 py-2.5 border border-slate-200 rounded-xl text-xs focus:ring-2 focus:ring-purple-500 focus:outline-none transition-all"></textarea>
-          </div>
-          <button onclick="generateAiSummary()" class="w-full py-3 bg-purple-600 hover:bg-purple-700 text-white font-bold text-xs rounded-xl shadow-md shadow-purple-200 flex items-center justify-center gap-2 transition-all">
-            <i data-lucide="sparkles" class="w-4 h-4"></i> Rangkum dengan AI Gemini
-          </button>
-        </div>
-
-        <div class="bg-white p-6 rounded-3xl border border-slate-200/80 shadow-xs space-y-4 flex flex-col justify-between">
-          <div>
-            <div class="flex items-center justify-between border-b border-slate-100 pb-3 mb-3">
-              <h3 class="font-extrabold text-slate-900 text-sm flex items-center gap-2">
-                <i data-lucide="file-check" class="w-4 h-4 text-emerald-600"></i> Hasil Rangkuman Cerdas AI
-              </h3>
-              <span id="ai-result-badge" class="text-[10px] font-extrabold px-2.5 py-1 bg-purple-50 text-purple-700 rounded-lg">Menunggu Input</span>
-            </div>
-            <div id="ai-summary-output" class="bg-slate-50 p-4 rounded-2xl border border-slate-200/60 text-xs text-slate-600 min-h-[220px] max-h-[350px] overflow-y-auto space-y-2 leading-relaxed">
-              <p class="italic text-slate-400">Hasil rangkuman dokumen, poin-poin utama, dan kesimpulan materi akan muncul di sini setelah AI selesai memproses.</p>
-            </div>
-          </div>
-          <div class="flex gap-2 pt-3 border-t border-slate-100">
-            <button onclick="copyAiSummary()" class="w-1/2 py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold text-xs rounded-xl transition-all flex items-center justify-center gap-1.5">
-              <i data-lucide="copy" class="w-3.5 h-3.5"></i> Salin Teks
-            </button>
-            <button onclick="saveAiSummaryToTask()" class="w-1/2 py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-xs rounded-xl shadow-md transition-all flex items-center justify-center gap-1.5">
-              <i data-lucide="save" class="w-3.5 h-3.5"></i> Simpan ke Tugas
-            </button>
-          </div>
         </div>
       </div>
     </section>
@@ -653,7 +533,7 @@
         <h3 class="font-bold text-xs uppercase mb-2 border-b pb-1">2. Laporan Rekapitulasi Tugas</h3>
         <table class="w-full text-left text-xs border border-collapse bg-white/60">
           <thead>
-            <tr class="bg-slate-100/90 border-b"><th class="p-2 border">Nama Tugas</th><th class="p-2 border">Dosen</th><th class="p-2 border">Deadline</th><th class="p-2 border">Status Pengerjaan / Pengumpulkan</th></tr>
+            <tr class="bg-slate-100/90 border-b"><th class="p-2 border">Nama Tugas</th><th class="p-2 border">Dosen</th><th class="p-2 border">Deadline</th><th class="p-2 border">Status Pengerjaan / Pengumpulan</th></tr>
           </thead>
           <tbody id="print-task-body"></tbody>
         </table>
@@ -729,11 +609,11 @@
           </div>
         </div>
         <div>
-          <label class="block text-[11px] font-bold text-slate-700 mb-1">Mata Kuliah / Nama Kegiatan</label>
+          <label class="block text-[11px] font-bold text-slate-700 mb-1">Mata Kuliah</label>
           <input type="text" id="schedule-subject" placeholder="Nama mata kuliah..." class="w-full px-3.5 py-2.5 border border-slate-200 rounded-xl text-xs focus:ring-2 focus:ring-indigo-500 focus:outline-none" required>
         </div>
         <div>
-          <label class="block text-[11px] font-bold text-slate-700 mb-1">Dosen Pengampu / Pengajar</label>
+          <label class="block text-[11px] font-bold text-slate-700 mb-1">Dosen Pengampu</label>
           <input type="text" id="schedule-lecturer" placeholder="Contoh: Pak BJ Sujibto (Opsional)" class="w-full px-3.5 py-2.5 border border-slate-200 rounded-xl text-xs focus:ring-2 focus:ring-indigo-500 focus:outline-none">
         </div>
         <div class="flex justify-end gap-2 pt-2">
@@ -780,7 +660,7 @@
             </select>
           </div>
           <div>
-            <label class="block text-[11px] font-bold text-slate-700 mb-1">Status Pengumpulkan</label>
+            <label class="block text-[11px] font-bold text-slate-700 mb-1">Status Pengumpulan</label>
             <select id="task-submission" class="w-full px-3.5 py-2.5 border border-slate-200 rounded-xl text-xs focus:ring-2 focus:ring-indigo-500 focus:outline-none">
               <option value="Belum dikumpulkan">Belum dikumpulkan</option>
               <option value="Sudah dikumpulkan">Sudah dikumpulkan</option>
@@ -792,8 +672,8 @@
           <input type="file" id="task-file-input" class="w-full text-xs text-slate-500 file:mr-2 file:py-2 file:px-3 file:rounded-xl file:border-0 file:text-xs file:font-semibold file:bg-indigo-50 file:text-indigo-700">
         </div>
         <div>
-          <label class="block text-[11px] font-bold text-slate-700 mb-1">Isi Rangkuman Singkat Tugas</label>
-          <textarea id="task-summary" rows="3" placeholder="Tuliskan poin-poin singkat instruksi atau rangkuman tugas..." class="w-full px-3.5 py-2.5 border border-slate-200 rounded-xl text-xs focus:ring-2 focus:ring-indigo-500 focus:outline-none"></textarea>
+          <label class="block text-[11px] font-bold text-slate-700 mb-1">Catatan / Rangkuman Tugas</label>
+          <textarea id="task-summary" rows="3" placeholder="Tuliskan poin-poin singkat instruksi tugas..." class="w-full px-3.5 py-2.5 border border-slate-200 rounded-xl text-xs focus:ring-2 focus:ring-indigo-500 focus:outline-none"></textarea>
         </div>
         <div class="flex justify-end gap-2 pt-2">
           <button type="button" onclick="closeTaskModal()" class="px-4 py-2 border rounded-xl text-xs font-bold text-slate-600">Batal</button>
@@ -906,8 +786,7 @@
       AGENDAS: 'workspace_agendas_master_data',
       FINANCES: 'workspace_finances_master_data',
       SCHEDULES: 'workspace_schedules_master_data',
-      AUTH: 'workspace_auth_session_state',
-      GEMINI_KEY: 'workspace_gemini_api_key'
+      AUTH: 'workspace_auth_session_state'
     };
 
     const defaultSchedules = [
@@ -929,7 +808,6 @@
     let schedules = [];
     let notifiedAgendas = new Set();
     let flowchartInstance = null;
-    let latestAiSummaryText = "";
 
     window.addEventListener('DOMContentLoaded', () => {
       runWelcomeSplashAnimation();
@@ -942,24 +820,12 @@
       startRealtimeClock();
       checkNotificationSupport();
 
-      const savedKey = localStorage.getItem(KEYS.GEMINI_KEY);
-      if (savedKey) {
-        document.getElementById('gemini-api-key').value = savedKey;
-      }
-
       setInterval(() => {
         updateAllCountdowns();
         autoCleanupAgendas();
         checkAgendaNotifications();
       }, 1000);
     });
-
-    function saveApiKey() {
-      const key = document.getElementById('gemini-api-key').value.trim();
-      if (!key) return alert('Masukkan API Key yang valid!');
-      localStorage.setItem(KEYS.GEMINI_KEY, key);
-      showToast('Gemini API Key berhasil disimpan!', 'success');
-    }
 
     function runWelcomeSplashAnimation() {
       const splash = document.getElementById('welcome-splash');
@@ -1017,7 +883,7 @@
       Notification.requestPermission().then(permission => {
         if (permission === 'granted') {
           showToast('Notifikasi sistem berhasil diaktifkan!', 'success');
-          sendSystemNotification('MasPram Time Pro', 'Notifikasi HP berhasil diaktifkan untuk pengingat kegiatan.');
+          sendSystemNotification('MasPram Time Pro', 'Notifikasi berhasil diaktifkan untuk pengingat.');
           checkNotificationSupport();
         } else {
           showToast('Izin notifikasi ditolak.', 'danger');
@@ -1095,12 +961,12 @@
       const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(publicData, null, 2));
       const downloadAnchor = document.createElement('a');
       downloadAnchor.setAttribute("href", dataStr);
-      downloadAnchor.setAttribute("download", `maspram_workspace_jadwal_${new Date().toISOString().split('T')[0]}.json`);
+      downloadAnchor.setAttribute("download", `maspram_workspace_backup_${new Date().toISOString().split('T')[0]}.json`);
       document.body.appendChild(downloadAnchor);
       downloadAnchor.click();
       downloadAnchor.remove();
 
-      showToast('File data tugas & kegiatan berhasil diunduh!', 'success');
+      showToast('File backup data berhasil diunduh!', 'success');
     }
 
     function importDataPublik(event) {
@@ -1116,7 +982,7 @@
             agendas = imported.agendas;
             if (imported.schedules) schedules = imported.schedules;
             saveStorageData();
-            showToast('Data Tugas & Kegiatan berhasil diperbarui dari file!', 'success');
+            showToast('Data berhasil dipulihkan dari file!', 'success');
           } else {
             alert('Format file JSON tidak valid!');
           }
@@ -1136,8 +1002,7 @@
       const lockBanner = document.getElementById('auth-lock-banner');
       const btnAddTask = document.getElementById('btn-add-task');
       const btnAddAgenda = document.getElementById('btn-add-agenda');
-      const btnAddSchedDash = document.getElementById('btn-add-schedule-dash');
-      const btnAddSchedTasks = document.getElementById('btn-add-schedule-tasks');
+      const btnAddSchedPage = document.getElementById('btn-add-schedule-page');
       const groupFinanceBtns = document.getElementById('finance-buttons-group');
       const btnPrintDash = document.getElementById('btn-print-dash');
       const btnPrintFin = document.getElementById('btn-print-fin');
@@ -1145,7 +1010,7 @@
       if (isAuthenticated) {
         container.innerHTML = `
           <span class="inline-flex items-center gap-1.5 px-3 py-2 bg-emerald-50 text-emerald-700 text-xs font-extrabold rounded-xl border border-emerald-200">
-            <span class="w-2 h-2 rounded-full bg-emerald-500"></span> <span class="hidden sm:inline">Halaman Edit</span>
+            <span class="w-2 h-2 rounded-full bg-emerald-500"></span> <span class="hidden sm:inline">Admin Aktif</span>
           </span>
           <button onclick="handleLogout()" class="p-2 text-slate-400 hover:text-red-600 rounded-xl hover:bg-slate-100 transition-all" title="Logout">
             <i data-lucide="log-out" class="w-4 h-4"></i>
@@ -1154,8 +1019,7 @@
         if (lockBanner) lockBanner.classList.add('hidden');
         if (btnAddTask) btnAddTask.classList.remove('hidden');
         if (btnAddAgenda) btnAddAgenda.classList.remove('hidden');
-        if (btnAddSchedDash) btnAddSchedDash.classList.remove('hidden');
-        if (btnAddSchedTasks) btnAddSchedTasks.classList.remove('hidden');
+        if (btnAddSchedPage) btnAddSchedPage.classList.remove('hidden');
         if (groupFinanceBtns) groupFinanceBtns.classList.remove('hidden');
         if (btnPrintDash) btnPrintDash.classList.remove('hidden');
         if (btnPrintFin) btnPrintFin.classList.remove('hidden');
@@ -1168,8 +1032,7 @@
         if (lockBanner) lockBanner.classList.remove('hidden');
         if (btnAddTask) btnAddTask.classList.add('hidden');
         if (btnAddAgenda) btnAddAgenda.classList.add('hidden');
-        if (btnAddSchedDash) btnAddSchedDash.classList.add('hidden');
-        if (btnAddSchedTasks) btnAddSchedTasks.classList.add('hidden');
+        if (btnAddSchedPage) btnAddSchedPage.classList.add('hidden');
         if (groupFinanceBtns) groupFinanceBtns.classList.add('hidden');
         if (btnPrintDash) btnPrintDash.classList.add('hidden');
         if (btnPrintFin) btnPrintFin.classList.add('hidden');
@@ -1203,7 +1066,7 @@
     }
 
     function switchPage(pageId) {
-      ['dashboard', 'tasks', 'ai-summary', 'agenda', 'finance'].forEach(p => {
+      ['dashboard', 'schedules', 'tasks', 'agenda', 'finance'].forEach(p => {
         const pageEl = document.getElementById(`page-${p}`);
         if (pageEl) pageEl.classList.add('hidden');
         const navBtn = document.getElementById(`nav-${p}`);
@@ -1214,11 +1077,7 @@
       if (activePage) activePage.classList.remove('hidden');
       const activeNav = document.getElementById(`nav-${pageId}`);
       if (activeNav) {
-        if (pageId === 'ai-summary') {
-          activeNav.className = "px-3.5 py-2 rounded-xl bg-purple-50 text-purple-700 border border-purple-200/80 shadow-2xs font-extrabold transition-all";
-        } else {
-          activeNav.className = "px-3.5 py-2 rounded-xl bg-white text-indigo-600 shadow-sm border border-slate-200/60 font-extrabold transition-all";
-        }
+        activeNav.className = "px-3.5 py-2 rounded-xl bg-white text-indigo-600 shadow-sm border border-slate-200/60 font-extrabold transition-all";
       }
 
       refreshAllViews();
@@ -1235,146 +1094,10 @@
       initLucide();
     }
 
-    function handleAiFileUpload(event) {
-      const file = event.target.files[0];
-      if (!file) return;
-
-      document.getElementById('ai-uploaded-file-name').innerText = `File: ${file.name}`;
-      document.getElementById('ai-material-title').value = file.name.replace(/\.[^/.]+$/, "");
-
-      const reader = new FileReader();
-      reader.onload = function(e) {
-        document.getElementById('ai-material-input').value = e.target.result;
-        showToast('File dibaca! Klik Rangkum dengan AI Gemini.', 'success');
-      };
-      reader.readAsText(file);
-    }
-
-    async function generateAiSummary() {
-      const title = document.getElementById('ai-material-title').value.trim();
-      const text = document.getElementById('ai-material-input').value.trim();
-      const output = document.getElementById('ai-summary-output');
-      const badge = document.getElementById('ai-result-badge');
-      const apiKey = document.getElementById('gemini-api-key').value.trim() || localStorage.getItem(KEYS.GEMINI_KEY);
-
-      if (!text) {
-        alert('Silakan unggah file atau masukkan catatan materi terlebih dahulu!');
-        return;
-      }
-
-      output.innerHTML = `<div class="flex items-center justify-center p-8 text-purple-600 font-bold gap-2"><i data-lucide="loader-2" class="w-5 h-5 animate-spin"></i> AI Gemini sedang merangkum dan menganalisis materi...</div>`;
-      initLucide();
-
-      if (!apiKey) {
-        // Fallback Simulasi Pintar jika API Key belum diisi
-        setTimeout(() => {
-          const sentences = text.split(/[.!?]+/).filter(s => s.trim().length > 5);
-          const corePoints = sentences.slice(0, 5).map(s => `• ${s.trim()}`).join('<br>');
-          
-          latestAiSummaryText = `Rangkuman Materi: ${title || 'Tanpa Judul'}\n\n[Poin Utama]:\n${sentences.slice(0, 5).map(s => '- ' + s.trim()).join('\n')}\n\n[Kesimpulan]:\n${text.substring(0, 200)}...`;
-
-          output.innerHTML = `
-            <div class="space-y-3">
-              <div>
-                <span class="text-[10px] font-extrabold text-purple-600 uppercase tracking-wider">Topik: ${escapeHtml(title || 'Dokumen Akademik')}</span>
-                <h4 class="font-extrabold text-slate-900 text-sm mt-0.5">Intisari & Poin Penting Materi</h4>
-              </div>
-              <div class="space-y-1.5 text-slate-700 leading-relaxed font-medium">
-                ${corePoints ? corePoints : '• ' + text.substring(0, 250)}
-              </div>
-              <div class="p-3 bg-amber-50 rounded-xl border border-amber-200 text-[11px] text-amber-900">
-                <span class="font-extrabold">⚠️ Info:</span> Menggunakan Mode Simulasi Lokal. Masukkan <strong>Gemini API Key</strong> di atas untuk terhubung langsung ke API Gemini AI sungguhan.
-              </div>
-            </div>
-          `;
-          badge.innerText = 'Berhasil Dirangkum';
-          badge.className = "text-[10px] font-extrabold px-2.5 py-1 bg-emerald-50 text-emerald-700 rounded-lg";
-          showToast('Dokumen berhasil dirangkum!', 'success');
-          initLucide();
-        }, 1000);
-        return;
-      }
-
-      // Koneksi Langsung ke Google Gemini API
-      try {
-        const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            contents: [{
-              parts: [{ text: `Tolong buatkan rangkuman materi akademik yang terstruktur, jelas, dan mudah dipahami dalam Bahasa Indonesia berdasarkan teks berikut:\n\nJudul: ${title}\nTeks Materi:\n${text}` }]
-            }]
-          })
-        });
-
-        const data = await response.json();
-        if (data.candidates && data.candidates[0].content.parts[0].text) {
-          const rawResult = data.candidates[0].content.parts[0].text;
-          latestAiSummaryText = rawResult;
-
-          output.innerHTML = `
-            <div class="space-y-3">
-              <div>
-                <span class="text-[10px] font-extrabold text-purple-600 uppercase tracking-wider">Topik: ${escapeHtml(title || 'Dokumen Akademik')}</span>
-                <h4 class="font-extrabold text-slate-900 text-sm mt-0.5">Hasil Rangkuman Gemini AI</h4>
-              </div>
-              <div class="text-slate-700 leading-relaxed whitespace-pre-line text-xs font-medium">
-                ${escapeHtml(rawResult)}
-              </div>
-            </div>
-          `;
-          badge.innerText = 'Terhubung AI Gemini';
-          badge.className = "text-[10px] font-extrabold px-2.5 py-1 bg-emerald-50 text-emerald-700 rounded-lg";
-          showToast('Materi berhasil dirangkum oleh Gemini AI!', 'success');
-        } else {
-          throw new Error('Respon API tidak valid');
-        }
-      } catch (err) {
-        output.innerHTML = `<p class="text-red-500 font-bold">Gagal terhubung ke Gemini AI. Periksa kembali API Key Anda.</p>`;
-        showToast('Gagal menghubungi Gemini API', 'danger');
-      }
-      initLucide();
-    }
-
-    function copyAiSummary() {
-      if (!latestAiSummaryText) return alert('Belum ada hasil rangkuman!');
-      navigator.clipboard.writeText(latestAiSummaryText);
-      showToast('Hasil rangkuman disalin!', 'success');
-    }
-
-    function saveAiSummaryToTask() {
-      if (!isAuthenticated) return openLoginModal();
-      if (!latestAiSummaryText) return alert('Belum ada hasil rangkuman!');
-      
-      const title = document.getElementById('ai-material-title').value.trim() || 'Materi Hasil Rangkuman AI';
-      const newTask = {
-        id: 'task_' + Date.now(),
-        name: title,
-        type: 'Individu',
-        lecturer: 'AI Assistant',
-        deadline: new Date(Date.now() + 86400000 * 3).toISOString().slice(0,16),
-        status: 'Belum dikerjakan',
-        submission: 'Belum dikumpulkan',
-        summary: latestAiSummaryText,
-        fileName: 'AI_Summary_Document.txt',
-        fileSize: '12 KB'
-      };
-
-      tasks.push(newTask);
-      saveStorageData();
-      showToast('Rangkuman disimpan ke Tugas baru!', 'success');
-      switchPage('tasks');
-    }
-
     function renderDashboard() {
       const totalTasks = tasks.length;
       const doneTasks = tasks.filter(t => t.status === 'Selesai').length;
-      const progTasks = tasks.filter(t => t.status === 'Dalam pengerjaan').length;
-      const todoTasks = tasks.filter(t => t.status === 'Belum dikerjakan').length;
-
       const donePct = totalTasks > 0 ? Math.round((doneTasks / totalTasks) * 100) : 0;
-      const progPct = totalTasks > 0 ? Math.round((progTasks / totalTasks) * 100) : 0;
-      const todoPct = totalTasks > 0 ? Math.round((todoTasks / totalTasks) * 100) : 0;
 
       document.getElementById('dash-total-tasks').innerText = totalTasks;
       document.getElementById('dash-completed-tasks').innerText = `${donePct}% Selesai`;
@@ -1387,31 +1110,11 @@
       document.getElementById('dash-total-income').innerText = isAuthenticated ? formatIDR(totalInc) : '[Terkunci]';
       document.getElementById('dash-total-expense').innerText = isAuthenticated ? formatIDR(totalExp) : '[Terkunci]';
       document.getElementById('dash-net-balance').innerText = `Saldo: ${isAuthenticated ? formatIDR(totalInc - totalExp) : '[Terkunci]'}`;
-
-      document.getElementById('dash-task-total-badge').innerText = `Total: ${totalTasks} Tugas`;
-      document.getElementById('bar-task-done').style.width = `${donePct}%`;
-      document.getElementById('bar-task-progress').style.width = `${progPct}%`;
-      document.getElementById('bar-task-todo').style.width = `${todoPct}%`;
-
-      document.getElementById('pct-task-done-num').innerText = `${donePct}%`;
-      document.getElementById('pct-task-progress-num').innerText = `${progPct}%`;
-      document.getElementById('pct-task-todo-num').innerText = `${todoPct}%`;
-
-      document.getElementById('cnt-task-done').innerText = `${doneTasks} dari ${totalTasks} tugas`;
-      document.getElementById('cnt-task-progress').innerText = `${progTasks} dari ${totalTasks} tugas`;
-      document.getElementById('cnt-task-todo').innerText = `${todoTasks} dari ${totalTasks} tugas`;
-
-      document.getElementById('task-pct-done').innerText = `${donePct}%`;
-      document.getElementById('task-count-done').innerText = `${doneTasks} Tugas`;
-      document.getElementById('task-pct-prog').innerText = `${progPct}%`;
-      document.getElementById('task-count-prog').innerText = `${progTasks} Tugas`;
-      document.getElementById('task-pct-todo').innerText = `${todoPct}%`;
-      document.getElementById('task-count-todo').innerText = `${todoTasks} Tugas`;
     }
 
     function renderSchedules() {
       const tbodyDash = document.getElementById('schedule-tbody-dash');
-      const tbodyTasks = document.getElementById('schedule-tbody-tasks');
+      const tbodyFull = document.getElementById('schedule-tbody-full');
 
       const actionHeaderCols = document.querySelectorAll('.btn-schedule-action');
       actionHeaderCols.forEach(col => {
@@ -1420,9 +1123,9 @@
       });
 
       if (schedules.length === 0) {
-        const emptyHtml = `<tr><td colspan="6" class="p-6 text-center text-slate-400">Belum ada jadwal perkuliahan. Klik tombol di atas untuk membuat jadwal.</td></tr>`;
+        const emptyHtml = `<tr><td colspan="6" class="p-6 text-center text-slate-400">Belum ada jadwal perkuliahan.</td></tr>`;
         if (tbodyDash) tbodyDash.innerHTML = emptyHtml;
-        if (tbodyTasks) tbodyTasks.innerHTML = emptyHtml;
+        if (tbodyFull) tbodyFull.innerHTML = emptyHtml;
         return;
       }
 
@@ -1431,9 +1134,7 @@
 
       const groupedSchedules = {};
       sortedSchedules.forEach(s => {
-        if (!groupedSchedules[s.day]) {
-          groupedSchedules[s.day] = [];
-        }
+        if (!groupedSchedules[s.day]) groupedSchedules[s.day] = [];
         groupedSchedules[s.day].push(s);
       });
 
@@ -1479,7 +1180,7 @@
       }
 
       if (tbodyDash) tbodyDash.innerHTML = rowsHtml;
-      if (tbodyTasks) tbodyTasks.innerHTML = rowsHtml;
+      if (tbodyFull) tbodyFull.innerHTML = rowsHtml;
     }
 
     function openScheduleModal() {
@@ -1527,7 +1228,7 @@
           s.room = document.getElementById('schedule-room').value;
           s.subject = document.getElementById('schedule-subject').value;
           s.lecturer = document.getElementById('schedule-lecturer').value;
-          showToast('Jadwal perkuliahan diperbarui!', 'success');
+          showToast('Jadwal kuliah diperbarui!', 'success');
         }
       } else {
         const newSchedule = {
@@ -1539,7 +1240,7 @@
           lecturer: document.getElementById('schedule-lecturer').value
         };
         schedules.push(newSchedule);
-        showToast('Jadwal perkuliahan baru ditambahkan!', 'success');
+        showToast('Jadwal kuliah baru ditambahkan!', 'success');
       }
 
       saveStorageData();
@@ -1548,7 +1249,7 @@
 
     function deleteSchedule(id) {
       if (!isAuthenticated) return openLoginModal();
-      if (confirm('Hapus jadwal perkuliahan ini?')) {
+      if (confirm('Hapus jadwal kuliah ini?')) {
         schedules = schedules.filter(s => s.id !== id);
         saveStorageData();
         showToast('Jadwal berhasil dihapus', 'info');
@@ -1624,6 +1325,22 @@
       document.getElementById('task-counter').innerText = `Jumlah Seluruh Tugas: ${tasks.length}`;
       const tbody = document.getElementById('task-table-body');
 
+      const totalTasks = tasks.length;
+      const doneTasks = tasks.filter(t => t.status === 'Selesai').length;
+      const progTasks = tasks.filter(t => t.status === 'Dalam pengerjaan').length;
+      const todoTasks = tasks.filter(t => t.status === 'Belum dikerjakan').length;
+
+      const donePct = totalTasks > 0 ? Math.round((doneTasks / totalTasks) * 100) : 0;
+      const progPct = totalTasks > 0 ? Math.round((progTasks / totalTasks) * 100) : 0;
+      const todoPct = totalTasks > 0 ? Math.round((todoTasks / totalTasks) * 100) : 0;
+
+      document.getElementById('task-pct-done').innerText = `${donePct}%`;
+      document.getElementById('task-count-done').innerText = `${doneTasks} Tugas`;
+      document.getElementById('task-pct-prog').innerText = `${progPct}%`;
+      document.getElementById('task-count-prog').innerText = `${progTasks} Tugas`;
+      document.getElementById('task-pct-todo').innerText = `${todoPct}%`;
+      document.getElementById('task-count-todo').innerText = `${todoTasks} Tugas`;
+
       if (tasks.length === 0) {
         tbody.innerHTML = `<tr><td colspan="7" class="p-8 text-center text-slate-400">Belum ada tugas tercatat.</td></tr>`;
         return;
@@ -1661,8 +1378,8 @@
             <div class="space-y-1.5">
               ${t.fileName ? `<span class="font-bold text-indigo-600 flex items-center gap-1 text-xs"><i data-lucide="file" class="w-3.5 h-3.5"></i> ${escapeHtml(t.fileName)}</span>` : '<span class="text-slate-300 italic text-xs">Tidak ada file</span>'}
               <div class="bg-slate-50 p-2.5 rounded-xl border border-slate-200/60 text-[11px] space-y-0.5">
-                <p class="font-bold text-slate-700">Rangkuman / Catatan:</p>
-                <p class="text-slate-600 leading-relaxed whitespace-pre-line">${t.summary ? escapeHtml(t.summary) : '• Tidak ada rangkuman.'}</p>
+                <p class="font-bold text-slate-700">Catatan:</p>
+                <p class="text-slate-600 leading-relaxed whitespace-pre-line">${t.summary ? escapeHtml(t.summary) : '• Tidak ada catatan.'}</p>
               </div>
             </div>
           </td>
@@ -1706,7 +1423,7 @@
       if (t) {
         t.submission = newSub;
         saveStorageData();
-        showToast(`Status pengumpulkan diperbarui: ${newSub}`, 'success');
+        showToast(`Status pengumpulan diperbarui: ${newSub}`, 'success');
       }
     }
 
