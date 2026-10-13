@@ -135,13 +135,16 @@
         </div>
       </div>
 
-      <!-- NAVIGASI DESKTOP -->
+     <!-- NAVIGASI DESKTOP -->
       <nav class="hidden md:flex items-center gap-1.5 bg-slate-100/80 p-1.5 rounded-2xl border border-slate-200/60 text-xs font-bold shadow-inner">
         <button onclick="switchPage('dashboard')" id="nav-dashboard" class="px-3.5 py-2 rounded-xl transition-all duration-200">Dashboard</button>
         <button onclick="switchPage('tasks')" id="nav-tasks" class="px-3.5 py-2 rounded-xl transition-all duration-200">Tugas</button>
-        <button onclick="switchPage('ai-summary')" id="nav-ai-summary" class="px-3.5 py-2 rounded-xl transition-all duration-200 flex items-center gap-1.5 text-purple-700">
+        
+        <!-- TERHUBUNG KE HALAMAN AI SUMMARY TERPISAH -->
+        <a href="ai-summary.html" class="px-3.5 py-2 rounded-xl transition-all duration-200 flex items-center gap-1.5 text-purple-700 bg-purple-50/80 border border-purple-200/80 shadow-2xs font-extrabold">
           <i data-lucide="sparkles" class="w-3.5 h-3.5"></i> AI Rangkuman
-        </button>
+        </a>
+
         <button onclick="switchPage('agenda')" id="nav-agenda" class="px-3.5 py-2 rounded-xl transition-all duration-200">Agenda</button>
         <button onclick="switchPage('finance')" id="nav-finance" class="px-3.5 py-2 rounded-xl transition-all duration-200">Keuangan</button>
       </nav>
@@ -162,7 +165,7 @@
       </div>
     </div>
 
-    <!-- NAVIGASI MOBILE -->
+   <!-- NAVIGASI MOBILE -->
     <div class="md:hidden flex justify-around border-t border-slate-100 bg-white/90 backdrop-blur-md py-2.5 px-2 text-[11px] font-semibold text-slate-600">
       <button onclick="switchPage('dashboard')" class="flex flex-col items-center gap-0.5">
         <i data-lucide="home" class="w-4 h-4"></i> Dashboard
@@ -170,9 +173,12 @@
       <button onclick="switchPage('tasks')" class="flex flex-col items-center gap-0.5">
         <i data-lucide="check-square" class="w-4 h-4"></i> Tugas
       </button>
-      <button onclick="switchPage('ai-summary')" class="flex flex-col items-center gap-0.5 text-purple-700 font-bold">
+      
+      <!-- TERHUBUNG KE HALAMAN AI SUMMARY TERPISAH (MOBILE) -->
+      <a href="ai-summary.html" class="flex flex-col items-center gap-0.5 text-purple-700 font-bold">
         <i data-lucide="sparkles" class="w-4 h-4"></i> AI Rangkum
-      </button>
+      </a>
+
       <button onclick="switchPage('agenda')" class="flex flex-col items-center gap-0.5">
         <i data-lucide="calendar" class="w-4 h-4"></i> Agenda
       </button>
