@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="id" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AI Perangkum Materi - MasPram Time Pro</title>
+  
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  
+  <!-- Font Plus Jakarta Sans -->
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  
+  <!-- Lucide Icons -->
+  <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+
+  <style>
+    body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: #f8fafc; }
+    .gradient-banner { background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 50%, #9333ea 100%); }
+    ::-webkit-scrollbar { width: 6px; height: 6px; }
+    ::-webkit-scrollbar-track { background: #f1f5f9; }
+    ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 9999px; }
+  </style>
+</head>
+<body class="bg-slate-50 text-slate-800 min-h-screen flex flex-col antialiased selection:bg-purple-500 selection:text-white">
+
+  <!-- NOTIFIKASI TOAST -->
+  <div id="toast-container" class="fixed bottom-5 right-5 z-50 flex flex-col gap-2.5"></div>
+
+  <!-- HEADER DENGAN TOMBOL KEMBALI KE MENU UTAMA -->
+  <header class="sticky top-0 z-40 bg-white/85 backdrop-blur-xl border-b border-slate-200/60 shadow-xs">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3 flex items-center justify-between gap-3">
+      <div class="flex items-center gap-3">
+        <a href="Index.html" class="p-2 bg-slate-100 hover:bg-slate-200 rounded-xl text-slate-700 transition-all flex items-center gap-1.5 text-xs font-bold">
+          <i data-lucide="arrow-left" class="w-4 h-4"></i> Kembali ke Dashboard
+        </a>
+      </div>
+      <div class="flex items-center gap-2">
+        <input type="password" id="gemini-api-key" placeholder="Masukkan Gemini API Key..." class="px-3 py-2 border border-slate-200 rounded-xl text-xs w-52 focus:ring-2 focus:ring-purple-500 focus:outline-none">
+        <button onclick="saveApiKey()" class="px-3.5 py-2 bg-slate-900 text-white font-bold text-xs rounded-xl hover:bg-slate-800 transition-all">Simpan Key</button>
+      </div>
+    </div>
+  </header>
+
+  <!-- KONTEN UTAMA HALAMAN AI -->
+  <main class="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-6">
+    <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 bg-white p-6 rounded-3xl border border-slate-200/80 shadow-xs">
+      <div>
+        <h2 class="text-xl font-black text-slate-900 tracking-tight flex items-center gap-2">
+          <i data-lucide="sparkles" class="w-6 h-6 text-purple-600"></i> AI Perangkum Materi Akademik (Halaman Terpisah)
+        </h2>
+        <p class="text-xs text-slate-500 mt-0.5 font-medium">Halaman khusus pemrosesan dokumen dan teks materi kuliah menggunakan Gemini AI.</p>
+      </div>
+    </div>
+
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+      <!-- Sisi Kiri: Input -->
+      <div class="bg-white p-6 rounded-3xl border border-slate-200/80 shadow-xs space-y-4">
+        <h3 class="font-extrabold text-slate-900 text-sm flex items-center gap-2">
+          <i data-lucide="upload-cloud" class="w-4 h-4 text-purple-600"></i> Sumber Materi (Upload File / Teks)
+        </h3>
+
+        <div class="border-2 border-dashed border-purple-200 bg-purple-50/30 rounded-2xl p-6 text-center hover:bg-purple-50/60 transition-all cursor-pointer relative" onclick="document.getElementById('ai-file-upload').click()">
+          <input type="file" id="ai-file-upload" onchange="handleAiFileUpload(event)" class="hidden" accept=".txt,.pdf,.doc,.docx,.md">
+          <div class="flex flex-col items-center justify-center space-y-2">
+            <div class="p-3.5 bg-purple-100 text-purple-700 rounded-2xl shadow-2xs">
+              <i data-lucide="file-up" class="w-5 h-5"></i>
+            </div>
+            <div>
+              <p id="ai-uploaded-file-name" class="text-xs font-extrabold text-slate-800">Klik untuk unggah file materi (TXT, MD)</p>
+              <p class="text-[11px] text-slate-400 mt-0.5">Atau tempel teks catatan Anda secara langsung di bawah ini</p>
+            </div>
+          </div>
+        </div>
+
+        <div>
+          <label class="block text-[11px] font-bold text-slate-700 mb-1">Judul / Topik Materi</label>
+          <input type="text" id="ai-material-title" placeholder="Contoh: Pengantar Sosiologi Modern" class="w-full px-3.5 py-2.5 border border-slate-200 rounded-xl text-xs focus:ring-2 focus:ring-purple-500 focus:outline-none">
+        </div>
+        <div>
+          <label class="block text-[11px] font-bold text-slate-700 mb-1">Isi / Catatan Materi</label>
+          <textarea id="ai-material-input" rows="6" placeholder="Tempel teks catatan kuliah di sini..." class="w-full px-3.5 py-2.5 border border-slate-200 rounded-xl text-xs focus:ring-2 focus:ring-purple-500 focus:outline-none"></textarea>
+        </div>
+        <button onclick="generateAiSummary()" class="w-full py-3 bg-purple-600 hover:bg-purple-700 text-white font-bold text-xs rounded-xl shadow-md flex items-center justify-center gap-2 transition-all">
+          <i data-lucide="sparkles" class="w-4 h-4"></i> Rangkum dengan AI Gemini
+        </button>
+      </div>
+
+      <!-- Sisi Kanan: Output -->
+      <div class="bg-white p-6 rounded-3xl border border-slate-200/80 shadow-xs space-y-4 flex flex-col justify-between">
+        <div>
+          <div class="flex items-center justify-between border-b border-slate-100 pb-3 mb-3">
+            <h3 class="font-extrabold text-slate-900 text-sm flex items-center gap-2">
+              <i data-lucide="file-check" class="w-4 h-4 text-emerald-600"></i> Hasil Rangkuman Cerdas AI
+            </h3>
+            <span id="ai-result-badge" class="text-[10px] font-extrabold px-2.5 py-1 bg-purple-50 text-purple-700 rounded-lg">Menunggu Input</span>
+          </div>
+          <div id="ai-summary-output" class="bg-slate-50 p-4 rounded-2xl border border-slate-200/60 text-xs text-slate-600 min-h-[220px] max-h-[350px] overflow-y-auto space-y-2 leading-relaxed">
+            <p class="italic text-slate-400">Hasil rangkuman dokumen dan poin-poin utama akan muncul di sini.</p>
+          </div>
+        </div>
+        <div class="flex gap-2 pt-3 border-t border-slate-100">
+          <button onclick="copyAiSummary()" class="w-full py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold text-xs rounded-xl transition-all flex items-center justify-center gap-1.5">
+            <i data-lucide="copy" class="w-3.5 h-3.5"></i> Salin Teks Rangkuman
+          </button>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <script>
+    let latestAiSummaryText = "";
+
+    window.addEventListener('DOMContentLoaded', () => {
+      if (typeof lucide !== 'undefined') lucide.createIcons();
+      const savedKey = localStorage.getItem('workspace_gemini_api_key');
+      if (savedKey) document.getElementById('gemini-api-key').value = savedKey;
+    });
+
+    function saveApiKey() {
+      const key = document.getElementById('gemini-api-key').value.trim();
+      if (!key) return alert('Masukkan API Key yang valid!');
+      localStorage.setItem('workspace_gemini_api_key', key);
+      showToast('Gemini API Key berhasil disimpan!', 'success');
+    }
+
+    function handleAiFileUpload(event) {
+      const file = event.target.files[0];
+      if (!file) return;
+      document.getElementById('ai-uploaded-file-name').innerText = `File: ${file.name}`;
+      document.getElementById('ai-material-title').value = file.name.replace(/\.[^/.]+$/, "");
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        document.getElementById('ai-material-input').value = e.target.result;
+        showToast('File berhasil dibaca!', 'success');
+      };
+      reader.readAsText(file);
+    }
+
+    async function generateAiSummary() {
+      const title = document.getElementById('ai-material-title').value.trim();
+      const text = document.getElementById('ai-material-input').value.trim();
+      const output = document.getElementById('ai-summary-output');
+      const badge = document.getElementById('ai-result-badge');
+      const apiKey = document.getElementById('gemini-api-key').value.trim() || localStorage.getItem('workspace_gemini_api_key');
+
+      if (!text) return alert('Masukkan catatan materi terlebih dahulu!');
+
+      output.innerHTML = `<div class="flex items-center justify-center p-8 text-purple-600 font-bold gap-2"><i data-lucide="loader-2" class="w-5 h-5 animate-spin"></i> AI Gemini sedang merangkum...</div>`;
+      if (typeof lucide !== 'undefined') lucide.createIcons();
+
+      if (!apiKey) {
+        setTimeout(() => {
+          const sentences = text.split(/[.!?]+/).filter(s => s.trim().length > 5);
+          latestAiSummaryText = `Rangkuman: ${title}\n\n${sentences.map(s => '- ' + s.trim()).join('\n')}`;
+          output.innerHTML = `<div class="space-y-2"><h4 class="font-bold text-slate-900">${title || 'Materi'}</h4><p class="text-xs text-slate-700">${sentences.map(s => '• ' + s.trim()).join('<br>')}</p></div>`;
+          badge.innerText = 'Simulasi Selesai';
+          showToast('Rangkuman dibuat (Mode Lokal)', 'success');
+        }, 1000);
+        return;
+      }
+
+      try {
+        const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ contents: [{ parts: [{ text: `Tolong buatkan rangkuman materi akademik yang terstruktur dalam Bahasa Indonesia:\n\nJudul: ${title}\nTeks:\n${text}` }] }] })
+        });
+        const data = await response.json();
+        if (data.candidates && data.candidates[0].content.parts[0].text) {
+          latestAiSummaryText = data.candidates[0].content.parts[0].text;
+          output.innerHTML = `<div class="whitespace-pre-line">${latestAiSummaryText}</div>`;
+          badge.innerText = 'Terhubung AI';
+          showToast('Sukses dirangkum Gemini AI!', 'success');
+        }
+      } catch (err) {
+        output.innerHTML = `<p class="text-red-500 font-bold">Gagal terhubung ke Gemini API.</p>`;
+      }
+    }
+
+    function copyAiSummary() {
+      if (!latestAiSummaryText) return alert('Belum ada hasil rangkuman!');
+      navigator.clipboard.writeText(latestAiSummaryText);
+      showToast('Teks disalin!', 'success');
+    }
+
+    function showToast(msg, type = 'success') {
+      const container = document.getElementById('toast-container');
+      const toast = document.createElement('div');
+      toast.className = `p-3.5 rounded-2xl shadow-xl text-xs font-bold text-white ${type === 'success' ? 'bg-emerald-600' : 'bg-indigo-600'}`;
+      toast.innerHTML = msg;
+      container.appendChild(toast);
+      setTimeout(() => toast.remove(), 3000);
+    }
+  </script>
+</body>
+</html>
