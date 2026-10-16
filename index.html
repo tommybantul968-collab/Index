@@ -120,15 +120,12 @@
       </nav>
 
       <div class="flex items-center gap-2 shrink-0">
-        <!-- Fitur Pencarian Global Trigger -->
         <button onclick="openSearchModal()" class="px-3 py-2 bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 text-xs font-bold rounded-xl border border-slate-200/80 dark:border-slate-700 flex items-center gap-1.5 transition-all" title="Pencarian Global">
           <i data-lucide="search" class="w-3.5 h-3.5 text-sky-600"></i> <span class="hidden sm:inline">Cari</span>
         </button>
 
-        <!-- Status Autentikasi Admin -->
         <div id="auth-container" class="flex items-center gap-1"></div>
 
-        <!-- Tombol Menu Settings -->
         <button onclick="openSettingsModal()" class="px-3 py-2 bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 text-xs font-bold rounded-xl border border-slate-200/80 dark:border-slate-700 flex items-center gap-1.5 transition-all" title="Pengaturan Workspace">
           <i data-lucide="settings" class="w-3.5 h-3.5 text-sky-600"></i> <span class="hidden sm:inline">Settings</span>
         </button>
@@ -159,7 +156,6 @@
 
     <!-- 1. HALAMAN DASHBOARD -->
     <section id="page-dashboard" class="space-y-6">
-      <!-- BANNER UTAMA DENGAN JAM REALTIME -->
       <div class="modern-header-wave p-6 sm:p-10 text-white shadow-xl flex flex-col md:flex-row justify-between items-center gap-6">
         <div class="relative z-10 flex flex-col sm:flex-row items-center sm:items-start gap-5 sm:gap-6 text-center sm:text-left">
           <div class="w-20 h-20 sm:w-24 sm:h-24 bg-white/15 backdrop-blur-2xl rounded-3xl border border-white/20 flex items-center justify-center p-3 shrink-0 shadow-2xl">
@@ -172,7 +168,6 @@
           </div>
         </div>
 
-        <!-- Kolom Jam Real-Time di Banner -->
         <div class="relative z-10 bg-white/10 backdrop-blur-xl border border-white/20 px-5 py-3.5 rounded-2xl flex items-center gap-3 shrink-0 shadow-lg text-center md:text-right">
           <span class="relative flex h-3 w-3">
             <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-sky-400 opacity-75"></span>
@@ -185,7 +180,6 @@
         </div>
       </div>
 
-      <!-- DASHBOARD PINTAS (Hari Ini & Besok) -->
       <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
         <div class="glass-card-clean p-6 rounded-3xl space-y-4">
           <div class="flex items-center justify-between border-b border-slate-100 dark:border-slate-800 pb-3">
@@ -194,9 +188,7 @@
             </h3>
             <span id="today-day-name" class="text-xs font-bold px-2.5 py-1 bg-sky-50 dark:bg-sky-950 text-sky-600 dark:text-sky-300 rounded-xl">--</span>
           </div>
-          <div id="dashboard-today-list" class="space-y-2.5 max-h-56 overflow-y-auto">
-            <!-- Diisi lewat JS -->
-          </div>
+          <div id="dashboard-today-list" class="space-y-2.5 max-h-56 overflow-y-auto"></div>
         </div>
 
         <div class="glass-card-clean p-6 rounded-3xl space-y-4">
@@ -206,9 +198,7 @@
             </h3>
             <span id="tomorrow-day-name" class="text-xs font-bold px-2.5 py-1 bg-indigo-50 dark:bg-indigo-950 text-indigo-600 dark:text-indigo-300 rounded-xl">--</span>
           </div>
-          <div id="dashboard-tomorrow-list" class="space-y-2.5 max-h-56 overflow-y-auto">
-            <!-- Diisi lewat JS -->
-          </div>
+          <div id="dashboard-tomorrow-list" class="space-y-2.5 max-h-56 overflow-y-auto"></div>
         </div>
       </div>
 
@@ -259,9 +249,9 @@
           <div>
             <p class="text-[11px] font-extrabold text-slate-400 uppercase tracking-wider">Jumlah Agenda</p>
             <h3 id="dash-total-agendas" class="text-2xl font-black text-slate-900 dark:text-white mt-1">0</h3>
-            <p id="dash-active-agendas" class="text-xs text-yellow-600 dark:text-yellow-400 mt-1 font-bold">0 Belum Terlaksana</p>
+            <p id="dash-active-agendas" class="text-xs text-orange-600 dark:text-orange-400 mt-1 font-bold">0 Belum Terlaksana</p>
           </div>
-          <div class="p-3.5 bg-yellow-50 dark:bg-yellow-950 text-yellow-600 dark:text-yellow-400 rounded-2xl"><i data-lucide="calendar-days" class="w-5 h-5"></i></div>
+          <div class="p-3.5 bg-orange-50 dark:bg-orange-950 text-orange-600 dark:text-orange-400 rounded-2xl"><i data-lucide="calendar-days" class="w-5 h-5"></i></div>
         </div>
 
         <div class="glass-card-clean p-5 rounded-2xl hover:shadow-md transition-all flex items-center justify-between">
@@ -283,7 +273,6 @@
         </div>
       </div>
 
-      <!-- KALENDER AKADEMIK INTERAKTIF -->
       <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
         <div class="glass-card-clean p-6 rounded-3xl">
           <div class="flex items-center justify-between mb-4">
@@ -300,7 +289,6 @@
             <div>Mg</div><div>Sn</div><div>Sl</div><div>Rb</div><div>Km</div><div>Jm</div><div>Sb</div>
           </div>
           <div id="calendar-days-grid" class="grid grid-cols-7 gap-1 text-xs"></div>
-          <!-- Detail Event Kalender -->
           <div id="calendar-event-details" class="mt-4 pt-3 border-t border-slate-100 dark:border-slate-800 text-xs text-slate-600 dark:text-slate-300">
             <p class="italic text-[11px]">Klik tanggal pada kalender untuk melihat detail jadwal/deadline/agenda.</p>
           </div>
@@ -462,6 +450,16 @@
         </div>
       </div>
 
+      <!-- Fitur Presentasi / Diagram Kegiatan (Poin 2) -->
+      <div class="glass-card-clean p-6 rounded-3xl space-y-4">
+        <h3 class="font-extrabold text-slate-900 dark:text-white text-sm flex items-center gap-2">
+          <i data-lucide="pie-chart" class="w-4 h-4 text-sky-600"></i> Diagram / Presentasi Status Kegiatan Agenda
+        </h3>
+        <div class="h-56 relative flex items-center justify-center">
+          <canvas id="agendaFlowchart"></canvas>
+        </div>
+      </div>
+
       <div id="agenda-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5"></div>
     </section>
 
@@ -538,7 +536,6 @@
       </div>
 
       <div class="space-y-4 text-xs font-semibold">
-        <!-- Pengaturan Tema -->
         <div class="flex items-center justify-between p-3.5 bg-slate-50 dark:bg-slate-800/60 rounded-2xl border border-slate-100 dark:border-slate-700/60">
           <div class="flex items-center gap-2.5">
             <div class="p-2 bg-amber-500/10 text-amber-500 rounded-xl"><i data-lucide="moon" class="w-4 h-4"></i></div>
@@ -552,7 +549,6 @@
           </button>
         </div>
 
-        <!-- Pengaturan Notifikasi -->
         <div class="flex items-center justify-between p-3.5 bg-slate-50 dark:bg-slate-800/60 rounded-2xl border border-slate-100 dark:border-slate-700/60">
           <div class="flex items-center gap-2.5">
             <div class="p-2 bg-sky-500/10 text-sky-600 rounded-xl"><i data-lucide="bell" class="w-4 h-4"></i></div>
@@ -561,12 +557,9 @@
               <p id="notif-status-desc" class="text-[10px] text-slate-400 font-medium">Aktifkan izin pengingat agenda & tugas</p>
             </div>
           </div>
-          <div id="settings-notif-action">
-            <!-- Diisi secara dinamis melalui JavaScript -->
-          </div>
+          <div id="settings-notif-action"></div>
         </div>
 
-        <!-- Ekspor Data -->
         <div class="flex items-center justify-between p-3.5 bg-slate-50 dark:bg-slate-800/60 rounded-2xl border border-slate-100 dark:border-slate-700/60">
           <div class="flex items-center gap-2.5">
             <div class="p-2 bg-sky-500/10 text-sky-600 rounded-xl"><i data-lucide="download" class="w-4 h-4"></i></div>
@@ -580,7 +573,6 @@
           </button>
         </div>
 
-        <!-- Impor Data -->
         <div class="flex items-center justify-between p-3.5 bg-slate-50 dark:bg-slate-800/60 rounded-2xl border border-slate-100 dark:border-slate-700/60">
           <div class="flex items-center gap-2.5">
             <div class="p-2 bg-indigo-500/10 text-indigo-600 rounded-xl"><i data-lucide="upload" class="w-4 h-4"></i></div>
@@ -595,10 +587,7 @@
           </label>
         </div>
 
-        <!-- Sesi Admin / Logout -->
-        <div id="settings-auth-section" class="pt-2 border-t border-slate-100 dark:border-slate-800">
-          <!-- Diisi secara dinamis melalui JavaScript -->
-        </div>
+        <div id="settings-auth-section" class="pt-2 border-t border-slate-100 dark:border-slate-800"></div>
       </div>
     </div>
   </div>
@@ -715,7 +704,7 @@
     </div>
   </div>
 
-  <!-- Modal Agenda -->
+  <!-- Modal Agenda (Diperbarui dengan opsi Status & Upload Undangan Resmi) -->
   <div id="modal-agenda" class="fixed inset-0 bg-slate-900/60 backdrop-blur-md z-50 hidden flex items-center justify-center p-4">
     <div class="bg-white dark:bg-slate-900 rounded-3xl max-w-md w-full p-6 shadow-2xl space-y-4 max-h-[90vh] overflow-y-auto border border-slate-100 dark:border-slate-800">
       <h3 id="agenda-modal-title" class="text-base font-extrabold text-slate-900 dark:text-white">Tambah / Edit Agenda Kegiatan</h3>
@@ -724,13 +713,14 @@
         <div><label class="block text-[11px] font-bold text-slate-700 dark:text-slate-300 mb-1">Nama Agenda</label><input type="text" id="agenda-title" class="w-full px-3.5 py-2.5 border border-slate-200 dark:border-slate-700 rounded-xl text-xs focus:ring-2 focus:ring-sky-500 focus:outline-none bg-transparent dark:text-white" required></div>
         <div class="grid grid-cols-2 gap-2">
           <div><label class="block text-[11px] font-bold text-slate-700 dark:text-slate-300 mb-1">Kriteria</label><select id="agenda-criteria" class="w-full px-3.5 py-2.5 border border-slate-200 dark:border-slate-700 bg-transparent rounded-xl text-xs focus:ring-2 focus:ring-sky-500 focus:outline-none dark:text-white"><option value="Umum">Umum</option><option value="Khusus">Khusus</option><option value="Tugas">Tugas</option></select></div>
-          <div><label class="block text-[11px] font-bold text-slate-700 dark:text-slate-300 mb-1">Status</label><select id="agenda-status" class="w-full px-3.5 py-2.5 border border-slate-200 dark:border-slate-700 bg-transparent rounded-xl text-xs focus:ring-2 focus:ring-sky-500 focus:outline-none dark:text-white"><option value="Belum terlaksana">Belum terlaksana</option><option value="Terlaksana">Terlaksana</option><option value="Tidak dihadiri">Tidak dihadiri</option></select></div>
+          <div><label class="block text-[11px] font-bold text-slate-700 dark:text-slate-300 mb-1">Status</label><select id="agenda-status" class="w-full px-3.5 py-2.5 border border-slate-200 dark:border-slate-700 bg-transparent rounded-xl text-xs focus:ring-2 focus:ring-sky-500 focus:outline-none dark:text-white"><option value="Belum terlaksana">Belum terlaksana</option><option value="Terlaksana">Terlaksana</option><option value="Tidak dihadiri">Tidak dihadiri</option><option value="Tidak terlaksana">Tidak terlaksana</option></select></div>
         </div>
         <div class="grid grid-cols-2 gap-2">
           <div><label class="block text-[11px] font-bold text-slate-700 dark:text-slate-300 mb-1">Waktu Mulai</label><input type="datetime-local" id="agenda-datetime" class="w-full px-3.5 py-2.5 border border-slate-200 dark:border-slate-700 rounded-xl text-xs focus:ring-2 focus:ring-sky-500 focus:outline-none bg-transparent dark:text-white" required></div>
           <div><label class="block text-[11px] font-bold text-slate-700 dark:text-slate-300 mb-1">Durasi (Jam)</label><input type="number" id="agenda-duration" value="1" min="1" class="w-full px-3.5 py-2.5 border border-slate-200 dark:border-slate-700 rounded-xl text-xs focus:ring-2 focus:ring-sky-500 focus:outline-none bg-transparent dark:text-white" required></div>
         </div>
         <div><label class="block text-[11px] font-bold text-slate-700 dark:text-slate-300 mb-1">Lokasi</label><input type="text" id="agenda-location" class="w-full px-3.5 py-2.5 border border-slate-200 dark:border-slate-700 rounded-xl text-xs focus:ring-2 focus:ring-sky-500 focus:outline-none bg-transparent dark:text-white" required></div>
+        <div><label class="block text-[11px] font-bold text-slate-700 dark:text-slate-300 mb-1">Upload Undangan Resmi (Sudah Bertandatangan)</label><input type="file" id="agenda-invitation-file" class="w-full text-xs text-slate-500 file:mr-2 file:py-2 file:px-3 file:rounded-xl file:border-0 file:text-xs file:font-semibold file:bg-sky-50 file:text-sky-700"></div>
         <div class="flex justify-end gap-2 pt-2">
           <button type="button" onclick="closeAgendaModal()" class="px-4 py-2 border border-slate-200 dark:border-slate-700 rounded-xl text-xs font-bold text-slate-600 dark:text-slate-300">Batal</button>
           <button type="submit" class="px-4 py-2 bg-sky-600 text-white rounded-xl text-xs font-bold shadow-md shadow-sky-100 dark:shadow-none">Simpan</button>
@@ -791,6 +781,7 @@ let finances = [];
 let schedules = [];
 let flowchartInstance = null;
 let taskFlowchartInstance = null;
+let agendaFlowchartInstance = null;
 let isDataFetched = false;
 let currentCalendarDate = new Date();
 
@@ -850,10 +841,34 @@ window.addEventListener('DOMContentLoaded', () => {
   setInterval(() => {
     updateAllCountdowns();
     checkAutomatedNotifications();
+    checkAgendaAutoDelete();
   }, 1000);
 });
 
-// LOGIC MODAL SETTINGS (PENGATURAN)
+// Fitur Agenda Otomatis Terhapus 4 Jam Setelah Selesai (Poin 6)
+function checkAgendaAutoDelete() {
+  const now = new Date();
+  let updated = false;
+  agendas = agendas.filter(a => {
+    if (!a.datetime) return true;
+    const startTime = new Date(a.datetime);
+    const durationHours = Number(a.duration || 1);
+    const finishTime = new Date(startTime.getTime() + durationHours * 3600000);
+    const deleteTime = new Date(finishTime.getTime() + 4 * 3600000); // 4 jam setelah selesai
+    
+    if (now >= deleteTime) {
+      updated = true;
+      return false; // Hapus agenda
+    }
+    return true;
+  });
+
+  if (updated) {
+    saveLocalStorageDataLocally();
+    refreshAllViews();
+  }
+}
+
 function openSettingsModal() {
   renderSettingsAuthSection();
   renderSettingsNotificationSection();
@@ -930,7 +945,6 @@ function renderSettingsAuthSection() {
   initLucide();
 }
 
-// LOGIC DARK MODE
 function initDarkModeSession() {
   const isDark = localStorage.getItem(KEYS.DARK_MODE) === 'true';
   if (isDark) {
@@ -980,8 +994,8 @@ function startRealtimeClock() {
 }
 
 function checkNotificationSupport() {
-  if ("Notification" in window && Notification.permission === 'granted') {
-    // Aktif secara otomatis di background
+  if ("Notification" in window && Notification.permission !== 'granted') {
+    Notification.requestPermission();
   }
 }
 
@@ -998,17 +1012,20 @@ function requestNotificationPermission() {
   });
 }
 
-// NOTIFIKASI DAN PENGINGAT OTOMATIS
+// Notifikasi Masuk Perangkat Baik Login atau Belum (Poin 4)
 let lastNotifiedIds = [];
 function checkAutomatedNotifications() {
-  if (!("Notification" in window) || Notification.permission !== 'granted') return;
   const now = new Date();
 
   agendas.forEach(a => {
     if (a.status === 'Belum terlaksana' && a.datetime) {
       const diff = new Date(a.datetime) - now;
       if (diff > 0 && diff <= 1800000 && !lastNotifiedIds.includes(a.id)) {
-        new Notification("Pengingat Agenda!", { body: `Agenda "${a.title}" akan dimulai dalam waktu kurang dari 30 menit.` });
+        const notifBody = `Agenda "${a.title}" akan dimulai dalam waktu kurang dari 30 menit.`;
+        showToast(notifBody, 'info');
+        if ("Notification" in window && Notification.permission === 'granted') {
+          new Notification("Pengingat Agenda MasPram Pro!", { body: notifBody });
+        }
         lastNotifiedIds.push(a.id);
       }
     }
@@ -1018,7 +1035,11 @@ function checkAutomatedNotifications() {
     if (t.status !== 'Selesai' && t.deadline) {
       const diff = new Date(t.deadline) - now;
       if (diff > 0 && diff <= 1800000 && !lastNotifiedIds.includes(t.id)) {
-        new Notification("Pengingat Deadline Tugas!", { body: `Tugas "${t.name}" (${t.lecturer}) akan segera berakhir.` });
+        const notifBody = `Tugas "${t.name}" (${t.lecturer}) akan segera berakhir.`;
+        showToast(notifBody, 'info');
+        if ("Notification" in window && Notification.permission === 'granted') {
+          new Notification("Pengingat Deadline Tugas!", { body: notifBody });
+        }
         lastNotifiedIds.push(t.id);
       }
     }
@@ -1188,7 +1209,7 @@ function switchPage(pageId) {
 }
 
 function refreshAllViews() {
-  renderDashboard(); renderSchedules(); renderTasks(); renderAgendas(); renderFinance(); renderCalendar(); renderFlowchart(); renderTaskFlowchart(); initLucide();
+  renderDashboard(); renderSchedules(); renderTasks(); renderAgendas(); renderFinance(); renderCalendar(); renderFlowchart(); renderTaskFlowchart(); renderAgendaFlowchart(); initLucide();
 }
 
 function renderDashboard() {
@@ -1439,6 +1460,30 @@ function renderTaskFlowchart() {
   });
 }
 
+// Diagram/Presentasi Status Agenda (Poin 2)
+function renderAgendaFlowchart() {
+  const ctx = document.getElementById('agendaFlowchart');
+  if (!ctx) return;
+  let belumCount = agendas.filter(a => a.status === 'Belum terlaksana').length;
+  let terlaksanaCount = agendas.filter(a => a.status === 'Terlaksana').length;
+  let tidakDihadiriCount = agendas.filter(a => a.status === 'Tidak dihadiri').length;
+  let tidakTerlaksanaCount = agendas.filter(a => a.status === 'Tidak terlaksana').length;
+
+  if (agendaFlowchartInstance) agendaFlowchartInstance.destroy();
+  agendaFlowchartInstance = new Chart(ctx.getContext('2d'), {
+    type: 'doughnut',
+    data: {
+      labels: ['Belum terlaksana', 'Terlaksana', 'Tidak dihadiri', 'Tidak terlaksana'],
+      datasets: [{
+        data: [belumCount, terlaksanaCount, tidakDihadiriCount, tidakTerlaksanaCount],
+        backgroundColor: ['#f97316', '#3b82f6', '#10b981', '#ef4444'],
+        borderWidth: 0
+      }]
+    },
+    options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'bottom' } } }
+  });
+}
+
 function renderTasks() {
   document.getElementById('task-counter').innerText = `Jumlah Seluruh Tugas: ${tasks.length}`;
   const tbody = document.getElementById('task-table-body');
@@ -1513,26 +1558,49 @@ function renderAgendas() {
   if (filteredAgendas.length === 0) { grid.innerHTML = `<div class="col-span-full p-12 text-center text-slate-400">Belum ada agenda.</div>`; return; }
   
   grid.innerHTML = filteredAgendas.map(a => {
-    let badgeClass = 'bg-yellow-50 dark:bg-yellow-950 text-yellow-600 dark:text-yellow-400';
+    // Penyesuaian Kode Warna Status Agenda (Poin 1)
+    let badgeClass = 'bg-orange-50 dark:bg-orange-950 text-orange-600 dark:text-orange-400';
     if (a.status === 'Terlaksana') badgeClass = 'bg-blue-50 dark:bg-blue-950 text-blue-600 dark:text-blue-400';
-    if (a.status === 'Tidak dihadiri') badgeClass = 'bg-red-50 dark:bg-red-950 text-red-600 dark:text-red-400';
+    if (a.status === 'Tidak dihadiri') badgeClass = 'bg-emerald-50 dark:bg-emerald-950 text-emerald-600 dark:text-emerald-400';
+    if (a.status === 'Tidak terlaksana') badgeClass = 'bg-red-50 dark:bg-red-950 text-red-600 dark:text-red-400';
 
     return `
       <div class="glass-card-clean p-6 rounded-3xl flex flex-col justify-between">
         <div>
           <div class="flex justify-between items-center mb-3">
             <span class="text-[10px] font-extrabold uppercase px-2 py-0.5 bg-slate-100 dark:bg-slate-800 rounded-lg">${a.criteria}</span>
-            <span class="text-xs font-extrabold px-2.5 py-1 rounded-xl ${badgeClass}">${a.status}</span>
+            ${isAuthenticated ? `
+              <select onchange="updateAgendaStatus('${a.id}', this.value)" class="text-xs font-extrabold px-2 py-1 rounded-xl border border-slate-200 dark:border-slate-700 bg-transparent ${badgeClass}">
+                <option value="Belum terlaksana" ${a.status==='Belum terlaksana'?'selected':''}>Belum terlaksana</option>
+                <option value="Terlaksana" ${a.status==='Terlaksana'?'selected':''}>Terlaksana</option>
+                <option value="Tidak dihadiri" ${a.status==='Tidak dihadiri'?'selected':''}>Tidak dihadiri</option>
+                <option value="Tidak terlaksana" ${a.status==='Tidak terlaksana'?'selected':''}>Tidak terlaksana</option>
+              </select>
+            ` : `<span class="text-xs font-extrabold px-2.5 py-1 rounded-xl ${badgeClass}">${a.status}</span>`}
           </div>
           <h4 class="font-extrabold text-slate-900 dark:text-white text-base">${escapeHtml(a.title)}</h4>
           <div class="mt-3 p-3 bg-sky-50 dark:bg-sky-950/50 rounded-2xl"><p class="text-[10px] font-extrabold text-sky-600 dark:text-sky-400 uppercase">Hitung Mundur</p><p id="cd-${a.id}" class="text-xs font-black text-sky-950 dark:text-sky-200 font-mono">Menghitung...</p></div>
-          <div class="mt-3 text-xs text-slate-500 font-semibold space-y-1"><div><i data-lucide="clock" class="w-3.5 h-3.5 inline"></i> ${formatDateTime(a.datetime)}</div><div><i data-lucide="map-pin" class="w-3.5 h-3.5 inline"></i> ${escapeHtml(a.location)}</div></div>
+          <div class="mt-3 text-xs text-slate-500 font-semibold space-y-1">
+            <div><i data-lucide="clock" class="w-3.5 h-3.5 inline"></i> ${formatDateTime(a.datetime)}</div>
+            <div><i data-lucide="map-pin" class="w-3.5 h-3.5 inline"></i> ${escapeHtml(a.location)}</div>
+            ${a.invitationFile ? `<div class="text-sky-600 dark:text-sky-400 font-bold flex items-center gap-1 mt-1"><i data-lucide="file-text" class="w-3.5 h-3.5"></i> Undangan: ${escapeHtml(a.invitationFile)}</div>` : ''}
+          </div>
         </div>
         ${isAuthenticated ? `<div class="mt-4 pt-3 border-t border-slate-100 dark:border-slate-800 flex justify-end gap-2"><button onclick="editAgenda('${a.id}')" class="p-1.5 text-sky-600 hover:bg-sky-50 dark:hover:bg-slate-800 rounded-lg transition-all" title="Edit Agenda"><i data-lucide="edit-3" class="w-4 h-4"></i></button><button onclick="deleteAgenda('${a.id}')" class="p-1.5 text-red-600 hover:bg-red-50 dark:hover:bg-slate-800 rounded-lg transition-all" title="Hapus Agenda"><i data-lucide="trash-2" class="w-4 h-4"></i></button></div>` : ''}
       </div>`;
   }).join('');
   
   updateAllCountdowns();
+}
+
+// Fitur ubah status agenda langsung (Poin 3)
+function updateAgendaStatus(id, val) {
+  const ag = agendas.find(x => x.id === id);
+  if (ag) {
+    ag.status = val;
+    saveLocalStorageData();
+    showToast('Status agenda diperbarui', 'success');
+  }
 }
 
 function updateAllCountdowns() {
@@ -1583,6 +1651,7 @@ function closeAgendaModal() { document.getElementById('modal-agenda').classList.
 function saveAgenda(e) {
   e.preventDefault();
   const id = document.getElementById('agenda-id').value;
+  const invitationFile = document.getElementById('agenda-invitation-file').files[0];
   const data = {
     id: id || 'agenda_' + Date.now(), 
     title: document.getElementById('agenda-title').value, 
@@ -1590,7 +1659,8 @@ function saveAgenda(e) {
     status: document.getElementById('agenda-status').value, 
     datetime: document.getElementById('agenda-datetime').value,
     duration: document.getElementById('agenda-duration').value, 
-    location: document.getElementById('agenda-location').value
+    location: document.getElementById('agenda-location').value,
+    invitationFile: invitationFile ? invitationFile.name : (id ? (agendas.find(x => x.id === id)?.invitationFile || null) : null)
   };
 
   if (id) {
