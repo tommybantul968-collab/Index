@@ -450,7 +450,7 @@
         </div>
       </div>
 
-      <!-- Fitur Presentasi / Diagram Kegiatan (Poin 2) -->
+      <!-- Diagram / Presentasi Kegiatan -->
       <div class="glass-card-clean p-6 rounded-3xl space-y-4">
         <h3 class="font-extrabold text-slate-900 dark:text-white text-sm flex items-center gap-2">
           <i data-lucide="pie-chart" class="w-4 h-4 text-sky-600"></i> Diagram / Presentasi Status Kegiatan Agenda
@@ -525,7 +525,7 @@
 
   </main>
 
-  <!-- MODAL SETTINGS (PENGATURAN TERPADU) -->
+  <!-- MODAL SETTINGS -->
   <div id="modal-settings" class="fixed inset-0 bg-slate-900/70 backdrop-blur-md z-50 hidden flex items-center justify-center p-4">
     <div class="bg-white dark:bg-slate-900 rounded-3xl max-w-md w-full p-6 shadow-2xl space-y-5 border border-slate-100 dark:border-slate-800">
       <div class="flex items-center justify-between border-b border-slate-100 dark:border-slate-800 pb-3">
@@ -610,7 +610,7 @@
     </div>
   </div>
 
-  <!-- MODALS SYSTEM (LOGIN ADMIN / TAMU) -->
+  <!-- MODAL LOGIN ADMIN / TAMU -->
   <div id="modal-login" class="fixed inset-0 bg-slate-900/70 backdrop-blur-md z-50 hidden flex items-center justify-center p-4">
     <div class="bg-white dark:bg-slate-900 rounded-3xl max-w-sm w-full p-6 shadow-2xl space-y-4 border border-slate-100 dark:border-slate-800">
       <div class="text-center">
@@ -634,7 +634,7 @@
     </div>
   </div>
 
-  <!-- MODAL PASSWORD KEUANGAN ("PRAMONO") -->
+  <!-- MODAL PASSWORD KEUANGAN -->
   <div id="modal-finance-auth" class="fixed inset-0 bg-slate-900/70 backdrop-blur-md z-50 hidden flex items-center justify-center p-4">
     <div class="bg-white dark:bg-slate-900 rounded-3xl max-w-sm w-full p-6 shadow-2xl space-y-4 border border-slate-100 dark:border-slate-800">
       <div class="text-center">
@@ -704,7 +704,7 @@
     </div>
   </div>
 
-  <!-- Modal Agenda (Diperbarui dengan opsi Status & Upload Undangan Resmi) -->
+  <!-- Modal Agenda -->
   <div id="modal-agenda" class="fixed inset-0 bg-slate-900/60 backdrop-blur-md z-50 hidden flex items-center justify-center p-4">
     <div class="bg-white dark:bg-slate-900 rounded-3xl max-w-md w-full p-6 shadow-2xl space-y-4 max-h-[90vh] overflow-y-auto border border-slate-100 dark:border-slate-800">
       <h3 id="agenda-modal-title" class="text-base font-extrabold text-slate-900 dark:text-white">Tambah / Edit Agenda Kegiatan</h3>
@@ -845,7 +845,6 @@ window.addEventListener('DOMContentLoaded', () => {
   }, 1000);
 });
 
-// Fitur Agenda Otomatis Terhapus 4 Jam Setelah Selesai (Poin 6)
 function checkAgendaAutoDelete() {
   const now = new Date();
   let updated = false;
@@ -854,11 +853,11 @@ function checkAgendaAutoDelete() {
     const startTime = new Date(a.datetime);
     const durationHours = Number(a.duration || 1);
     const finishTime = new Date(startTime.getTime() + durationHours * 3600000);
-    const deleteTime = new Date(finishTime.getTime() + 4 * 3600000); // 4 jam setelah selesai
+    const deleteTime = new Date(finishTime.getTime() + 4 * 3600000);
     
     if (now >= deleteTime) {
       updated = true;
-      return false; // Hapus agenda
+      return false;
     }
     return true;
   });
@@ -1012,7 +1011,6 @@ function requestNotificationPermission() {
   });
 }
 
-// Notifikasi Masuk Perangkat Baik Login atau Belum (Poin 4)
 let lastNotifiedIds = [];
 function checkAutomatedNotifications() {
   const now = new Date();
@@ -1424,29 +1422,45 @@ function selectCalendarDate(dateStr) {
   detailsEl.innerHTML = html;
 }
 
+// PERBAIKAN 1: Pengecekan Destroy Instance Chart agar tidak bentrok
 function renderFlowchart() {
+  const ctx = document.getElementById('financeFlowchart');
+  if (!ctx) return;
   const overlay = document.getElementById('flowchart-locked-overlay');
-  if (!isFinanceUnlocked) { if (overlay) overlay.classList.remove('hidden'); return; }
+  
+  if (!isFinanceUnlocked) {
+    if (overlay) overlay.classList.remove('hidden');
+    return;
+  }
   if (overlay) overlay.classList.add('hidden');
+
   let totalInc = finances.filter(f => f.type === 'pemasukan').reduce((acc, f) => acc + Number(f.amount), 0);
   let totalExp = finances.filter(f => f.type === 'pengeluaran').reduce((acc, f) => acc + Number(f.amount), 0);
-  const ctx = document.getElementById('financeFlowchart').getContext('2d');
+
   if (flowchartInstance) flowchartInstance.destroy();
-  flowchartInstance = new Chart(ctx, {
+  flowchartInstance = new Chart(ctx.getContext('2d'), {
     type: 'doughnut',
-    data: { labels: ['Pemasukan', 'Pengeluaran'], datasets: [{ data: [totalInc || 1, totalExp], backgroundColor: ['#10b981', '#ef4444'], borderWidth: 0 }] },
+    data: {
+      labels: ['Pemasukan', 'Pengeluaran'],
+      datasets: [{
+        data: [totalInc || 0, totalExp || 0],
+        backgroundColor: ['#10b981', '#ef4444'],
+        borderWidth: 0
+      }]
+    },
     options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'bottom' } } }
   });
 }
 
 function renderTaskFlowchart() {
-  const ctx = document.getElementById('taskFlowchart').getContext('2d');
+  const ctx = document.getElementById('taskFlowchart');
+  if (!ctx) return;
   let todoCount = tasks.filter(t => t.status === 'Belum dikerjakan').length;
   let progCount = tasks.filter(t => t.status === 'Dalam pengerjaan').length;
   let doneCount = tasks.filter(t => t.status === 'Selesai').length;
 
   if (taskFlowchartInstance) taskFlowchartInstance.destroy();
-  taskFlowchartInstance = new Chart(ctx, {
+  taskFlowchartInstance = new Chart(ctx.getContext('2d'), {
     type: 'doughnut',
     data: {
       labels: ['Belum Dikerjakan', 'Dalam Pengerjaan', 'Selesai'],
@@ -1460,7 +1474,6 @@ function renderTaskFlowchart() {
   });
 }
 
-// Diagram/Presentasi Status Agenda (Poin 2)
 function renderAgendaFlowchart() {
   const ctx = document.getElementById('agendaFlowchart');
   if (!ctx) return;
@@ -1558,7 +1571,6 @@ function renderAgendas() {
   if (filteredAgendas.length === 0) { grid.innerHTML = `<div class="col-span-full p-12 text-center text-slate-400">Belum ada agenda.</div>`; return; }
   
   grid.innerHTML = filteredAgendas.map(a => {
-    // Penyesuaian Kode Warna Status Agenda (Poin 1)
     let badgeClass = 'bg-orange-50 dark:bg-orange-950 text-orange-600 dark:text-orange-400';
     if (a.status === 'Terlaksana') badgeClass = 'bg-blue-50 dark:bg-blue-950 text-blue-600 dark:text-blue-400';
     if (a.status === 'Tidak dihadiri') badgeClass = 'bg-emerald-50 dark:bg-emerald-950 text-emerald-600 dark:text-emerald-400';
@@ -1593,7 +1605,6 @@ function renderAgendas() {
   updateAllCountdowns();
 }
 
-// Fitur ubah status agenda langsung (Poin 3)
 function updateAgendaStatus(id, val) {
   const ag = agendas.find(x => x.id === id);
   if (ag) {
@@ -1613,7 +1624,7 @@ function updateAllCountdowns() {
       return;
     }
     const diff = new Date(a.datetime) - now;
-    if (diff <= 0) { el.innerText = 'Sedang Berlangsung!'; return; }
+    if (diff <= 0) { el.innerText = 'Waktu telah lewat / Sedang Berlangsung'; return; }
     const d = Math.floor(diff / 86400000), h = Math.floor((diff % 86400000) / 3600000), m = Math.floor((diff % 3600000) / 60000), s = Math.floor((diff % 60000) / 1000);
     el.innerText = `${d > 0 ? d + 'hr ' : ''}${String(h).padStart(2,'0')}j ${String(m).padStart(2,'0')}m ${String(s).padStart(2,'0')}d`;
   });
@@ -1676,6 +1687,7 @@ function saveAgenda(e) {
 
 function deleteAgenda(id) { if(confirm('Hapus agenda?')) { agendas = agendas.filter(x => x.id !== id); saveLocalStorageData(); } }
 
+// PERBAIKAN 2: Perhitungan persentase pemasukan & pengeluaran dinamis
 function renderFinance() {
   const groupFin = document.getElementById('finance-buttons-group');
   if (isFinanceUnlocked && isAuthenticated) {
@@ -1686,11 +1698,23 @@ function renderFinance() {
 
   let totalInc = finances.filter(f => f.type === 'pemasukan').reduce((acc, f) => acc + Number(f.amount), 0);
   let totalExp = finances.filter(f => f.type === 'pengeluaran').reduce((acc, f) => acc + Number(f.amount), 0);
+  let totalArus = totalInc + totalExp;
   
+  let incPct = totalArus > 0 ? Math.round((totalInc / totalArus) * 100) : 0;
+  let expPct = totalArus > 0 ? Math.round((totalExp / totalArus) * 100) : 0;
+
   document.getElementById('fin-income-total').innerText = isFinanceUnlocked ? formatIDR(totalInc) : '[Terkunci]';
   document.getElementById('fin-expense-total').innerText = isFinanceUnlocked ? formatIDR(totalExp) : '[Terkunci]';
   document.getElementById('fin-net-total').innerText = isFinanceUnlocked ? formatIDR(totalInc - totalExp) : '[Terkunci]';
   
+  if (isFinanceUnlocked) {
+    document.getElementById('fin-income-pct').innerText = `${incPct}% dari Total Arus Keuangan`;
+    document.getElementById('fin-expense-pct').innerText = `${expPct}% dari Total Arus Keuangan`;
+  } else {
+    document.getElementById('fin-income-pct').innerText = `[Terkunci]`;
+    document.getElementById('fin-expense-pct').innerText = `[Terkunci]`;
+  }
+
   const tbody = document.getElementById('finance-table-body');
   if (!isFinanceUnlocked) {
     tbody.innerHTML = `<tr><td colspan="5" class="p-12 text-center"><button onclick="requestFinanceAccess()" class="px-4 py-2 bg-indigo-600 text-white rounded-xl text-xs font-bold shadow-md">Masukkan Password untuk Membuka Keuangan</button></td></tr>`;
